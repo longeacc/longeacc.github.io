@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import PageContent from '@/components/PageContent';
 import { dictionaries } from '@/lib/dictionaries';
-import { LANG_CODES, DEFAULT_LANG, isLang, pathForLang } from '@/lib/languages';
+import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
 
 export function generateStaticParams() {
-  return LANG_CODES.filter((code) => code !== DEFAULT_LANG).map((locale) => ({ locale }));
+  return LANG_CODES.map((locale) => ({ locale }));
 }
 
 export async function generateMetadata({
@@ -51,7 +51,7 @@ export default async function LocalePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (!isLang(locale) || locale === DEFAULT_LANG) {
+  if (!isLang(locale)) {
     notFound();
   }
   return <PageContent lang={locale} />;
