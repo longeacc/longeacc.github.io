@@ -1,56 +1,25 @@
-const PIPELINE_STAGES = [
-  {
-    num: '01',
-    title: 'Rule-based pass',
-    body: 'Regex and lexicon matching catch high-confidence, low-ambiguity entities cheaply — dates, dosages, standard biomarker abbreviations.',
-  },
-  {
-    num: '02',
-    title: 'CRF layer',
-    body: 'A conditional random field models sequential structure the rules miss, using local context to resolve ambiguous spans.',
-  },
-  {
-    num: '03',
-    title: 'Transformer extraction',
-    body: 'DrBERT-7BG, fine-tuned across three oncology corpora, handles the entities that need real semantic and domain understanding.',
-  },
-  {
-    num: '04',
-    title: 'LLM arbitration',
-    body: 'Remaining conflicts and edge cases are routed to an LLM pass for final disambiguation before output.',
-  },
-];
+import MetricCounter from './MetricCounter';
+import type { Dictionary } from '@/lib/dictionaries';
 
-const TAGS = ['Clinical NLP', 'CRF', 'Transformers', 'DrBERT-7GB', 'French oncology'];
-
-export default function Research() {
+export default function Research({ dict }: { dict: Dictionary }) {
+  const { research, metrics } = dict;
   return (
     <section id="research" className="section-alt">
       <div className="wrap">
         <div className="section-head">
-          <div className="section-label">02 — Research</div>
-          <h2>DEMNE / DuraXeLL</h2>
-          <p>A hybrid named-entity recognition pipeline for French oncology clinical text.</p>
+          <div className="section-label">{research.label}</div>
+          <h2>{research.title}</h2>
+          <p>{research.subtitle}</p>
         </div>
 
         <div className="research-block">
           <div>
-            <h3>Determination of Extraction Methods for Named Entities</h3>
-            <div className="research-tagline">Clinical NER · French oncology corpora</div>
-            <p>
-              Off-the-shelf NER models struggle badly on French clinical text: dense abbreviations,
-              inconsistent formatting across hospital systems, and biomarker terminology that
-              barely appears in general training data. DEMNE tackles this with a staged pipeline
-              rather than a single model — each stage handles what it&apos;s actually good at, and
-              only escalates to a heavier model when it has to.
-            </p>
-            <p>
-              The system is fine-tuned on <strong>DrBERT-7GB</strong> across three distinct French
-              oncology corpora, and targets seven priority biomarker entity types used in
-              treatment-relevant reporting.
-            </p>
+            <h3>{research.h3}</h3>
+            <div className="research-tagline">{research.tagline}</div>
+            <p>{research.p1}</p>
+            <p>{research.p2}</p>
             <div className="tag-row">
-              {TAGS.map((tag) => (
+              {research.tags.map((tag) => (
                 <span className="tag" key={tag}>
                   {tag}
                 </span>
@@ -62,20 +31,45 @@ export default function Research() {
                 target="_blank"
                 rel="noopener"
               >
-                View repository
+                {research.viewRepo}
               </a>
-              <a href="#writing">Read the methodology</a>
+              <a href="#writing">{research.readMethodology}</a>
             </div>
           </div>
 
           <div className="pipeline">
-            {PIPELINE_STAGES.map((stage) => (
+            {research.pipeline.map((stage) => (
               <div className="pipeline-stage" key={stage.num}>
                 <div className="stage-num">{stage.num}</div>
                 <div className="stage-body">
                   <h4>{stage.title}</h4>
                   <p>{stage.body}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="metrics-block">
+          <div className="section-label">{metrics.label}</div>
+          <h3 className="metrics-title">{metrics.title}</h3>
+          <div className="metrics-row">
+            {metrics.items.map((metric) => (
+              <MetricCounter key={metric.label} {...metric} />
+            ))}
+          </div>
+        </div>
+
+        <div className="ai-act">
+          <h3>{research.aiAct.title}</h3>
+          <p>{research.aiAct.body}</p>
+          <div className="ai-act-grid">
+            {research.aiAct.articles.map((article) => (
+              <div className="ai-act-card" key={article.code}>
+                <div className="ai-act-code">
+                  {article.code} — {article.label}
+                </div>
+                <p>{article.desc}</p>
               </div>
             ))}
           </div>

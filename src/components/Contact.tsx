@@ -1,15 +1,18 @@
-export default function Contact() {
+import type { Dictionary } from '@/lib/dictionaries';
+
+export default function Contact({ dict }: { dict: Dictionary }) {
+  const { contact } = dict;
   return (
     <section id="contact">
       <div className="wrap contact-inner">
-        <h2>Let&apos;s talk about clinical NLP, biomedical AI, or a PhD collaboration.</h2>
+        <h2>{contact.title}</h2>
         <div className="contact-links">
-          <a href="mailto:contact@clement-longeac.dev">contact@clement-longeac.dev</a>
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
           <a href="https://github.com/longeacc" target="_blank" rel="noopener">
-            GitHub
+            {contact.github}
           </a>
           <a href="https://www.linkedin.com/in/clement-longeac" target="_blank" rel="noopener">
-            LinkedIn
+            {contact.linkedin}
           </a>
         </div>
       </div>

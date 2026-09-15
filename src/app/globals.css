@@ -17,6 +17,23 @@
   --mono: 'JetBrains Mono', monospace;
 }
 
+:root[data-theme='light'] {
+  --bg: #F7F8FC;
+  --bg-alt: #EEF0F8;
+  --surface: #FFFFFF;
+  --line: #DADFEF;
+  --line-soft: #E7EAF6;
+  --text: #12162B;
+  --text-muted: #4B5170;
+  --text-faint: #7B82A3;
+  --cyan: #0E9C89;
+  --cyan-dim: #B6ECE2;
+  --violet: #6152D9;
+  --violet-dim: #D9D4FF;
+}
+
+:root[data-theme='light'] .btn-primary { color: #FFFFFF; }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
@@ -96,10 +113,69 @@ nav a {
   transition: color 0.15s ease;
 }
 nav a:hover { color: var(--cyan); }
-.nav-toggle { display: none; }
+
+.nav-controls { display: flex; align-items: center; gap: 14px; }
+
+.lang-toggle {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  border: 1px solid var(--line);
+  padding: 5px 9px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.lang-toggle:hover { color: var(--cyan); border-color: var(--cyan); }
+
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.theme-toggle:hover { border-color: var(--cyan); }
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  padding: 0;
+}
+.nav-toggle span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  margin: 0 auto;
+  background: var(--text);
+}
 
 @media (max-width: 760px) {
-  nav ul { display: none; }
+  nav ul {
+    display: none;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+  }
+  nav ul.nav-open { display: flex; }
+  nav ul li { padding: 12px 32px; border-bottom: 1px solid var(--line-soft); }
+  nav ul li:last-child { border-bottom: none; }
+  .nav-toggle { display: flex; }
 }
 
 /* ---------- HERO ---------- */
@@ -365,6 +441,74 @@ section { position: relative; z-index: 1; padding: 88px 0; }
   transition: color 0.15s ease;
 }
 .contact-links a:hover { color: var(--cyan); }
+
+/* ---------- ABOUT: vision line ---------- */
+.vision-line {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--violet);
+  border-left: 2px solid var(--violet-dim);
+  padding-left: 14px;
+  margin-top: 22px !important;
+}
+
+/* ---------- METRICS ---------- */
+.metrics-block { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--line); }
+.metrics-title { font-size: 1.2rem; margin: 6px 0 32px; }
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 700px) { .metrics-row { grid-template-columns: 1fr; gap: 28px; } }
+.metric-value {
+  font-family: var(--grotesk);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.metric-value sup { font-size: 0.55em; top: -0.7em; }
+.metric-label { color: var(--text-muted); font-size: 0.92rem; max-width: 34ch; }
+
+/* ---------- PUBLICATIONS ---------- */
+.publication-card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 32px;
+  max-width: 720px;
+}
+.publication-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+.publication-meta {
+  font-family: var(--grotesk);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.publication-card p { color: var(--text-muted); font-size: 0.96rem; }
+
+/* ---------- EU AI ACT ---------- */
+.ai-act { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--line); }
+.ai-act h3 { font-size: 1.2rem; margin-bottom: 10px; }
+.ai-act > p { color: var(--text-muted); max-width: 70ch; margin-bottom: 24px; }
+.ai-act-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 700px) { .ai-act-grid { grid-template-columns: 1fr; } }
+.ai-act-card {
+  border: 1px solid var(--line);
+  padding: 20px;
+}
+.ai-act-code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--violet);
+  margin-bottom: 8px;
+}
+.ai-act-card p { color: var(--text-muted); font-size: 0.92rem; margin: 0; }
 
 footer {
   border-top: 1px solid var(--line);

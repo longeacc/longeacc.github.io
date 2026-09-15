@@ -1,9 +1,12 @@
-export default function Footer() {
+import type { Dictionary } from '@/lib/dictionaries';
+
+export default function Footer({ dict }: { dict: Dictionary }) {
+  const { footer } = dict;
   return (
     <footer>
       <div className="wrap" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '10px' }}>
-        <span>© 2026 Clément Longeac</span>
-        <span>Built with a hybrid pipeline of its own</span>
+        <span>{footer.copyright}</span>
+        <span>{footer.tagline}</span>
       </div>
     </footer>
   );

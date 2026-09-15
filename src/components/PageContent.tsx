@@ -1,0 +1,35 @@
+'use client';
+
+import { useEffect } from 'react';
+import Nav from './Nav';
+import Hero from './Hero';
+import About from './About';
+import Research from './Research';
+import Experience from './Experience';
+import Publications from './Publications';
+import Writing from './Writing';
+import Contact from './Contact';
+import Footer from './Footer';
+import { dictionaries, type Lang } from '@/lib/dictionaries';
+
+export default function PageContent({ lang }: { lang: Lang }) {
+  const dict = dictionaries[lang];
+
+  useEffect(() => {
+    document.documentElement.lang = dict.htmlLang;
+  }, [dict.htmlLang]);
+
+  return (
+    <>
+      <Nav dict={dict} lang={lang} />
+      <Hero dict={dict} />
+      <About dict={dict} />
+      <Research dict={dict} />
+      <Experience dict={dict} />
+      <Publications dict={dict} />
+      <Writing dict={dict} />
+      <Contact dict={dict} />
+      <Footer dict={dict} />
+    </>
+  );
+}

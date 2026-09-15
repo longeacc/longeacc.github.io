@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import PageContent from '@/components/PageContent';
 import { dictionaries } from '@/lib/dictionaries';
 
-const dict = dictionaries.fr;
+const dict = dictionaries.en;
 
 export const metadata: Metadata = {
   title: dict.meta.title,
   description: dict.meta.description,
   alternates: {
-    canonical: 'https://clement-longeac.com/',
+    canonical: 'https://clement-longeac.com/en/',
     languages: {
       fr: 'https://clement-longeac.com/',
       en: 'https://clement-longeac.com/en/',
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: dict.meta.title,
     description: dict.meta.description,
-    url: 'https://clement-longeac.com/',
+    url: 'https://clement-longeac.com/en/',
     siteName: 'Clément Longeac',
-    locale: 'fr_FR',
+    locale: 'en_US',
     type: 'profile',
   },
   twitter: {
@@ -29,6 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
-  return <PageContent lang="fr" />;
+export default function HomeEn() {
+  return <PageContent lang="en" />;
 }
