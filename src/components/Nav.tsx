@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
-import type { Dictionary, Lang } from '@/lib/dictionaries';
+import LangSwitcher from './LangSwitcher';
+import type { Dictionary } from '@/lib/dictionaries';
+import type { Lang } from '@/lib/languages';
 
 export default function Nav({ dict, lang }: { dict: Dictionary; lang: Lang }) {
   const [open, setOpen] = useState(false);
-  const otherLangHref = lang === 'fr' ? '/en/' : '/';
 
   return (
     <nav>
@@ -48,9 +48,11 @@ export default function Nav({ dict, lang }: { dict: Dictionary; lang: Lang }) {
           </li>
         </ul>
         <div className="nav-controls">
-          <Link href={otherLangHref} className="lang-toggle" hrefLang={lang === 'fr' ? 'en' : 'fr'}>
-            {dict.nav.langSwitchLabel}
-          </Link>
+          <LangSwitcher
+            current={lang}
+            placeholder={dict.nav.langSearchPlaceholder}
+            noResultsLabel={dict.nav.langSearchNoResults}
+          />
           <ThemeToggle label={dict.nav.themeToggleLabel} />
           <button
             type="button"

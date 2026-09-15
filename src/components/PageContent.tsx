@@ -11,13 +11,15 @@ import Writing from './Writing';
 import Contact from './Contact';
 import Footer from './Footer';
 import { dictionaries, type Lang } from '@/lib/dictionaries';
+import { langMeta } from '@/lib/languages';
 
 export default function PageContent({ lang }: { lang: Lang }) {
   const dict = dictionaries[lang];
 
   useEffect(() => {
     document.documentElement.lang = dict.htmlLang;
-  }, [dict.htmlLang]);
+    document.documentElement.dir = langMeta(lang).dir;
+  }, [dict.htmlLang, lang]);
 
   return (
     <>
