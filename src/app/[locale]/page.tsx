@@ -36,11 +36,13 @@ export async function generateMetadata({
       siteName: 'Clément Longeac',
       locale: dict.htmlLang,
       type: 'profile',
+      images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: dict.meta.title }],
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: dict.meta.title,
       description: dict.meta.description,
+      images: ['/images/og-image.png'],
     },
   };
 }
