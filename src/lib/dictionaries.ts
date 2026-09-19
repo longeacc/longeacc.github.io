@@ -106,7 +106,7 @@ const en: Dictionary = {
   meta: {
     title: 'Clément Longeac — AI Research, Clinical NLP & Biomedical AI',
     description:
-      'Research in clinical NLP and biomedical AI. Engineering student at ESIEE Paris, Data Science & AI track, Tremplin Recherche program. Heading toward a PhD in AI applied to biomedical research.',
+      'Clinical NLP & biomedical AI researcher at ESIEE Paris, building toward a PhD in AI for biomedical research.',
   },
   nav: {
     about: 'About',
@@ -284,9 +284,9 @@ const en: Dictionary = {
 const fr: Dictionary = {
   htmlLang: 'fr',
   meta: {
-    title: 'Clément Longeac — Recherche IA, NLP clinique & IA biomédicale',
+    title: 'Clément Longeac — NLP clinique & IA biomédicale',
     description:
-      'Recherche en NLP clinique et IA biomédicale. Ingénieur ESIEE Paris, spécialisation Data Science & IA, programme Tremplin Recherche. Vers un doctorat en IA appliquée à la recherche biomédicale.',
+      'Recherche en NLP clinique et IA biomédicale à ESIEE Paris, en route vers un doctorat en IA biomédicale.',
   },
   nav: {
     about: 'À propos',
@@ -464,9 +464,9 @@ const fr: Dictionary = {
 const es: Dictionary = {
   htmlLang: 'es',
   meta: {
-    title: 'Clément Longeac — Investigación en IA, PLN clínico e IA biomédica',
+    title: 'Clément Longeac — NLP clínico e IA biomédica',
     description:
-      'Investigación en PLN clínico e IA biomédica. Estudiante de ingeniería en ESIEE Paris, especialización Data Science & IA, programa Tremplin Recherche. Camino hacia un doctorado en IA aplicada a la investigación biomédica.',
+      'Investigación en PLN clínico e IA biomédica en ESIEE Paris, rumbo a un doctorado en IA biomédica.',
   },
   nav: {
     about: 'Sobre mí',
@@ -586,9 +586,9 @@ const es: Dictionary = {
 const de: Dictionary = {
   htmlLang: 'de',
   meta: {
-    title: 'Clément Longeac — KI-Forschung, klinisches NLP & biomedizinische KI',
+    title: 'Clément Longeac — klinisches NLP & biomedizinische KI',
     description:
-      'Forschung im Bereich klinisches NLP und biomedizinische KI. Ingenieurstudent an der ESIEE Paris, Schwerpunkt Data Science & KI, Programm Tremplin Recherche. Auf dem Weg zu einer Promotion in KI angewandt auf biomedizinische Forschung.',
+      'Forschung zu klinischem NLP und biomedizinischer KI an der ESIEE Paris, auf dem Weg zur Promotion.',
   },
   nav: {
     about: 'Über mich',
@@ -708,9 +708,9 @@ const de: Dictionary = {
 const it: Dictionary = {
   htmlLang: 'it',
   meta: {
-    title: 'Clément Longeac — Ricerca IA, NLP clinico e IA biomedica',
+    title: 'Clément Longeac — NLP clinico e IA biomedica',
     description:
-      'Ricerca in NLP clinico e IA biomedica. Studente di ingegneria a ESIEE Paris, specializzazione Data Science & IA, programma Tremplin Recherche. Verso un dottorato in IA applicata alla ricerca biomedica.',
+      'Ricerca in NLP clinico e IA biomedica a ESIEE Paris, verso un dottorato in IA biomedica.',
   },
   nav: {
     about: 'Chi sono',
@@ -830,9 +830,9 @@ const it: Dictionary = {
 const pt: Dictionary = {
   htmlLang: 'pt',
   meta: {
-    title: 'Clément Longeac — Pesquisa em IA, PLN clínico e IA biomédica',
+    title: 'Clément Longeac — PLN clínico e IA biomédica',
     description:
-      'Pesquisa em PLN clínico e IA biomédica. Estudante de engenharia na ESIEE Paris, especialização em Data Science & IA, programa Tremplin Recherche. A caminho de um doutorado em IA aplicada à pesquisa biomédica.',
+      'Pesquisa em PLN clínico e IA biomédica na ESIEE Paris, rumo a um doutorado em IA biomédica.',
   },
   nav: {
     about: 'Sobre mim',
@@ -952,9 +952,9 @@ const pt: Dictionary = {
 const nl: Dictionary = {
   htmlLang: 'nl',
   meta: {
-    title: 'Clément Longeac — AI-onderzoek, klinische NLP & biomedische AI',
+    title: 'Clément Longeac — klinische NLP & biomedische AI',
     description:
-      'Onderzoek in klinische NLP en biomedische AI. Ingenieursstudent aan ESIEE Paris, specialisatie Data Science & AI, Tremplin Recherche-programma. Op weg naar een PhD in AI toegepast op biomedisch onderzoek.',
+      'Onderzoek in klinische NLP en biomedische AI aan ESIEE Paris, op weg naar een PhD.',
   },
   nav: {
     about: 'Over mij',
@@ -1076,7 +1076,7 @@ const zh: Dictionary = {
   meta: {
     title: 'Clément Longeac — 人工智能研究、临床自然语言处理与生物医学人工智能',
     description:
-      '临床自然语言处理与生物医学人工智能研究。巴黎ESIEE工程学院学生，专攻数据科学与人工智能，参加Tremplin Recherche科研项目,目标是攻读应用于生物医学研究的人工智能博士学位。',
+      '临床自然语言处理与生物医学人工智能研究，就读于巴黎ESIEE工程学院，目标是攻读生物医学人工智能博士。',
   },
   nav: {
     about: '关于我',
@@ -1198,7 +1198,7 @@ const ja: Dictionary = {
   meta: {
     title: 'Clément Longeac — AI研究、臨床NLP・生物医学AI',
     description:
-      '臨床NLPと生物医学AIの研究。パリESIEE工科大学の学生、データサイエンス・AI専攻、Tremplin Recherche研究プログラム所属。生物医学研究に応用するAIの博士号取得を目指しています。',
+      '臨床NLPと生物医学AIの研究。パリESIEE工科大学に在籍し、生物医学AIの博士号取得を目指しています。',
   },
   nav: {
     about: 'プロフィール',
@@ -1320,7 +1320,7 @@ const ko: Dictionary = {
   meta: {
     title: 'Clément Longeac — AI 연구, 임상 NLP 및 생물의학 AI',
     description:
-      '임상 NLP 및 생물의학 AI 연구. 파리 ESIEE 공과대학 학생, 데이터 사이언스 & AI 전공, Tremplin Recherche 연구 프로그램 소속. 생물의학 연구에 응용되는 AI 박사 학위를 목표로 하고 있습니다.',
+      '임상 NLP와 생물의학 AI 연구자. 파리 ESIEE 공과대학 재학 중이며 생물의학 AI 박사 학위를 목표로 합니다.',
   },
   nav: {
     about: '소개',
@@ -1440,9 +1440,9 @@ const ko: Dictionary = {
 const ru: Dictionary = {
   htmlLang: 'ru',
   meta: {
-    title: 'Clément Longeac — исследования ИИ, клинический NLP и биомедицинский ИИ',
+    title: 'Clément Longeac — клинический NLP и биомедицинский ИИ',
     description:
-      'Исследования в области клинического NLP и биомедицинского ИИ. Студент-инженер ESIEE Paris, специализация Data Science & AI, программа Tremplin Recherche. На пути к докторской степени в области ИИ, применяемого в биомедицинских исследованиях.',
+      'Исследования в области клинического NLP и биомедицинского ИИ в ESIEE Paris, на пути к докторантуре.',
   },
   nav: {
     about: 'Обо мне',
@@ -1562,9 +1562,9 @@ const ru: Dictionary = {
 const ar: Dictionary = {
   htmlLang: 'ar',
   meta: {
-    title: 'Clément Longeac — أبحاث الذكاء الاصطناعي، معالجة اللغة السريرية والذكاء الاصطناعي الحيوي الطبي',
+    title: 'Clément Longeac — NLP سريري وذكاء اصطناعي طبي',
     description:
-      'أبحاث في معالجة اللغة الطبيعية السريرية والذكاء الاصطناعي الحيوي الطبي. طالب هندسة في ESIEE Paris، تخصص علوم البيانات والذكاء الاصطناعي، برنامج Tremplin Recherche. في طريقي لنيل درجة الدكتوراه في الذكاء الاصطناعي المطبق على البحث الطبي الحيوي.',
+      'أبحاث في معالجة اللغة السريرية والذكاء الاصطناعي الطبي في ESIEE Paris، في طريقي لنيل الدكتوراه.',
   },
   nav: {
     about: 'نبذة عني',
@@ -1684,9 +1684,9 @@ const ar: Dictionary = {
 const hi: Dictionary = {
   htmlLang: 'hi',
   meta: {
-    title: 'Clément Longeac — एआई अनुसंधान, क्लिनिकल एनएलपी और बायोमेडिकल एआई',
+    title: 'Clément Longeac — क्लिनिकल NLP और बायोमेडिकल AI',
     description:
-      'क्लिनिकल एनएलपी और बायोमेडिकल एआई में अनुसंधान। ESIEE Paris में इंजीनियरिंग छात्र, डेटा साइंस एवं एआई विशेषज्ञता, Tremplin Recherche कार्यक्रम। बायोमेडिकल शोध में लागू एआई पर पीएचडी की दिशा में अग्रसर।',
+      'ESIEE Paris में क्लिनिकल NLP और बायोमेडिकल AI पर शोध, पीएचडी की दिशा में अग्रसर।',
   },
   nav: {
     about: 'मेरे बारे में',
@@ -1806,9 +1806,9 @@ const hi: Dictionary = {
 const tr: Dictionary = {
   htmlLang: 'tr',
   meta: {
-    title: 'Clément Longeac — Yapay Zeka Araştırması, Klinik NLP ve Biyomedikal Yapay Zeka',
+    title: 'Clément Longeac — Klinik NLP ve Biyomedikal AI',
     description:
-      'Klinik NLP ve biyomedikal yapay zeka alanında araştırma. ESIEE Paris\'te mühendislik öğrencisi, Veri Bilimi & Yapay Zeka uzmanlığı, Tremplin Recherche programı. Biyomedikal araştırmaya uygulanan yapay zeka alanında doktora hedefliyor.',
+      'ESIEE Paris\'te klinik NLP ve biyomedikal AI araştırması, doktoraya giden yolda.',
   },
   nav: {
     about: 'Hakkımda',
@@ -1930,7 +1930,7 @@ const pl: Dictionary = {
   meta: {
     title: 'Clément Longeac — Badania AI, kliniczne NLP i biomedyczna AI',
     description:
-      'Badania w zakresie klinicznego NLP i biomedycznej AI. Student inżynierii w ESIEE Paris, specjalizacja Data Science & AI, program Tremplin Recherche. W drodze do doktoratu z AI stosowanej w badaniach biomedycznych.',
+      'Badania w klinicznym NLP i biomedycznej AI w ESIEE Paris, w drodze do doktoratu.',
   },
   nav: {
     about: 'O mnie',
@@ -2052,7 +2052,7 @@ const vi: Dictionary = {
   meta: {
     title: 'Clément Longeac — Nghiên cứu AI, NLP lâm sàng và AI y sinh',
     description:
-      'Nghiên cứu về NLP lâm sàng và AI y sinh. Sinh viên kỹ thuật tại ESIEE Paris, chuyên ngành Khoa học Dữ liệu & AI, chương trình Tremplin Recherche. Hướng tới bằng tiến sĩ về AI ứng dụng trong nghiên cứu y sinh.',
+      'Nghiên cứu NLP lâm sàng và AI y sinh tại ESIEE Paris, hướng tới bằng tiến sĩ.',
   },
   nav: {
     about: 'Giới thiệu',
@@ -2174,7 +2174,7 @@ const id: Dictionary = {
   meta: {
     title: 'Clément Longeac — Riset AI, NLP Klinis & AI Biomedis',
     description:
-      'Riset dalam NLP klinis dan AI biomedis. Mahasiswa teknik di ESIEE Paris, spesialisasi Data Science & AI, program Tremplin Recherche. Menuju gelar PhD dalam AI yang diterapkan pada riset biomedis.',
+      'Riset NLP klinis dan AI biomedis di ESIEE Paris, menuju gelar PhD.',
   },
   nav: {
     about: 'Tentang saya',
@@ -2294,9 +2294,9 @@ const id: Dictionary = {
 const sv: Dictionary = {
   htmlLang: 'sv',
   meta: {
-    title: 'Clément Longeac — AI-forskning, klinisk NLP och biomedicinsk AI',
+    title: 'Clément Longeac — klinisk NLP & biomedicinsk AI',
     description:
-      'Forskning inom klinisk NLP och biomedicinsk AI. Ingenjörsstudent vid ESIEE Paris, inriktning Data Science & AI, programmet Tremplin Recherche. På väg mot en doktorsexamen i AI tillämpad på biomedicinsk forskning.',
+      'Forskning i klinisk NLP och biomedicinsk AI vid ESIEE Paris, på väg mot en doktorsexamen.',
   },
   nav: {
     about: 'Om mig',
@@ -2416,9 +2416,9 @@ const sv: Dictionary = {
 const uk: Dictionary = {
   htmlLang: 'uk',
   meta: {
-    title: 'Clément Longeac — дослідження ШІ, клінічний NLP та біомедичний ШІ',
+    title: 'Clément Longeac — клінічний NLP та біомедичний ШІ',
     description:
-      'Дослідження у сфері клінічного NLP та біомедичного ШІ. Студент-інженер ESIEE Paris, спеціалізація Data Science & AI, програма Tremplin Recherche. На шляху до докторського ступеня зі ШІ, застосованого в біомедичних дослідженнях.',
+      'Дослідження клінічного NLP та біомедичного ШІ в ESIEE Paris, на шляху до докторантури.',
   },
   nav: {
     about: 'Про мене',
@@ -2538,9 +2538,9 @@ const uk: Dictionary = {
 const th: Dictionary = {
   htmlLang: 'th',
   meta: {
-    title: 'Clément Longeac — งานวิจัย AI, NLP ทางคลินิก และ AI ชีวการแพทย์',
+    title: 'Clément Longeac — NLP ทางคลินิกและ AI ชีวการแพทย์',
     description:
-      'งานวิจัยด้าน NLP ทางคลินิกและ AI ชีวการแพทย์ นักศึกษาวิศวกรรมที่ ESIEE Paris สาขา Data Science & AI โปรแกรม Tremplin Recherche กำลังมุ่งสู่ปริญญาเอกด้าน AI ที่ประยุกต์ใช้กับงานวิจัยชีวการแพทย์',
+      'งานวิจัยด้าน NLP ทางคลินิกและ AI ชีวการแพทย์ที่ ESIEE Paris มุ่งสู่ปริญญาเอก',
   },
   nav: {
     about: 'เกี่ยวกับฉัน',

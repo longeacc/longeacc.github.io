@@ -154,6 +154,26 @@ async function main() {
             children: 'ESIEE Paris · Tremplin Recherche',
           },
         },
+        // call to action pill, gives the preview something to click toward
+        {
+          type: 'div',
+          props: {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginTop: '36px',
+              padding: '10px 22px',
+              border: `1px solid ${CYAN}`,
+              borderRadius: '3px',
+              color: CYAN,
+              fontFamily: 'Space Grotesk',
+              fontSize: '16px',
+              fontWeight: 600,
+            },
+            children: 'Voir la recherche → clement-longeac.com',
+          },
+        },
       ],
     },
   };
