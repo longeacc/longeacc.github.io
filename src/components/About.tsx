@@ -16,14 +16,19 @@ export default function About({ dict }: { dict: Dictionary }) {
             <p>{about.p3}</p>
             <p className="vision-line">{about.visionLine}</p>
           </div>
-          <dl className="fact-list">
-            {about.facts.map((fact) => (
-              <div className="fact-row" key={fact.dt}>
-                <dt>{fact.dt}</dt>
-                <dd>{fact.dd}</dd>
-              </div>
-            ))}
-          </dl>
+          <div>
+            <div className="profile-photo">
+              <img src="/images/profile.jpg" alt="Clément Longeac" width={400} height={400} />
+            </div>
+            <dl className="fact-list">
+              {about.facts.map((fact) => (
+                <div className="fact-row" key={fact.dt}>
+                  <dt>{fact.dt}</dt>
+                  <dd>{fact.dd}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </div>
     </section>

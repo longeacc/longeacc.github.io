@@ -27,7 +27,8 @@ export type LangMeta = {
   dir: 'ltr' | 'rtl';
 };
 
-export const DEFAULT_LANG: Lang = 'fr';
+/** Language the root "/" redirects visitors to. Every language, including this one, is served at /<code>/. */
+export const REDIRECT_LANG: Lang = 'en';
 
 export const LANGUAGES: LangMeta[] = [
   { code: 'en', nameNative: 'English', nameEn: 'English', dir: 'ltr' },
@@ -63,5 +64,5 @@ export function langMeta(code: Lang): LangMeta {
 }
 
 export function pathForLang(code: Lang): string {
-  return code === DEFAULT_LANG ? '/' : `/${code}/`;
+  return `/${code}/`;
 }

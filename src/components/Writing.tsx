@@ -1,7 +1,12 @@
+import Link from 'next/link';
 import type { Dictionary } from '@/lib/dictionaries';
+import { pathForLang, type Lang } from '@/lib/languages';
+import { slugForPost } from '@/lib/blog';
 
-export default function Writing({ dict }: { dict: Dictionary }) {
+export default function Writing({ dict, lang }: { dict: Dictionary; lang: Lang }) {
   const { writing } = dict;
+  const home = pathForLang(lang);
+
   return (
     <section id="writing">
       <div className="wrap">
@@ -12,12 +17,16 @@ export default function Writing({ dict }: { dict: Dictionary }) {
         </div>
 
         <div className="writing-grid">
-          {writing.posts.map((post) => (
-            <div className="writing-card" key={post.title}>
+          {writing.posts.map((post, i) => (
+            <Link
+              key={post.title}
+              href={`${home}blog/${slugForPost(lang, i)}/`}
+              className="writing-card writing-card-link"
+            >
               <div className="writing-status">{post.status}</div>
               <h3>{post.title}</h3>
               <p>{post.body}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

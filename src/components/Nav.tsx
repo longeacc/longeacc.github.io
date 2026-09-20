@@ -4,10 +4,11 @@ import { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
 import LangSwitcher from './LangSwitcher';
 import type { Dictionary } from '@/lib/dictionaries';
-import type { Lang } from '@/lib/languages';
+import { pathForLang, type Lang } from '@/lib/languages';
 
 export default function Nav({ dict, lang }: { dict: Dictionary; lang: Lang }) {
   const [open, setOpen] = useState(false);
+  const home = pathForLang(lang);
 
   return (
     <nav>
@@ -17,32 +18,32 @@ export default function Nav({ dict, lang }: { dict: Dictionary; lang: Lang }) {
         </div>
         <ul className={open ? 'nav-open' : ''}>
           <li>
-            <a href="#about" onClick={() => setOpen(false)}>
+            <a href={`${home}#about`} onClick={() => setOpen(false)}>
               {dict.nav.about}
             </a>
           </li>
           <li>
-            <a href="#research" onClick={() => setOpen(false)}>
+            <a href={`${home}#research`} onClick={() => setOpen(false)}>
               {dict.nav.research}
             </a>
           </li>
           <li>
-            <a href="#experience" onClick={() => setOpen(false)}>
+            <a href={`${home}#experience`} onClick={() => setOpen(false)}>
               {dict.nav.experience}
             </a>
           </li>
           <li>
-            <a href="#publications" onClick={() => setOpen(false)}>
+            <a href={`${home}#publications`} onClick={() => setOpen(false)}>
               {dict.nav.publications}
             </a>
           </li>
           <li>
-            <a href="#writing" onClick={() => setOpen(false)}>
+            <a href={`${home}#writing`} onClick={() => setOpen(false)}>
               {dict.nav.writing}
             </a>
           </li>
           <li>
-            <a href="#contact" onClick={() => setOpen(false)}>
+            <a href={`${home}#contact`} onClick={() => setOpen(false)}>
               {dict.nav.contact}
             </a>
           </li>

@@ -29,7 +29,7 @@ export default function PageContent({ lang }: { lang: Lang }) {
       <Research dict={dict} />
       <Experience dict={dict} />
       <Publications dict={dict} />
-      <Writing dict={dict} />
+      <Writing dict={dict} lang={lang} />
       <Contact dict={dict} />
       <Footer dict={dict} />
     </>

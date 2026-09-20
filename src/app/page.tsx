@@ -1,40 +1,30 @@
 import type { Metadata } from 'next';
-import PageContent from '@/components/PageContent';
-import { dictionaries } from '@/lib/dictionaries';
-import { LANG_CODES, pathForLang } from '@/lib/languages';
+import { LANG_CODES, REDIRECT_LANG, pathForLang } from '@/lib/languages';
 
-const dict = dictionaries.fr;
-const url = `https://clement-longeac.com${pathForLang('fr')}`;
+const redirectPath = pathForLang(REDIRECT_LANG);
+const redirectUrl = `https://clement-longeac.com${redirectPath}`;
 
-const languages: Record<string, string> = {};
+const languages: Record<string, string> = { 'x-default': redirectUrl };
 LANG_CODES.forEach((code) => {
   languages[code] = `https://clement-longeac.com${pathForLang(code)}`;
 });
 
 export const metadata: Metadata = {
-  title: dict.meta.title,
-  description: dict.meta.description,
+  title: 'Clément Longeac',
+  robots: { index: false, follow: true },
   alternates: {
-    canonical: url,
+    canonical: redirectUrl,
     languages,
-  },
-  openGraph: {
-    title: dict.meta.title,
-    description: dict.meta.description,
-    url,
-    siteName: 'Clément Longeac',
-    locale: 'fr_FR',
-    type: 'profile',
-    images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: dict.meta.title }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: dict.meta.title,
-    description: dict.meta.description,
-    images: ['/images/og-image.png'],
   },
 };
 
-export default function Home() {
-  return <PageContent lang="fr" />;
+export default function RootRedirect() {
+  return (
+    <>
+      <meta httpEquiv="refresh" content={`0; url=${redirectPath}`} />
+      <p style={{ padding: '48px', fontFamily: 'sans-serif' }}>
+        Redirecting to <a href={redirectPath}>clement-longeac.com{redirectPath}</a>…
+      </p>
+    </>
+  );
 }

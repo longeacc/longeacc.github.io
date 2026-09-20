@@ -12,6 +12,16 @@ export default function Research({ dict }: { dict: Dictionary }) {
           <p>{research.subtitle}</p>
         </div>
 
+        <div className="metrics-block metrics-block-top">
+          <div className="section-label">{metrics.label}</div>
+          <h3 className="metrics-title">{metrics.title}</h3>
+          <div className="metrics-row">
+            {metrics.items.map((metric) => (
+              <MetricCounter key={metric.label} {...metric} />
+            ))}
+          </div>
+        </div>
+
         <div className="research-block">
           <div>
             <h3>{research.h3}</h3>
@@ -46,16 +56,6 @@ export default function Research({ dict }: { dict: Dictionary }) {
                   <p>{stage.body}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="metrics-block">
-          <div className="section-label">{metrics.label}</div>
-          <h3 className="metrics-title">{metrics.title}</h3>
-          <div className="metrics-row">
-            {metrics.items.map((metric) => (
-              <MetricCounter key={metric.label} {...metric} />
             ))}
           </div>
         </div>
