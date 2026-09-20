@@ -24,3 +24,13 @@ export function slugForPost(lang: Lang, postIndex: number): string {
 export function postIndexForSlug(lang: Lang, slug: string): number {
   return slugsForLang(lang).indexOf(slug);
 }
+
+/** Topic tags, same across every locale (short technical labels, not translated). */
+const TAGS: string[][] = [
+  ['clinical-nlp', 'french', 'ner'],
+  ['demne', 'architecture'],
+];
+
+export function tagsForPost(postIndex: number): string[] {
+  return TAGS[postIndex] ?? [];
+}

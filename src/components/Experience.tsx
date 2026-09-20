@@ -13,7 +13,10 @@ export default function Experience({ dict }: { dict: Dictionary }) {
         <div className="timeline">
           {experience.items.map((item) => (
             <div className="tl-item" key={item.title}>
-              <div className="tl-date">{item.date}</div>
+              <div className="tl-date">
+                {item.date}
+                {item.current && <span className="tl-badge">{experience.currentLabel}</span>}
+              </div>
               <h3>{item.title}</h3>
               <div className="tl-org">{item.org}</div>
               <p>{item.body}</p>

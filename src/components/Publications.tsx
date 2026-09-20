@@ -12,10 +12,10 @@ export default function Publications({ dict }: { dict: Dictionary }) {
         </div>
 
         <div className="publication-card">
-          <div className="writing-status">{publications.status}</div>
           <h3>{publications.entryTitle}</h3>
-          <div className="publication-meta">
-            {publications.authors} · {publications.journal}
+          <div className="pub-authors">{publications.authors}</div>
+          <div className="pub-venue">
+            {publications.journal} — {publications.status}
           </div>
           <p>{publications.description}</p>
         </div>

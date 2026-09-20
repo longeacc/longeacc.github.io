@@ -3,7 +3,21 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Metric } from '@/lib/dictionaries';
 
-export default function MetricCounter({ value, prefix = '', suffix, decimals = 0, superscript = false, label }: Metric & { label: string }) {
+const COLOR_VAR: Record<NonNullable<Metric['color']>, string> = {
+  cyan: 'var(--cyan)',
+  violet: 'var(--violet)',
+  text: 'var(--text)',
+};
+
+export default function MetricCounter({
+  value,
+  prefix = '',
+  suffix,
+  decimals = 0,
+  superscript = false,
+  color = 'cyan',
+  label,
+}: Metric & { label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [display, setDisplay] = useState(0);
   const started = useRef(false);
@@ -23,7 +37,7 @@ export default function MetricCounter({ value, prefix = '', suffix, decimals = 0
               setDisplay(value);
               return;
             }
-            const duration = 1200;
+            const duration = 1500;
             const start = performance.now();
             const tick = (now: number) => {
               const progress = Math.min((now - start) / duration, 1);
@@ -35,7 +49,7 @@ export default function MetricCounter({ value, prefix = '', suffix, decimals = 0
           }
         });
       },
-      { threshold: 0.4 },
+      { threshold: 0.5 },
     );
 
     observer.observe(node);
@@ -46,7 +60,7 @@ export default function MetricCounter({ value, prefix = '', suffix, decimals = 0
 
   return (
     <div className="metric" ref={ref}>
-      <div className="metric-value">
+      <div className="metric-value" style={{ color: COLOR_VAR[color] }}>
         {prefix}
         {superscript ? <sup>{formatted}</sup> : formatted}
         {suffix}

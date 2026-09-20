@@ -4,8 +4,16 @@ export type { Lang };
 
 export type PipelineStage = { num: string; title: string; body: string };
 export type AiActArticle = { code: string; label: string; desc: string };
-export type Metric = { value: number; prefix?: string; suffix: string; decimals?: number; superscript?: boolean; label: string };
-export type TimelineItem = { date: string; title: string; org: string; body: string };
+export type Metric = {
+  value: number;
+  prefix?: string;
+  suffix: string;
+  decimals?: number;
+  superscript?: boolean;
+  color?: 'cyan' | 'violet' | 'text';
+  label: string;
+};
+export type TimelineItem = { date: string; title: string; org: string; body: string; current?: boolean };
 export type WritingPost = { status: string; title: string; body: string };
 
 export type Dictionary = {
@@ -71,6 +79,7 @@ export type Dictionary = {
   experience: {
     label: string;
     title: string;
+    currentLabel: string;
     items: TimelineItem[];
   };
   publications: {
@@ -200,23 +209,24 @@ const en: Dictionary = {
     label: 'Results',
     title: 'What the staged approach buys',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Exact ternary concordance across 65 entities, 3 multi-institutional corpora' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Energy cost reduction vs. a full-LLM baseline, from a 12,636-configuration grid search' },
-      { value: 11, suffix: 'M', label: "Patient records in AP-HP's Entrepôt de Données de Santé the pipeline runs against" },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Mean F1 — external validation' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-free extraction' },
+      { value: 300, suffix: '', color: 'text', label: 'AP-HP clinical notes validated' },
     ],
   },
   experience: {
     label: '03 — Experience',
     title: 'Where the work has happened so far',
+    currentLabel: 'Ongoing',
     items: [
       {
-        date: '2025 — Present',
+        current: true, date: '2025 — Present',
         title: 'Research Assistant, Tremplin Recherche',
         org: 'ESIEE Paris',
         body: 'Developing DEMNE, a hybrid clinical NER pipeline for French oncology text, as the core project of the Tremplin Recherche track ahead of PhD applications.',
       },
       {
-        date: '2026 — Present',
+        current: true, date: '2026 — Present',
         title: 'Founder & Product Lead, NeuroStep',
         org: 'Junior Entreprise ESIEE Paris',
         body: 'Building a platform that gives brain-injury patients and occupational therapists a structured way to compare cognitive-compensation tools. Started as a Python/Streamlit prototype at the SN@SU hackathon (Sorbonne Université, with Flor Sanchez-Luizard, occupational therapist at UEROS L\'ADAPT Île-de-France); now scoping a production rebuild (FastAPI, PostgreSQL, Next.js) with HDS/RGPD-compliant hosting and a semantic search engine for clinical tool matching.',
@@ -380,23 +390,24 @@ const fr: Dictionary = {
     label: 'Résultats',
     title: "Ce qu'apporte l'approche en étages",
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Concordance ternaire exacte sur 65 entités, 3 corpus multi-institutionnels' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: "Réduction du coût énergétique vs une base LLM complète, sur une recherche en grille de 12 636 configurations" },
-      { value: 11, suffix: 'M', label: "Dossiers patients de l'Entrepôt de Données de Santé de l'AP-HP sur lesquels tourne le pipeline" },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 moyen — validation externe' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Extraction sans GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Notes cliniques AP-HP validées' },
     ],
   },
   experience: {
     label: '03 — Expérience',
     title: "Où le travail s'est déroulé jusqu'ici",
+    currentLabel: 'En cours',
     items: [
       {
-        date: '2025 — Présent',
+        current: true, date: '2025 — Présent',
         title: 'Assistant de recherche, Tremplin Recherche',
         org: 'ESIEE Paris',
         body: "Développement de DEMNE, un pipeline hybride de NER clinique pour le texte d'oncologie français, projet central du parcours Tremplin Recherche en vue des candidatures de thèse.",
       },
       {
-        date: '2026 — Présent',
+        current: true, date: '2026 — Présent',
         title: 'Fondateur & Product Lead, NeuroStep',
         org: 'Junior Entreprise ESIEE Paris',
         body: "Construction d'une plateforme donnant aux patients cérébrolésés et à leurs ergothérapeutes un moyen structuré de comparer les outils numériques de compensation cognitive. Né en prototype Python/Streamlit au hackathon SN@SU (Sorbonne Université, avec Flor Sanchez-Luizard, ergothérapeute à l'UEROS L'ADAPT Île-de-France) ; en cadrage vers une refonte de production (FastAPI, PostgreSQL, Next.js) avec hébergement conforme HDS/RGPD et moteur de recherche sémantique pour l'appariement clinique.",
@@ -536,17 +547,18 @@ const es: Dictionary = {
     label: 'Resultados',
     title: 'Lo que aporta el enfoque por etapas',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Concordancia ternaria exacta en 65 entidades, 3 corpus multi-institucionales' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Reducción del coste energético frente a una base LLM completa, en una búsqueda en cuadrícula de 12.636 configuraciones' },
-      { value: 11, suffix: 'M', label: 'Historiales de pacientes del Entrepôt de Données de Santé del AP-HP sobre los que corre el pipeline' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 medio — validación externa' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Extracción sin GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Notas clínicas de AP-HP validadas' },
     ],
   },
   experience: {
     label: '03 — Experiencia',
     title: 'Dónde ha ocurrido el trabajo hasta ahora',
+    currentLabel: 'En curso',
     items: [
-      { date: '2025 — Presente', title: 'Asistente de investigación, Tremplin Recherche', org: 'ESIEE Paris', body: 'Desarrollo de DEMNE, un pipeline híbrido de NER clínico para texto de oncología francés, como proyecto central del itinerario Tremplin Recherche de cara a las solicitudes de doctorado.' },
-      { date: '2026 — Presente', title: 'Fundador y Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construcción de una plataforma que da a pacientes con daño cerebral y a sus terapeutas ocupacionales una forma estructurada de comparar herramientas digitales de compensación cognitiva. Nacido como prototipo Python/Streamlit en el hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapeuta ocupacional en UEROS L\'ADAPT Île-de-France); actualmente en fase de definición de una reconstrucción de producción (FastAPI, PostgreSQL, Next.js) con alojamiento conforme a HDS/RGPD y un motor de búsqueda semántica para el emparejamiento clínico.' },
+      { current: true, date: '2025 — Presente', title: 'Asistente de investigación, Tremplin Recherche', org: 'ESIEE Paris', body: 'Desarrollo de DEMNE, un pipeline híbrido de NER clínico para texto de oncología francés, como proyecto central del itinerario Tremplin Recherche de cara a las solicitudes de doctorado.' },
+      { current: true, date: '2026 — Presente', title: 'Fundador y Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construcción de una plataforma que da a pacientes con daño cerebral y a sus terapeutas ocupacionales una forma estructurada de comparar herramientas digitales de compensación cognitiva. Nacido como prototipo Python/Streamlit en el hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapeuta ocupacional en UEROS L\'ADAPT Île-de-France); actualmente en fase de definición de una reconstrucción de producción (FastAPI, PostgreSQL, Next.js) con alojamiento conforme a HDS/RGPD y un motor de búsqueda semántica para el emparejamiento clínico.' },
       { date: '2024 — 2027', title: 'Estudiante de ingeniería — Data Science & IA', org: 'ESIEE Paris', body: 'Estudiante de cuarto año del programa de ingeniería de cinco años de ESIEE Paris, especialización Data Science & IA (DSIA).' },
       { date: '2025', title: 'Becario de ingeniería, división GRADES', org: 'Synchrotron SOLEIL', body: 'Desarrollo de autopkgtests en OpenCL para la compatibilidad de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) en la infraestructura Debian/ROCm vía GitLab Salsa.' },
       { date: '2022 — Presente', title: 'Tutor de ciencias', org: 'Complétude', body: 'Clases de matemáticas, física e informática a estudiantes de secundaria y universidad junto a mis estudios de ingeniería.' },
@@ -658,17 +670,18 @@ const de: Dictionary = {
     label: 'Ergebnisse',
     title: 'Was der gestufte Ansatz bringt',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Exakte ternäre Übereinstimmung über 65 Entitäten, 3 multi-institutionelle Korpora' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Reduktion der Energiekosten gegenüber einer vollständigen LLM-Baseline, aus einer Grid-Search mit 12.636 Konfigurationen' },
-      { value: 11, suffix: 'M', label: 'Patientenakten im Entrepôt de Données de Santé der AP-HP, gegen die die Pipeline läuft' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Mittlerer F1 — externe Validierung' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-freie Extraktion' },
+      { value: 300, suffix: '', color: 'text', label: 'Validierte AP-HP-Klinikberichte' },
     ],
   },
   experience: {
     label: '03 — Erfahrung',
     title: 'Wo die Arbeit bisher stattgefunden hat',
+    currentLabel: 'Laufend',
     items: [
-      { date: '2025 — Heute', title: 'Forschungsassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Entwicklung von DEMNE, einer hybriden klinischen NER-Pipeline für französischen Onkologie-Text, als Kernprojekt des Tremplin-Recherche-Programms vor den Promotionsbewerbungen.' },
-      { date: '2026 — Heute', title: 'Gründer & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Aufbau einer Plattform, die hirnverletzten Patienten und ihren Ergotherapeuten eine strukturierte Möglichkeit gibt, digitale Werkzeuge zur kognitiven Kompensation zu vergleichen. Entstanden als Python/Streamlit-Prototyp beim SN@SU-Hackathon (Sorbonne-Universität, mit Flor Sanchez-Luizard, Ergotherapeutin bei UEROS L\'ADAPT Île-de-France); derzeit in der Planungsphase für einen Produktions-Relaunch (FastAPI, PostgreSQL, Next.js) mit HDS/RGPD-konformem Hosting und einer semantischen Suchmaschine für klinisches Matching.' },
+      { current: true, date: '2025 — Heute', title: 'Forschungsassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Entwicklung von DEMNE, einer hybriden klinischen NER-Pipeline für französischen Onkologie-Text, als Kernprojekt des Tremplin-Recherche-Programms vor den Promotionsbewerbungen.' },
+      { current: true, date: '2026 — Heute', title: 'Gründer & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Aufbau einer Plattform, die hirnverletzten Patienten und ihren Ergotherapeuten eine strukturierte Möglichkeit gibt, digitale Werkzeuge zur kognitiven Kompensation zu vergleichen. Entstanden als Python/Streamlit-Prototyp beim SN@SU-Hackathon (Sorbonne-Universität, mit Flor Sanchez-Luizard, Ergotherapeutin bei UEROS L\'ADAPT Île-de-France); derzeit in der Planungsphase für einen Produktions-Relaunch (FastAPI, PostgreSQL, Next.js) mit HDS/RGPD-konformem Hosting und einer semantischen Suchmaschine für klinisches Matching.' },
       { date: '2024 — 2027', title: 'Ingenieurstudent — Data Science & KI', org: 'ESIEE Paris', body: 'Student im vierten Jahr des fünfjährigen Ingenieurstudiengangs der ESIEE Paris, Schwerpunkt Data Science & KI (DSIA).' },
       { date: '2025', title: 'Ingenieurpraktikant, GRADES-Abteilung', org: 'Synchrotron SOLEIL', body: 'Entwicklung von Autopkgtests in OpenCL für AMD-GPU-Kompatibilität (pyopencl, nabu, ufo-filters, pyvkfft) auf Debian/ROCm-Infrastruktur über GitLab Salsa.' },
       { date: '2022 — Heute', title: 'MINT-Nachhilfelehrer', org: 'Complétude', body: 'Unterricht in Mathematik, Physik und Informatik für Sekundarschüler und Studierende, parallel zu meinem Ingenieurstudium.' },
@@ -780,17 +793,18 @@ const it: Dictionary = {
     label: 'Risultati',
     title: 'Cosa porta l\'approccio a stadi',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Concordanza ternaria esatta su 65 entità, 3 corpus multi-istituzionali' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Riduzione del costo energetico rispetto a una baseline LLM completa, da una grid search di 12.636 configurazioni' },
-      { value: 11, suffix: 'M', label: 'Fascicoli di pazienti dell\'Entrepôt de Données de Santé dell\'AP-HP su cui gira la pipeline' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 medio — validazione esterna' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Estrazione senza GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Note cliniche AP-HP validate' },
     ],
   },
   experience: {
     label: '03 — Esperienza',
     title: 'Dove si è svolto il lavoro finora',
+    currentLabel: 'In corso',
     items: [
-      { date: '2025 — Presente', title: 'Assistente di ricerca, Tremplin Recherche', org: 'ESIEE Paris', body: 'Sviluppo di DEMNE, una pipeline ibrida di NER clinico per testo di oncologia francese, come progetto centrale del percorso Tremplin Recherche in vista delle candidature al dottorato.' },
-      { date: '2026 — Presente', title: 'Fondatore e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Costruzione di una piattaforma che offre a pazienti con lesioni cerebrali e ai loro terapisti occupazionali un modo strutturato per confrontare strumenti digitali di compensazione cognitiva. Nato come prototipo Python/Streamlit all\'hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapista occupazionale presso UEROS L\'ADAPT Île-de-France); ora in fase di definizione per una riprogettazione in produzione (FastAPI, PostgreSQL, Next.js) con hosting conforme a HDS/RGPD e un motore di ricerca semantica per l\'abbinamento clinico.' },
+      { current: true, date: '2025 — Presente', title: 'Assistente di ricerca, Tremplin Recherche', org: 'ESIEE Paris', body: 'Sviluppo di DEMNE, una pipeline ibrida di NER clinico per testo di oncologia francese, come progetto centrale del percorso Tremplin Recherche in vista delle candidature al dottorato.' },
+      { current: true, date: '2026 — Presente', title: 'Fondatore e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Costruzione di una piattaforma che offre a pazienti con lesioni cerebrali e ai loro terapisti occupazionali un modo strutturato per confrontare strumenti digitali di compensazione cognitiva. Nato come prototipo Python/Streamlit all\'hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapista occupazionale presso UEROS L\'ADAPT Île-de-France); ora in fase di definizione per una riprogettazione in produzione (FastAPI, PostgreSQL, Next.js) con hosting conforme a HDS/RGPD e un motore di ricerca semantica per l\'abbinamento clinico.' },
       { date: '2024 — 2027', title: 'Studente di ingegneria — Data Science & IA', org: 'ESIEE Paris', body: 'Studente del quarto anno del percorso di ingegneria quinquennale di ESIEE Paris, specializzazione Data Science & IA (DSIA).' },
       { date: '2025', title: 'Stagista ingegnere, divisione GRADES', org: 'Synchrotron SOLEIL', body: 'Sviluppo di autopkgtest in OpenCL per la compatibilità GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sull\'infrastruttura Debian/ROCm via GitLab Salsa.' },
       { date: '2022 — Presente', title: 'Tutor STEM', org: 'Complétude', body: 'Insegnamento di matematica, fisica e informatica a studenti delle superiori e universitari, in parallelo ai miei studi di ingegneria.' },
@@ -902,17 +916,18 @@ const pt: Dictionary = {
     label: 'Resultados',
     title: 'O que a abordagem em estágios traz',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Concordância ternária exata em 65 entidades, 3 corpus multi-institucionais' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Redução do custo energético em relação a uma baseline LLM completa, a partir de uma busca em grade com 12.636 configurações' },
-      { value: 11, suffix: 'M', label: 'Prontuários de pacientes do Entrepôt de Données de Santé do AP-HP sobre os quais o pipeline roda' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 médio — validação externa' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Extração sem GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Notas clínicas da AP-HP validadas' },
     ],
   },
   experience: {
     label: '03 — Experiência',
     title: 'Onde o trabalho aconteceu até agora',
+    currentLabel: 'Em andamento',
     items: [
-      { date: '2025 — Atualmente', title: 'Assistente de pesquisa, Tremplin Recherche', org: 'ESIEE Paris', body: 'Desenvolvimento do DEMNE, um pipeline híbrido de NER clínico para texto de oncologia francês, como projeto central da trilha Tremplin Recherche antes das candidaturas de doutorado.' },
-      { date: '2026 — Atualmente', title: 'Fundador e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construção de uma plataforma que dá a pacientes com lesão cerebral e a seus terapeutas ocupacionais uma forma estruturada de comparar ferramentas digitais de compensação cognitiva. Nasceu como protótipo Python/Streamlit no hackathon SN@SU (Sorbonne, com Flor Sanchez-Luizard, terapeuta ocupacional na UEROS L\'ADAPT Île-de-France); atualmente em fase de definição de uma reconstrução de produção (FastAPI, PostgreSQL, Next.js) com hospedagem compatível com HDS/RGPD e um motor de busca semântica para correspondência clínica.' },
+      { current: true, date: '2025 — Atualmente', title: 'Assistente de pesquisa, Tremplin Recherche', org: 'ESIEE Paris', body: 'Desenvolvimento do DEMNE, um pipeline híbrido de NER clínico para texto de oncologia francês, como projeto central da trilha Tremplin Recherche antes das candidaturas de doutorado.' },
+      { current: true, date: '2026 — Atualmente', title: 'Fundador e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construção de uma plataforma que dá a pacientes com lesão cerebral e a seus terapeutas ocupacionais uma forma estruturada de comparar ferramentas digitais de compensação cognitiva. Nasceu como protótipo Python/Streamlit no hackathon SN@SU (Sorbonne, com Flor Sanchez-Luizard, terapeuta ocupacional na UEROS L\'ADAPT Île-de-France); atualmente em fase de definição de uma reconstrução de produção (FastAPI, PostgreSQL, Next.js) com hospedagem compatível com HDS/RGPD e um motor de busca semântica para correspondência clínica.' },
       { date: '2024 — 2027', title: 'Estudante de engenharia — Data Science & IA', org: 'ESIEE Paris', body: 'Estudante do quarto ano do programa de engenharia de cinco anos da ESIEE Paris, especialização em Data Science & IA (DSIA).' },
       { date: '2025', title: 'Estagiário de engenharia, divisão GRADES', org: 'Synchrotron SOLEIL', body: 'Desenvolvimento de autopkgtests em OpenCL para compatibilidade de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infraestrutura Debian/ROCm via GitLab Salsa.' },
       { date: '2022 — Atualmente', title: 'Tutor de ciências exatas', org: 'Complétude', body: 'Aulas de matemática, física e computação para alunos do ensino médio e universitário, paralelamente aos meus estudos de engenharia.' },
@@ -1024,17 +1039,18 @@ const nl: Dictionary = {
     label: 'Resultaten',
     title: 'Wat de gefaseerde aanpak oplevert',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Exacte ternaire overeenstemming over 65 entiteiten, 3 multi-institutionele corpora' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Energiekostenreductie ten opzichte van een volledige LLM-baseline, uit een grid search met 12.636 configuraties' },
-      { value: 11, suffix: 'M', label: 'Patiëntendossiers in het Entrepôt de Données de Santé van AP-HP waarop de pipeline draait' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Gemiddelde F1 — externe validatie' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-vrije extractie' },
+      { value: 300, suffix: '', color: 'text', label: 'Gevalideerde AP-HP klinische notities' },
     ],
   },
   experience: {
     label: '03 — Ervaring',
     title: 'Waar het werk tot nu toe heeft plaatsgevonden',
+    currentLabel: 'Lopend',
     items: [
-      { date: '2025 — Heden', title: 'Onderzoeksassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Ontwikkeling van DEMNE, een hybride klinische NER-pipeline voor Franse oncologietekst, als kernproject van het Tremplin Recherche-traject voorafgaand aan doctoraatssollicitaties.' },
-      { date: '2026 — Heden', title: 'Oprichter & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bouw van een platform dat hersenletselpatiënten en hun ergotherapeuten een gestructureerde manier geeft om digitale hulpmiddelen voor cognitieve compensatie te vergelijken. Ontstaan als Python/Streamlit-prototype tijdens de SN@SU-hackathon (Sorbonne-universiteit, met Flor Sanchez-Luizard, ergotherapeut bij UEROS L\'ADAPT Île-de-France); momenteel in de planningsfase voor een productieherbouw (FastAPI, PostgreSQL, Next.js) met HDS/RGPD-conforme hosting en een semantische zoekmachine voor klinische matching.' },
+      { current: true, date: '2025 — Heden', title: 'Onderzoeksassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Ontwikkeling van DEMNE, een hybride klinische NER-pipeline voor Franse oncologietekst, als kernproject van het Tremplin Recherche-traject voorafgaand aan doctoraatssollicitaties.' },
+      { current: true, date: '2026 — Heden', title: 'Oprichter & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bouw van een platform dat hersenletselpatiënten en hun ergotherapeuten een gestructureerde manier geeft om digitale hulpmiddelen voor cognitieve compensatie te vergelijken. Ontstaan als Python/Streamlit-prototype tijdens de SN@SU-hackathon (Sorbonne-universiteit, met Flor Sanchez-Luizard, ergotherapeut bij UEROS L\'ADAPT Île-de-France); momenteel in de planningsfase voor een productieherbouw (FastAPI, PostgreSQL, Next.js) met HDS/RGPD-conforme hosting en een semantische zoekmachine voor klinische matching.' },
       { date: '2024 — 2027', title: 'Ingenieursstudent — Data Science & AI', org: 'ESIEE Paris', body: 'Vierdejaars student in het vijfjarige ingenieursprogramma van ESIEE Paris, specialisatie Data Science & AI (DSIA).' },
       { date: '2025', title: 'Ingenieursstagiair, afdeling GRADES', org: 'Synchrotron SOLEIL', body: 'Ontwikkeling van autopkgtests in OpenCL voor AMD-GPU-compatibiliteit (pyopencl, nabu, ufo-filters, pyvkfft) op Debian/ROCm-infrastructuur via GitLab Salsa.' },
       { date: '2022 — Heden', title: 'Bijlesdocent bèta-vakken', org: 'Complétude', body: 'Bijles wiskunde, natuurkunde en informatica aan middelbare scholieren en studenten, naast mijn ingenieursstudie.' },
@@ -1146,17 +1162,18 @@ const zh: Dictionary = {
     label: '成果',
     title: '分阶段方法带来的价值',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: '在65个实体、3个多机构语料库上的精确三分类一致率' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: '相较于完整LLM基线的能耗降低倍数，来自12,636种配置的网格搜索' },
-      { value: 11, suffix: 'M', label: '流水线运行所依托的巴黎公立医院集团(AP-HP)健康数据仓库中的患者病历数' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: '平均F1值——外部验证' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: '无需GPU的抽取' },
+      { value: 300, suffix: '', color: 'text', label: '已验证的AP-HP临床记录' },
     ],
   },
   experience: {
     label: '03 — 经历',
     title: '迄今为止的工作历程',
+    currentLabel: '进行中',
     items: [
-      { date: '2025年 — 至今', title: '研究助理，Tremplin Recherche', org: 'ESIEE Paris', body: '开发DEMNE，一个面向法语肿瘤学文本的混合临床命名实体识别流水线，作为Tremplin Recherche项目的核心课题，为博士申请做准备。' },
-      { date: '2026年 — 至今', title: '创始人兼产品负责人，NeuroStep', org: 'ESIEE Paris学生创业公司', body: '构建一个平台，让脑损伤患者及其职业治疗师能够以结构化方式比较认知补偿数字工具。项目起源于索邦大学SN@SU黑客松上的Python/Streamlit原型（与UEROS L\'ADAPT法兰西岛的职业治疗师Flor Sanchez-Luizard合作）；目前正规划以FastAPI、PostgreSQL和Next.js重构为生产版本，采用符合HDS/RGPD标准的托管方案,并配备用于临床工具匹配的语义搜索引擎。' },
+      { current: true, date: '2025年 — 至今', title: '研究助理，Tremplin Recherche', org: 'ESIEE Paris', body: '开发DEMNE，一个面向法语肿瘤学文本的混合临床命名实体识别流水线，作为Tremplin Recherche项目的核心课题，为博士申请做准备。' },
+      { current: true, date: '2026年 — 至今', title: '创始人兼产品负责人，NeuroStep', org: 'ESIEE Paris学生创业公司', body: '构建一个平台，让脑损伤患者及其职业治疗师能够以结构化方式比较认知补偿数字工具。项目起源于索邦大学SN@SU黑客松上的Python/Streamlit原型（与UEROS L\'ADAPT法兰西岛的职业治疗师Flor Sanchez-Luizard合作）；目前正规划以FastAPI、PostgreSQL和Next.js重构为生产版本，采用符合HDS/RGPD标准的托管方案,并配备用于临床工具匹配的语义搜索引擎。' },
       { date: '2024年 — 2027年', title: '工程学学生 — 数据科学与人工智能', org: 'ESIEE Paris', body: '巴黎ESIEE工程学院五年制工程学项目四年级学生，专攻数据科学与人工智能（DSIA）。' },
       { date: '2025年', title: '工程实习生，GRADES部门', org: 'Synchrotron SOLEIL（法国索莱伊同步辐射光源）', body: '使用OpenCL开发autopkgtest测试脚本，用于AMD GPU兼容性测试（pyopencl、nabu、ufo-filters、pyvkfft），并通过GitLab Salsa在Debian/ROCm基础设施上运行。' },
       { date: '2022年 — 至今', title: '理科家教', org: 'Complétude', body: '在攻读工程学学位的同时，为中学生和大学生教授数学、物理和计算机课程。' },
@@ -1268,17 +1285,18 @@ const ja: Dictionary = {
     label: '成果',
     title: '段階的アプローチがもたらすもの',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: '65実体・3つの多機関コーパスにわたる正確な三値一致率' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: '12,636通りの構成によるグリッドサーチから得た、フルLLMベースラインに対するエネルギーコスト削減倍率' },
-      { value: 11, suffix: 'M', label: 'パイプラインが処理対象とするAP-HP（パリ公立病院機構）健康データ基盤の患者記録数' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: '平均F1値 — 外部検証' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU不要の抽出' },
+      { value: 300, suffix: '', color: 'text', label: '検証済みAP-HP臨床記録' },
     ],
   },
   experience: {
     label: '03 — 経歴',
     title: 'これまでの活動の場',
+    currentLabel: '進行中',
     items: [
-      { date: '2025年 — 現在', title: '研究アシスタント、Tremplin Recherche', org: 'ESIEE Paris', body: 'フランス語腫瘍学テキスト向けのハイブリッド臨床NERパイプラインであるDEMNEを、博士課程出願を見据えたTremplin Rechercheコースの中核プロジェクトとして開発。' },
-      { date: '2026年 — 現在', title: '創業者兼プロダクトリード、NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '脳損傷患者とその作業療法士が認知補償デジタルツールを比較検討できる構造化された手段を提供するプラットフォームを構築中。ソルボンヌ大学のSN@SUハッカソン（UEROS L\'ADAPT イル＝ド＝フランスの作業療法士Flor Sanchez-Luizard氏との共同）でPython/Streamlit製プロトタイプとして誕生し、現在はHDS/RGPD準拠のホスティングと臨床マッチング用のセマンティック検索エンジンを備えた本番版（FastAPI、PostgreSQL、Next.js）への再構築を計画中。' },
+      { current: true, date: '2025年 — 現在', title: '研究アシスタント、Tremplin Recherche', org: 'ESIEE Paris', body: 'フランス語腫瘍学テキスト向けのハイブリッド臨床NERパイプラインであるDEMNEを、博士課程出願を見据えたTremplin Rechercheコースの中核プロジェクトとして開発。' },
+      { current: true, date: '2026年 — 現在', title: '創業者兼プロダクトリード、NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '脳損傷患者とその作業療法士が認知補償デジタルツールを比較検討できる構造化された手段を提供するプラットフォームを構築中。ソルボンヌ大学のSN@SUハッカソン（UEROS L\'ADAPT イル＝ド＝フランスの作業療法士Flor Sanchez-Luizard氏との共同）でPython/Streamlit製プロトタイプとして誕生し、現在はHDS/RGPD準拠のホスティングと臨床マッチング用のセマンティック検索エンジンを備えた本番版（FastAPI、PostgreSQL、Next.js）への再構築を計画中。' },
       { date: '2024年 — 2027年', title: '工学部学生 — データサイエンス・AI', org: 'ESIEE Paris', body: 'パリESIEE工科大学の5年制工学プログラム4年生、データサイエンス・AI（DSIA）専攻。' },
       { date: '2025年', title: 'エンジニアインターン、GRADES部門', org: 'Synchrotron SOLEIL（シンクロトロン・ソレイユ）', body: 'GitLab Salsa経由のDebian/ROCm基盤上で、AMD GPU互換性検証のためOpenCLを用いたautopkgtestスクリプト（pyopencl、nabu、ufo-filters、pyvkfft）を開発。' },
       { date: '2022年 — 現在', title: '理系家庭教師', org: 'Complétude', body: '工学の学業と並行して、中高生・大学生に数学・物理・情報科学を指導。' },
@@ -1390,17 +1408,18 @@ const ko: Dictionary = {
     label: '결과',
     title: '단계별 접근 방식이 가져오는 것',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: '65개 개체, 3개 다기관 코퍼스에 걸친 정확한 3진 일치율' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: '12,636개 구성에 대한 그리드 서치를 통해 확인한, 완전한 LLM 기준선 대비 에너지 비용 절감 배수' },
-      { value: 11, suffix: 'M', label: '파이프라인이 처리 대상으로 하는 AP-HP(파리 공립병원그룹) 보건 데이터 저장소 내 환자 기록 수' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: '평균 F1 — 외부 검증' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU 없는 추출' },
+      { value: 300, suffix: '', color: 'text', label: '검증된 AP-HP 임상 기록' },
     ],
   },
   experience: {
     label: '03 — 경력',
     title: '지금까지의 활동 이력',
+    currentLabel: '진행 중',
     items: [
-      { date: '2025년 — 현재', title: '연구 조교, Tremplin Recherche', org: 'ESIEE Paris', body: '박사과정 지원을 앞두고 Tremplin Recherche 트랙의 핵심 프로젝트로서, 프랑스어 종양학 텍스트를 위한 하이브리드 임상 NER 파이프라인인 DEMNE를 개발.' },
-      { date: '2026년 — 현재', title: '창립자 & 프로덕트 리드, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '뇌손상 환자와 이들을 돕는 작업치료사가 인지 보상 디지털 도구를 구조적으로 비교할 수 있는 플랫폼을 구축 중. 소르본 대학교 SN@SU 해커톤에서 (UEROS L\'ADAPT 일드프랑스 소속 작업치료사 Flor Sanchez-Luizard와 함께) Python/Streamlit 프로토타입으로 시작했으며, 현재 HDS/RGPD 준수 호스팅과 임상 도구 매칭을 위한 시맨틱 검색 엔진을 갖춘 프로덕션 버전(FastAPI, PostgreSQL, Next.js)으로의 재구축을 기획 중.' },
+      { current: true, date: '2025년 — 현재', title: '연구 조교, Tremplin Recherche', org: 'ESIEE Paris', body: '박사과정 지원을 앞두고 Tremplin Recherche 트랙의 핵심 프로젝트로서, 프랑스어 종양학 텍스트를 위한 하이브리드 임상 NER 파이프라인인 DEMNE를 개발.' },
+      { current: true, date: '2026년 — 현재', title: '창립자 & 프로덕트 리드, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '뇌손상 환자와 이들을 돕는 작업치료사가 인지 보상 디지털 도구를 구조적으로 비교할 수 있는 플랫폼을 구축 중. 소르본 대학교 SN@SU 해커톤에서 (UEROS L\'ADAPT 일드프랑스 소속 작업치료사 Flor Sanchez-Luizard와 함께) Python/Streamlit 프로토타입으로 시작했으며, 현재 HDS/RGPD 준수 호스팅과 임상 도구 매칭을 위한 시맨틱 검색 엔진을 갖춘 프로덕션 버전(FastAPI, PostgreSQL, Next.js)으로의 재구축을 기획 중.' },
       { date: '2024년 — 2027년', title: '공학도 — 데이터 사이언스 & AI', org: 'ESIEE Paris', body: '파리 ESIEE 공과대학 5년제 공학 프로그램 4학년, 데이터 사이언스 & AI(DSIA) 전공.' },
       { date: '2025년', title: '엔지니어링 인턴, GRADES 부서', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa를 통한 Debian/ROCm 인프라에서 AMD GPU 호환성을 위한 OpenCL 기반 autopkgtest 스크립트(pyopencl, nabu, ufo-filters, pyvkfft) 개발.' },
       { date: '2022년 — 현재', title: '이공계 과외 교사', org: 'Complétude', body: '공학 학업과 병행하여 중고등학생 및 대학생에게 수학, 물리, 컴퓨터과학을 지도.' },
@@ -1512,17 +1531,18 @@ const ru: Dictionary = {
     label: 'Результаты',
     title: 'Что даёт поэтапный подход',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Точное тройное совпадение по 65 сущностям, 3 мультиучрежденческим корпусам' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Снижение энергозатрат по сравнению с полной базовой моделью LLM, по результатам решётчатого поиска из 12 636 конфигураций' },
-      { value: 11, suffix: 'M', label: 'Записи пациентов в хранилище медицинских данных AP-HP, на которых работает конвейер' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Средний F1 — внешняя валидация' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Извлечение без GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Проверенные клинические записи AP-HP' },
     ],
   },
   experience: {
     label: '03 — Опыт',
     title: 'Где проходила работа до сих пор',
+    currentLabel: 'Текущий',
     items: [
-      { date: '2025 — настоящее время', title: 'Научный ассистент, Tremplin Recherche', org: 'ESIEE Paris', body: 'Разработка DEMNE, гибридного конвейера клинического NER для французского онкологического текста, в качестве основного проекта программы Tremplin Recherche перед подачей заявок в докторантуру.' },
-      { date: '2026 — настоящее время', title: 'Основатель и Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Разработка платформы, которая даёт пациентам с черепно-мозговыми травмами и их эрготерапевтам структурированный способ сравнивать цифровые инструменты когнитивной компенсации. Проект начался как прототип на Python/Streamlit на хакатоне SN@SU (Сорбоннский университет, совместно с Flor Sanchez-Luizard, эрготерапевтом из UEROS L\'ADAPT Иль-де-Франс); сейчас на стадии планирования продакшн-версии (FastAPI, PostgreSQL, Next.js) с хостингом, соответствующим HDS/RGPD, и семантическим поисковым движком для клинического сопоставления.' },
+      { current: true, date: '2025 — настоящее время', title: 'Научный ассистент, Tremplin Recherche', org: 'ESIEE Paris', body: 'Разработка DEMNE, гибридного конвейера клинического NER для французского онкологического текста, в качестве основного проекта программы Tremplin Recherche перед подачей заявок в докторантуру.' },
+      { current: true, date: '2026 — настоящее время', title: 'Основатель и Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Разработка платформы, которая даёт пациентам с черепно-мозговыми травмами и их эрготерапевтам структурированный способ сравнивать цифровые инструменты когнитивной компенсации. Проект начался как прототип на Python/Streamlit на хакатоне SN@SU (Сорбоннский университет, совместно с Flor Sanchez-Luizard, эрготерапевтом из UEROS L\'ADAPT Иль-де-Франс); сейчас на стадии планирования продакшн-версии (FastAPI, PostgreSQL, Next.js) с хостингом, соответствующим HDS/RGPD, и семантическим поисковым движком для клинического сопоставления.' },
       { date: '2024 — 2027', title: 'Студент-инженер — Data Science & AI', org: 'ESIEE Paris', body: 'Студент четвёртого курса пятилетней инженерной программы ESIEE Paris, специализация Data Science & AI (DSIA).' },
       { date: '2025', title: 'Инженер-стажёр, отдел GRADES', org: 'Synchrotron SOLEIL', body: 'Разработка autopkgtest-скриптов на OpenCL для проверки совместимости с GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) на инфраструктуре Debian/ROCm через GitLab Salsa.' },
       { date: '2022 — настоящее время', title: 'Репетитор по точным наукам', org: 'Complétude', body: 'Преподавание математики, физики и информатики школьникам и студентам параллельно с инженерной учёбой.' },
@@ -1634,17 +1654,18 @@ const ar: Dictionary = {
     label: 'النتائج',
     title: 'ما يقدّمه النهج المتدرج',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'تطابق ثلاثي دقيق عبر 65 كيانًا، وثلاث مجموعات نصوص من مؤسسات متعددة' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'معامل خفض تكلفة الطاقة مقارنة بخط أساس نموذج لغوي كبير كامل، من بحث شبكي شمل 12,636 إعدادًا' },
-      { value: 11, suffix: 'M', label: 'عدد سجلات المرضى في مستودع بيانات الصحة الخاص بـAP-HP الذي يعمل عليه خط الأنابيب' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'متوسط F1 — تحقق خارجي' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'استخراج بدون GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'سجلات AP-HP السريرية الموثقة' },
     ],
   },
   experience: {
     label: '03 — الخبرة',
     title: 'أين جرى العمل حتى الآن',
+    currentLabel: 'جارٍ',
     items: [
-      { date: '2025 — حتى الآن', title: 'مساعد باحث، Tremplin Recherche', org: 'ESIEE Paris', body: 'تطوير DEMNE، خط أنابيب هجين للتعرف على الكيانات السريرية للنص الفرنسي الخاص بالأورام، كمشروع أساسي لمسار Tremplin Recherche استعدادًا لطلبات الدكتوراه.' },
-      { date: '2026 — حتى الآن', title: 'مؤسس ورئيس المنتج، NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'بناء منصة تمنح مرضى الإصابات الدماغية ومعالجيهم الوظيفيين طريقة منظمة لمقارنة الأدوات الرقمية للتعويض المعرفي. وُلد المشروع كنموذج أولي بلغة Python وStreamlit في هاكاثون SN@SU (جامعة السوربون، بالتعاون مع Flor Sanchez-Luizard، معالجة وظيفية في UEROS L\'ADAPT إيل دو فرانس)؛ وهو الآن في مرحلة التخطيط لإعادة بناء إنتاجية (FastAPI، PostgreSQL، Next.js) باستضافة متوافقة مع معايير HDS/RGPD ومحرك بحث دلالي لمطابقة الأدوات السريرية.' },
+      { current: true, date: '2025 — حتى الآن', title: 'مساعد باحث، Tremplin Recherche', org: 'ESIEE Paris', body: 'تطوير DEMNE، خط أنابيب هجين للتعرف على الكيانات السريرية للنص الفرنسي الخاص بالأورام، كمشروع أساسي لمسار Tremplin Recherche استعدادًا لطلبات الدكتوراه.' },
+      { current: true, date: '2026 — حتى الآن', title: 'مؤسس ورئيس المنتج، NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'بناء منصة تمنح مرضى الإصابات الدماغية ومعالجيهم الوظيفيين طريقة منظمة لمقارنة الأدوات الرقمية للتعويض المعرفي. وُلد المشروع كنموذج أولي بلغة Python وStreamlit في هاكاثون SN@SU (جامعة السوربون، بالتعاون مع Flor Sanchez-Luizard، معالجة وظيفية في UEROS L\'ADAPT إيل دو فرانس)؛ وهو الآن في مرحلة التخطيط لإعادة بناء إنتاجية (FastAPI، PostgreSQL، Next.js) باستضافة متوافقة مع معايير HDS/RGPD ومحرك بحث دلالي لمطابقة الأدوات السريرية.' },
       { date: '2024 — 2027', title: 'طالب هندسة — علوم البيانات والذكاء الاصطناعي', org: 'ESIEE Paris', body: 'طالب في السنة الرابعة من برنامج الهندسة الخماسي في ESIEE Paris، تخصص علوم البيانات والذكاء الاصطناعي (DSIA).' },
       { date: '2025', title: 'متدرب هندسي، قسم GRADES', org: 'Synchrotron SOLEIL', body: 'تطوير سكريبتات autopkgtest باستخدام OpenCL لاختبار توافق معالجات AMD الرسومية (pyopencl، nabu، ufo-filters، pyvkfft) على بنية Debian/ROCm عبر GitLab Salsa.' },
       { date: '2022 — حتى الآن', title: 'مدرّس خصوصي في العلوم', org: 'Complétude', body: 'تدريس الرياضيات والفيزياء والمعلوماتية لطلاب الثانوية والجامعة إلى جانب دراستي الهندسية.' },
@@ -1756,17 +1777,18 @@ const hi: Dictionary = {
     label: 'परिणाम',
     title: 'चरणबद्ध दृष्टिकोण से क्या मिलता है',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: '65 एंटिटीज़, 3 बहु-संस्थागत कॉर्पस में सटीक त्रिआधारी सहमति' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: '12,636 कॉन्फ़िगरेशनों की ग्रिड सर्च से, पूर्ण एलएलएम बेसलाइन की तुलना में ऊर्जा लागत में कमी का गुणक' },
-      { value: 11, suffix: 'M', label: 'AP-HP के स्वास्थ्य डेटा भंडार में मरीज़ों के रिकॉर्ड जिन पर पाइपलाइन चलती है' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'औसत F1 — बाह्य सत्यापन' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-मुक्त निष्कर्षण' },
+      { value: 300, suffix: '', color: 'text', label: 'सत्यापित AP-HP क्लिनिकल नोट्स' },
     ],
   },
   experience: {
     label: '03 — अनुभव',
     title: 'अब तक काम कहाँ हुआ है',
+    currentLabel: 'जारी',
     items: [
-      { date: '2025 — अब तक', title: 'रिसर्च असिस्टेंट, Tremplin Recherche', org: 'ESIEE Paris', body: 'फ्रेंच ऑन्कोलॉजी टेक्स्ट के लिए एक हाइब्रिड क्लिनिकल एनईआर पाइपलाइन, DEMNE का विकास, पीएचडी आवेदनों से पहले Tremplin Recherche ट्रैक की मुख्य परियोजना के रूप में।' },
-      { date: '2026 — अब तक', title: 'संस्थापक और प्रोडक्ट लीड, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'एक ऐसा प्लेटफ़ॉर्म बना रहा हूँ जो मस्तिष्क-चोट वाले रोगियों और उनके ऑक्यूपेशनल थेरेपिस्ट को कॉग्निटिव कंपेंसेशन डिजिटल टूल्स की तुलना करने का एक संरचित तरीका देता है। इसकी शुरुआत सोरबोन विश्वविद्यालय के SN@SU हैकाथॉन में (UEROS L\'ADAPT इल-द-फ्रांस की ऑक्यूपेशनल थेरेपिस्ट Flor Sanchez-Luizard के साथ) एक Python/Streamlit प्रोटोटाइप के रूप में हुई; अब यह HDS/RGPD-अनुरूप होस्टिंग और क्लिनिकल मैचिंग के लिए एक सिमेंटिक सर्च इंजन के साथ एक प्रोडक्शन रीबिल्ड (FastAPI, PostgreSQL, Next.js) की योजना के चरण में है।' },
+      { current: true, date: '2025 — अब तक', title: 'रिसर्च असिस्टेंट, Tremplin Recherche', org: 'ESIEE Paris', body: 'फ्रेंच ऑन्कोलॉजी टेक्स्ट के लिए एक हाइब्रिड क्लिनिकल एनईआर पाइपलाइन, DEMNE का विकास, पीएचडी आवेदनों से पहले Tremplin Recherche ट्रैक की मुख्य परियोजना के रूप में।' },
+      { current: true, date: '2026 — अब तक', title: 'संस्थापक और प्रोडक्ट लीड, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'एक ऐसा प्लेटफ़ॉर्म बना रहा हूँ जो मस्तिष्क-चोट वाले रोगियों और उनके ऑक्यूपेशनल थेरेपिस्ट को कॉग्निटिव कंपेंसेशन डिजिटल टूल्स की तुलना करने का एक संरचित तरीका देता है। इसकी शुरुआत सोरबोन विश्वविद्यालय के SN@SU हैकाथॉन में (UEROS L\'ADAPT इल-द-फ्रांस की ऑक्यूपेशनल थेरेपिस्ट Flor Sanchez-Luizard के साथ) एक Python/Streamlit प्रोटोटाइप के रूप में हुई; अब यह HDS/RGPD-अनुरूप होस्टिंग और क्लिनिकल मैचिंग के लिए एक सिमेंटिक सर्च इंजन के साथ एक प्रोडक्शन रीबिल्ड (FastAPI, PostgreSQL, Next.js) की योजना के चरण में है।' },
       { date: '2024 — 2027', title: 'इंजीनियरिंग छात्र — डेटा साइंस एवं एआई', org: 'ESIEE Paris', body: 'ESIEE Paris के पाँच-वर्षीय इंजीनियरिंग कार्यक्रम का चौथे वर्ष का छात्र, डेटा साइंस एवं एआई (DSIA) में विशेषज्ञता।' },
       { date: '2025', title: 'इंजीनियरिंग इंटर्न, GRADES डिवीज़न', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa के माध्यम से Debian/ROCm इंफ्रास्ट्रक्चर पर AMD GPU संगतता के लिए OpenCL में autopkgtest स्क्रिप्ट (pyopencl, nabu, ufo-filters, pyvkfft) विकसित कीं।' },
       { date: '2022 — अब तक', title: 'STEM ट्यूटर', org: 'Complétude', body: 'अपनी इंजीनियरिंग पढ़ाई के साथ-साथ माध्यमिक और विश्वविद्यालय के छात्रों को गणित, भौतिकी और कंप्यूटर विज्ञान पढ़ाना।' },
@@ -1878,17 +1900,18 @@ const tr: Dictionary = {
     label: 'Sonuçlar',
     title: 'Aşamalı yaklaşımın kazandırdıkları',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: '65 varlık, 3 çok kurumlu derlem üzerinde tam üçlü uyum' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: '12.636 yapılandırmalık bir grid search\'ten, tam bir LLM temeline kıyasla enerji maliyeti azalma katsayısı' },
-      { value: 11, suffix: 'M', label: 'Hattın üzerinde çalıştığı AP-HP Sağlık Verileri Deposu\'ndaki hasta kaydı sayısı' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Ortalama F1 — dış doğrulama' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU\'suz çıkarım' },
+      { value: 300, suffix: '', color: 'text', label: 'Doğrulanmış AP-HP klinik notları' },
     ],
   },
   experience: {
     label: '03 — Deneyim',
     title: 'Çalışmaların şimdiye kadar gerçekleştiği yerler',
+    currentLabel: 'Devam ediyor',
     items: [
-      { date: '2025 — Günümüz', title: 'Araştırma Asistanı, Tremplin Recherche', org: 'ESIEE Paris', body: 'Doktora başvurularından önce Tremplin Recherche programının temel projesi olarak, Fransızca onkoloji metni için hibrit klinik NER hattı DEMNE\'nin geliştirilmesi.' },
-      { date: '2026 — Günümüz', title: 'Kurucu ve Ürün Lideri, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Beyin hasarı olan hastalara ve onların ergoterapistlerine bilişsel telafi dijital araçlarını karşılaştırmak için yapılandırılmış bir yol sunan bir platform inşa ediyorum. Sorbonne Üniversitesi\'ndeki SN@SU hackathonunda (UEROS L\'ADAPT Île-de-France\'ta ergoterapist olan Flor Sanchez-Luizard ile birlikte) bir Python/Streamlit prototipi olarak doğdu; şu anda HDS/RGPD uyumlu barındırma ve klinik eşleştirme için bir anlamsal arama motoruna sahip bir üretim yeniden yapılanmasının (FastAPI, PostgreSQL, Next.js) planlama aşamasında.' },
+      { current: true, date: '2025 — Günümüz', title: 'Araştırma Asistanı, Tremplin Recherche', org: 'ESIEE Paris', body: 'Doktora başvurularından önce Tremplin Recherche programının temel projesi olarak, Fransızca onkoloji metni için hibrit klinik NER hattı DEMNE\'nin geliştirilmesi.' },
+      { current: true, date: '2026 — Günümüz', title: 'Kurucu ve Ürün Lideri, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Beyin hasarı olan hastalara ve onların ergoterapistlerine bilişsel telafi dijital araçlarını karşılaştırmak için yapılandırılmış bir yol sunan bir platform inşa ediyorum. Sorbonne Üniversitesi\'ndeki SN@SU hackathonunda (UEROS L\'ADAPT Île-de-France\'ta ergoterapist olan Flor Sanchez-Luizard ile birlikte) bir Python/Streamlit prototipi olarak doğdu; şu anda HDS/RGPD uyumlu barındırma ve klinik eşleştirme için bir anlamsal arama motoruna sahip bir üretim yeniden yapılanmasının (FastAPI, PostgreSQL, Next.js) planlama aşamasında.' },
       { date: '2024 — 2027', title: 'Mühendislik Öğrencisi — Veri Bilimi & Yapay Zeka', org: 'ESIEE Paris', body: 'ESIEE Paris\'in beş yıllık mühendislik programının dördüncü sınıf öğrencisi, Veri Bilimi & Yapay Zeka (DSIA) uzmanlığı.' },
       { date: '2025', title: 'Mühendislik Stajyeri, GRADES Bölümü', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa üzerinden Debian/ROCm altyapısında AMD GPU uyumluluğu için OpenCL ile autopkgtest betikleri (pyopencl, nabu, ufo-filters, pyvkfft) geliştirdi.' },
       { date: '2022 — Günümüz', title: 'Fen Bilimleri Özel Öğretmeni', org: 'Complétude', body: 'Mühendislik eğitimimle birlikte lise ve üniversite öğrencilerine matematik, fizik ve bilgisayar bilimi dersleri veriyorum.' },
@@ -2000,17 +2023,18 @@ const pl: Dictionary = {
     label: 'Wyniki',
     title: 'Co daje podejście etapowe',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Dokładna trójwartościowa zgodność na 65 encjach, 3 wieloinstytucjonalnych korpusach' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Współczynnik redukcji kosztów energii w porównaniu z pełnym modelem bazowym LLM, z grid search obejmującego 12 636 konfiguracji' },
-      { value: 11, suffix: 'M', label: 'Liczba dokumentacji pacjentów w repozytorium danych zdrowotnych AP-HP, na których działa pipeline' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Średnie F1 — walidacja zewnętrzna' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Ekstrakcja bez GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Zwalidowane notatki kliniczne AP-HP' },
     ],
   },
   experience: {
     label: '03 — Doświadczenie',
     title: 'Gdzie do tej pory odbywała się praca',
+    currentLabel: 'W trakcie',
     items: [
-      { date: '2025 — obecnie', title: 'Asystent badawczy, Tremplin Recherche', org: 'ESIEE Paris', body: 'Rozwój DEMNE, hybrydowego pipeline\'u klinicznego NER dla francuskiego tekstu onkologicznego, jako głównego projektu ścieżki Tremplin Recherche przed aplikacjami doktoranckimi.' },
-      { date: '2026 — obecnie', title: 'Założyciel i Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Budowa platformy, która daje pacjentom po urazach mózgu i ich terapeutom zajęciowym ustrukturyzowany sposób porównywania cyfrowych narzędzi kompensacji poznawczej. Powstała jako prototyp Python/Streamlit na hackathonie SN@SU (Sorbona, wraz z Flor Sanchez-Luizard, terapeutką zajęciową w UEROS L\'ADAPT Île-de-France); obecnie na etapie planowania produkcyjnej przebudowy (FastAPI, PostgreSQL, Next.js) z hostingiem zgodnym z HDS/RGPD i semantyczną wyszukiwarką do dopasowywania narzędzi klinicznych.' },
+      { current: true, date: '2025 — obecnie', title: 'Asystent badawczy, Tremplin Recherche', org: 'ESIEE Paris', body: 'Rozwój DEMNE, hybrydowego pipeline\'u klinicznego NER dla francuskiego tekstu onkologicznego, jako głównego projektu ścieżki Tremplin Recherche przed aplikacjami doktoranckimi.' },
+      { current: true, date: '2026 — obecnie', title: 'Założyciel i Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Budowa platformy, która daje pacjentom po urazach mózgu i ich terapeutom zajęciowym ustrukturyzowany sposób porównywania cyfrowych narzędzi kompensacji poznawczej. Powstała jako prototyp Python/Streamlit na hackathonie SN@SU (Sorbona, wraz z Flor Sanchez-Luizard, terapeutką zajęciową w UEROS L\'ADAPT Île-de-France); obecnie na etapie planowania produkcyjnej przebudowy (FastAPI, PostgreSQL, Next.js) z hostingiem zgodnym z HDS/RGPD i semantyczną wyszukiwarką do dopasowywania narzędzi klinicznych.' },
       { date: '2024 — 2027', title: 'Student inżynierii — Data Science & AI', org: 'ESIEE Paris', body: 'Student czwartego roku pięcioletniego programu inżynierskiego ESIEE Paris, specjalizacja Data Science & AI (DSIA).' },
       { date: '2025', title: 'Stażysta inżynieryjny, dział GRADES', org: 'Synchrotron SOLEIL', body: 'Rozwój skryptów autopkgtest w OpenCL do testowania kompatybilności GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infrastrukturze Debian/ROCm za pośrednictwem GitLab Salsa.' },
       { date: '2022 — obecnie', title: 'Korepetytor przedmiotów ścisłych', org: 'Complétude', body: 'Nauczanie matematyki, fizyki i informatyki uczniów szkół średnich i studentów równolegle ze studiami inżynierskimi.' },
@@ -2122,17 +2146,18 @@ const vi: Dictionary = {
     label: 'Kết quả',
     title: 'Những gì phương pháp theo giai đoạn mang lại',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Độ khớp ba giá trị chính xác trên 65 thực thể, 3 kho ngữ liệu đa cơ sở' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Hệ số giảm chi phí năng lượng so với mô hình nền LLM đầy đủ, từ tìm kiếm lưới với 12.636 cấu hình' },
-      { value: 11, suffix: 'M', label: 'Số hồ sơ bệnh nhân trong kho dữ liệu y tế của AP-HP mà pipeline vận hành trên đó' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 trung bình — xác thực bên ngoài' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Trích xuất không cần GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Ghi chú lâm sàng AP-HP đã xác thực' },
     ],
   },
   experience: {
     label: '03 — Kinh nghiệm',
     title: 'Công việc đã diễn ra ở đâu cho đến nay',
+    currentLabel: 'Đang diễn ra',
     items: [
-      { date: '2025 — Hiện tại', title: 'Trợ lý nghiên cứu, Tremplin Recherche', org: 'ESIEE Paris', body: 'Phát triển DEMNE, một pipeline NER lâm sàng lai cho văn bản ung bướu tiếng Pháp, là dự án cốt lõi của chương trình Tremplin Recherche trước khi nộp hồ sơ tiến sĩ.' },
-      { date: '2026 — Hiện tại', title: 'Nhà sáng lập kiêm Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Xây dựng một nền tảng mang lại cho bệnh nhân chấn thương não và các nhà trị liệu nghề nghiệp của họ một cách có cấu trúc để so sánh các công cụ số hỗ trợ bù đắp nhận thức. Ra đời như một bản mẫu Python/Streamlit tại hackathon SN@SU (Đại học Sorbonne, cùng với Flor Sanchez-Luizard, nhà trị liệu nghề nghiệp tại UEROS L\'ADAPT Île-de-France); hiện đang trong giai đoạn lên kế hoạch xây dựng lại phiên bản sản xuất (FastAPI, PostgreSQL, Next.js) với dịch vụ lưu trữ tuân thủ HDS/RGPD và một công cụ tìm kiếm ngữ nghĩa để ghép nối công cụ lâm sàng.' },
+      { current: true, date: '2025 — Hiện tại', title: 'Trợ lý nghiên cứu, Tremplin Recherche', org: 'ESIEE Paris', body: 'Phát triển DEMNE, một pipeline NER lâm sàng lai cho văn bản ung bướu tiếng Pháp, là dự án cốt lõi của chương trình Tremplin Recherche trước khi nộp hồ sơ tiến sĩ.' },
+      { current: true, date: '2026 — Hiện tại', title: 'Nhà sáng lập kiêm Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Xây dựng một nền tảng mang lại cho bệnh nhân chấn thương não và các nhà trị liệu nghề nghiệp của họ một cách có cấu trúc để so sánh các công cụ số hỗ trợ bù đắp nhận thức. Ra đời như một bản mẫu Python/Streamlit tại hackathon SN@SU (Đại học Sorbonne, cùng với Flor Sanchez-Luizard, nhà trị liệu nghề nghiệp tại UEROS L\'ADAPT Île-de-France); hiện đang trong giai đoạn lên kế hoạch xây dựng lại phiên bản sản xuất (FastAPI, PostgreSQL, Next.js) với dịch vụ lưu trữ tuân thủ HDS/RGPD và một công cụ tìm kiếm ngữ nghĩa để ghép nối công cụ lâm sàng.' },
       { date: '2024 — 2027', title: 'Sinh viên kỹ thuật — Khoa học Dữ liệu & AI', org: 'ESIEE Paris', body: 'Sinh viên năm thứ tư của chương trình kỹ thuật năm năm tại ESIEE Paris, chuyên ngành Khoa học Dữ liệu & AI (DSIA).' },
       { date: '2025', title: 'Thực tập sinh kỹ thuật, bộ phận GRADES', org: 'Synchrotron SOLEIL', body: 'Phát triển các script autopkgtest bằng OpenCL để kiểm tra khả năng tương thích GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) trên hạ tầng Debian/ROCm thông qua GitLab Salsa.' },
       { date: '2022 — Hiện tại', title: 'Gia sư khoa học tự nhiên', org: 'Complétude', body: 'Dạy toán, vật lý và tin học cho học sinh trung học và sinh viên đại học song song với việc học kỹ thuật của tôi.' },
@@ -2244,17 +2269,18 @@ const id: Dictionary = {
     label: 'Hasil',
     title: 'Apa yang diberikan pendekatan bertahap',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Kesesuaian ternary yang tepat pada 65 entitas, 3 korpus multi-institusi' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Faktor pengurangan biaya energi dibandingkan baseline LLM penuh, dari grid search dengan 12.636 konfigurasi' },
-      { value: 11, suffix: 'M', label: 'Jumlah rekam medis pasien di gudang data kesehatan AP-HP yang menjadi tempat pipeline ini berjalan' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 rata-rata — validasi eksternal' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Ekstraksi tanpa GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Catatan klinis AP-HP tervalidasi' },
     ],
   },
   experience: {
     label: '03 — Pengalaman',
     title: 'Di mana pekerjaan ini telah berlangsung sejauh ini',
+    currentLabel: 'Sedang berlangsung',
     items: [
-      { date: '2025 — Sekarang', title: 'Asisten Riset, Tremplin Recherche', org: 'ESIEE Paris', body: 'Mengembangkan DEMNE, pipeline NER klinis hybrid untuk teks onkologi Prancis, sebagai proyek inti jalur Tremplin Recherche menjelang pendaftaran program PhD.' },
-      { date: '2026 — Sekarang', title: 'Pendiri & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Membangun platform yang memberi pasien cedera otak dan terapis okupasi mereka cara terstruktur untuk membandingkan alat digital kompensasi kognitif. Lahir sebagai prototipe Python/Streamlit di hackathon SN@SU (Universitas Sorbonne, bersama Flor Sanchez-Luizard, terapis okupasi di UEROS L\'ADAPT Île-de-France); kini dalam tahap perencanaan pembangunan ulang versi produksi (FastAPI, PostgreSQL, Next.js) dengan hosting yang sesuai HDS/RGPD dan mesin pencari semantik untuk pencocokan klinis.' },
+      { current: true, date: '2025 — Sekarang', title: 'Asisten Riset, Tremplin Recherche', org: 'ESIEE Paris', body: 'Mengembangkan DEMNE, pipeline NER klinis hybrid untuk teks onkologi Prancis, sebagai proyek inti jalur Tremplin Recherche menjelang pendaftaran program PhD.' },
+      { current: true, date: '2026 — Sekarang', title: 'Pendiri & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Membangun platform yang memberi pasien cedera otak dan terapis okupasi mereka cara terstruktur untuk membandingkan alat digital kompensasi kognitif. Lahir sebagai prototipe Python/Streamlit di hackathon SN@SU (Universitas Sorbonne, bersama Flor Sanchez-Luizard, terapis okupasi di UEROS L\'ADAPT Île-de-France); kini dalam tahap perencanaan pembangunan ulang versi produksi (FastAPI, PostgreSQL, Next.js) dengan hosting yang sesuai HDS/RGPD dan mesin pencari semantik untuk pencocokan klinis.' },
       { date: '2024 — 2027', title: 'Mahasiswa Teknik — Data Science & AI', org: 'ESIEE Paris', body: 'Mahasiswa tahun keempat program teknik lima tahun ESIEE Paris, spesialisasi Data Science & AI (DSIA).' },
       { date: '2025', title: 'Magang Teknik, Divisi GRADES', org: 'Synchrotron SOLEIL', body: 'Mengembangkan skrip autopkgtest dalam OpenCL untuk kompatibilitas GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) pada infrastruktur Debian/ROCm melalui GitLab Salsa.' },
       { date: '2022 — Sekarang', title: 'Guru Les Sains', org: 'Complétude', body: 'Mengajar matematika, fisika, dan ilmu komputer kepada siswa sekolah menengah dan universitas, sejalan dengan studi teknik saya.' },
@@ -2366,17 +2392,18 @@ const sv: Dictionary = {
     label: 'Resultat',
     title: 'Vad det stegvisa tillvägagångssättet ger',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Exakt ternär överensstämmelse över 65 entiteter, 3 multiinstitutionella korpusar' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Faktor för minskad energikostnad jämfört med en fullständig LLM-baslinje, från en grid search med 12 636 konfigurationer' },
-      { value: 11, suffix: 'M', label: 'Patientjournaler i AP-HP:s hälsodatalager som pipelinen körs mot' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Genomsnittlig F1 — extern validering' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-fri extraktion' },
+      { value: 300, suffix: '', color: 'text', label: 'Validerade AP-HP-journalanteckningar' },
     ],
   },
   experience: {
     label: '03 — Erfarenhet',
     title: 'Var arbetet har ägt rum hittills',
+    currentLabel: 'Pågående',
     items: [
-      { date: '2025 — Nuvarande', title: 'Forskningsassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Utveckling av DEMNE, en hybrid klinisk NER-pipeline för fransk onkologitext, som huvudprojekt inom Tremplin Recherche-spåret inför doktorandansökningar.' },
-      { date: '2026 — Nuvarande', title: 'Grundare & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bygger en plattform som ger hjärnskadade patienter och deras arbetsterapeuter ett strukturerat sätt att jämföra digitala verktyg för kognitiv kompensation. Föddes som en Python/Streamlit-prototyp på SN@SU-hackathonet (Sorbonneuniversitetet, tillsammans med Flor Sanchez-Luizard, arbetsterapeut vid UEROS L\'ADAPT Île-de-France); nu i planeringsfasen för en produktionsombyggnad (FastAPI, PostgreSQL, Next.js) med HDS/RGPD-kompatibel hosting och en semantisk sökmotor för klinisk matchning.' },
+      { current: true, date: '2025 — Nuvarande', title: 'Forskningsassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Utveckling av DEMNE, en hybrid klinisk NER-pipeline för fransk onkologitext, som huvudprojekt inom Tremplin Recherche-spåret inför doktorandansökningar.' },
+      { current: true, date: '2026 — Nuvarande', title: 'Grundare & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bygger en plattform som ger hjärnskadade patienter och deras arbetsterapeuter ett strukturerat sätt att jämföra digitala verktyg för kognitiv kompensation. Föddes som en Python/Streamlit-prototyp på SN@SU-hackathonet (Sorbonneuniversitetet, tillsammans med Flor Sanchez-Luizard, arbetsterapeut vid UEROS L\'ADAPT Île-de-France); nu i planeringsfasen för en produktionsombyggnad (FastAPI, PostgreSQL, Next.js) med HDS/RGPD-kompatibel hosting och en semantisk sökmotor för klinisk matchning.' },
       { date: '2024 — 2027', title: 'Ingenjörsstudent — Data Science & AI', org: 'ESIEE Paris', body: 'Fjärdeårsstudent i ESIEE Paris femåriga ingenjörsprogram, inriktning Data Science & AI (DSIA).' },
       { date: '2025', title: 'Ingenjörspraktikant, GRADES-avdelningen', org: 'Synchrotron SOLEIL', body: 'Utveckling av autopkgtest-skript i OpenCL för AMD GPU-kompatibilitet (pyopencl, nabu, ufo-filters, pyvkfft) på Debian/ROCm-infrastruktur via GitLab Salsa.' },
       { date: '2022 — Nuvarande', title: 'NO-lärare (privatundervisning)', org: 'Complétude', body: 'Undervisar i matematik, fysik och datavetenskap för gymnasie- och universitetsstudenter parallellt med mina ingenjörsstudier.' },
@@ -2488,17 +2515,18 @@ const uk: Dictionary = {
     label: 'Результати',
     title: 'Що дає поетапний підхід',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'Точний потрійний збіг на 65 сутностях, 3 мультиінституційних корпусах' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'Коефіцієнт зниження енерговитрат порівняно з повною базовою моделлю LLM, за результатами ґратчастого пошуку з 12 636 конфігурацій' },
-      { value: 11, suffix: 'M', label: 'Медичні записи пацієнтів у сховищі даних охорони здоров\'я AP-HP, на яких працює конвеєр' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Середній F1 — зовнішня валідація' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Видобування без GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'Перевірені клінічні записи AP-HP' },
     ],
   },
   experience: {
     label: '03 — Досвід',
     title: 'Де досі відбувалася робота',
+    currentLabel: 'Триває',
     items: [
-      { date: '2025 — дотепер', title: 'Науковий асистент, Tremplin Recherche', org: 'ESIEE Paris', body: 'Розробка DEMNE, гібридного конвеєра клінічного NER для французького онкологічного тексту, як основного проєкту програми Tremplin Recherche перед подачею заявок на докторантуру.' },
-      { date: '2026 — дотепер', title: 'Засновник і Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Створення платформи, яка дає пацієнтам із черепно-мозковими травмами та їхнім ерготерапевтам структурований спосіб порівнювати цифрові інструменти когнітивної компенсації. Народився як прототип на Python/Streamlit на хакатоні SN@SU (Сорбонський університет, разом із Flor Sanchez-Luizard, ерготерапевткою в UEROS L\'ADAPT Іль-де-Франс); зараз на етапі планування виробничої перебудови (FastAPI, PostgreSQL, Next.js) з хостингом, що відповідає HDS/RGPD, і семантичним пошуковим механізмом для клінічного зіставлення.' },
+      { current: true, date: '2025 — дотепер', title: 'Науковий асистент, Tremplin Recherche', org: 'ESIEE Paris', body: 'Розробка DEMNE, гібридного конвеєра клінічного NER для французького онкологічного тексту, як основного проєкту програми Tremplin Recherche перед подачею заявок на докторантуру.' },
+      { current: true, date: '2026 — дотепер', title: 'Засновник і Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Створення платформи, яка дає пацієнтам із черепно-мозковими травмами та їхнім ерготерапевтам структурований спосіб порівнювати цифрові інструменти когнітивної компенсації. Народився як прототип на Python/Streamlit на хакатоні SN@SU (Сорбонський університет, разом із Flor Sanchez-Luizard, ерготерапевткою в UEROS L\'ADAPT Іль-де-Франс); зараз на етапі планування виробничої перебудови (FastAPI, PostgreSQL, Next.js) з хостингом, що відповідає HDS/RGPD, і семантичним пошуковим механізмом для клінічного зіставлення.' },
       { date: '2024 — 2027', title: 'Студент-інженер — Data Science & AI', org: 'ESIEE Paris', body: 'Студент четвертого курсу п\'ятирічної інженерної програми ESIEE Paris, спеціалізація Data Science & AI (DSIA).' },
       { date: '2025', title: 'Інженер-стажист, відділ GRADES', org: 'Synchrotron SOLEIL', body: 'Розробка скриптів autopkgtest на OpenCL для перевірки сумісності з GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) на інфраструктурі Debian/ROCm через GitLab Salsa.' },
       { date: '2022 — дотепер', title: 'Репетитор з точних наук', org: 'Complétude', body: 'Викладання математики, фізики та інформатики учням старшої школи та студентам паралельно з інженерним навчанням.' },
@@ -2610,17 +2638,18 @@ const th: Dictionary = {
     label: 'ผลลัพธ์',
     title: 'สิ่งที่แนวทางแบบขั้นตอนมอบให้',
     items: [
-      { value: 83.1, suffix: '%', decimals: 1, label: 'ความสอดคล้องแบบสามค่าที่แม่นยำใน 65 เอนทิตี จาก 3 คลังข้อมูลข้ามสถาบัน' },
-      { value: 4, prefix: '×10', suffix: '', superscript: true, label: 'ตัวคูณการลดต้นทุนพลังงานเทียบกับพื้นฐาน LLM แบบเต็มรูปแบบ จากการค้นหาแบบกริดที่มี 12,636 การตั้งค่า' },
-      { value: 11, suffix: 'M', label: 'จำนวนเวชระเบียนผู้ป่วยในคลังข้อมูลสุขภาพของ AP-HP ที่ไปป์ไลน์นี้ทำงานอยู่' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 เฉลี่ย — การตรวจสอบภายนอก' },
+      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'การสกัดโดยไม่ใช้ GPU' },
+      { value: 300, suffix: '', color: 'text', label: 'บันทึกทางคลินิกของ AP-HP ที่ผ่านการตรวจสอบ' },
     ],
   },
   experience: {
     label: '03 — ประสบการณ์',
     title: 'สถานที่ที่งานได้ดำเนินมาจนถึงตอนนี้',
+    currentLabel: 'กำลังดำเนินการ',
     items: [
-      { date: '2025 — ปัจจุบัน', title: 'ผู้ช่วยวิจัย, Tremplin Recherche', org: 'ESIEE Paris', body: 'พัฒนา DEMNE ไปป์ไลน์ NER ทางคลินิกแบบไฮบริดสำหรับข้อความมะเร็งวิทยาภาษาฝรั่งเศส ในฐานะโครงการหลักของหลักสูตร Tremplin Recherche ก่อนการสมัครปริญญาเอก' },
-      { date: '2026 — ปัจจุบัน', title: 'ผู้ก่อตั้งและ Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'สร้างแพลตฟอร์มที่ช่วยให้ผู้ป่วยสมองบาดเจ็บและนักกิจกรรมบำบัดของพวกเขามีวิธีที่เป็นระบบในการเปรียบเทียบเครื่องมือดิจิทัลเพื่อชดเชยความบกพร่องทางปัญญา เริ่มต้นจากต้นแบบ Python/Streamlit ในงานแฮกกาธอน SN@SU (มหาวิทยาลัยซอร์บอนน์ ร่วมกับ Flor Sanchez-Luizard นักกิจกรรมบำบัดที่ UEROS L\'ADAPT อีล-เดอ-ฟร็องส์) ปัจจุบันอยู่ในขั้นตอนวางแผนการสร้างใหม่ในเวอร์ชันโปรดักชัน (FastAPI, PostgreSQL, Next.js) พร้อมโฮสติ้งที่สอดคล้องกับ HDS/RGPD และเอนจินค้นหาเชิงความหมายสำหรับการจับคู่เครื่องมือทางคลินิก' },
+      { current: true, date: '2025 — ปัจจุบัน', title: 'ผู้ช่วยวิจัย, Tremplin Recherche', org: 'ESIEE Paris', body: 'พัฒนา DEMNE ไปป์ไลน์ NER ทางคลินิกแบบไฮบริดสำหรับข้อความมะเร็งวิทยาภาษาฝรั่งเศส ในฐานะโครงการหลักของหลักสูตร Tremplin Recherche ก่อนการสมัครปริญญาเอก' },
+      { current: true, date: '2026 — ปัจจุบัน', title: 'ผู้ก่อตั้งและ Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'สร้างแพลตฟอร์มที่ช่วยให้ผู้ป่วยสมองบาดเจ็บและนักกิจกรรมบำบัดของพวกเขามีวิธีที่เป็นระบบในการเปรียบเทียบเครื่องมือดิจิทัลเพื่อชดเชยความบกพร่องทางปัญญา เริ่มต้นจากต้นแบบ Python/Streamlit ในงานแฮกกาธอน SN@SU (มหาวิทยาลัยซอร์บอนน์ ร่วมกับ Flor Sanchez-Luizard นักกิจกรรมบำบัดที่ UEROS L\'ADAPT อีล-เดอ-ฟร็องส์) ปัจจุบันอยู่ในขั้นตอนวางแผนการสร้างใหม่ในเวอร์ชันโปรดักชัน (FastAPI, PostgreSQL, Next.js) พร้อมโฮสติ้งที่สอดคล้องกับ HDS/RGPD และเอนจินค้นหาเชิงความหมายสำหรับการจับคู่เครื่องมือทางคลินิก' },
       { date: '2024 — 2027', title: 'นักศึกษาวิศวกรรม — Data Science & AI', org: 'ESIEE Paris', body: 'นักศึกษาชั้นปีที่ 4 ในหลักสูตรวิศวกรรมห้าปีของ ESIEE Paris สาขา Data Science & AI (DSIA)' },
       { date: '2025', title: 'นักศึกษาฝึกงานด้านวิศวกรรม, ฝ่าย GRADES', org: 'Synchrotron SOLEIL', body: 'พัฒนาสคริปต์ autopkgtest ด้วย OpenCL เพื่อทดสอบความเข้ากันได้ของ GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) บนโครงสร้างพื้นฐาน Debian/ROCm ผ่าน GitLab Salsa' },
       { date: '2022 — ปัจจุบัน', title: 'ติวเตอร์วิชาวิทยาศาสตร์', org: 'Complétude', body: 'สอนคณิตศาสตร์ ฟิสิกส์ และวิทยาการคอมพิวเตอร์ให้กับนักเรียนมัธยมและนักศึกษามหาวิทยาลัย ควบคู่ไปกับการเรียนวิศวกรรมของผม' },

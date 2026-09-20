@@ -5,7 +5,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { dictionaries } from '@/lib/dictionaries';
 import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
-import { postIndexForSlug, slugsForLang } from '@/lib/blog';
+import { postIndexForSlug, slugsForLang, tagsForPost } from '@/lib/blog';
 
 export function generateStaticParams() {
   return LANG_CODES.flatMap((locale) =>
@@ -49,15 +49,25 @@ export default async function BlogPost({
     <>
       <Nav dict={dict} lang={locale} />
       <article className="blog-article">
-        <div className="wrap">
+        <div className="wrap blog-article-wrap">
           <Link href={`${home}blog/`} className="blog-back-link">
             ← {dict.writing.title}
           </Link>
-          <div className="writing-status">{post.status}</div>
-          <h1>{post.title}</h1>
-          <p className="blog-article-lede">{post.body}</p>
-          <div className="blog-article-placeholder">
-            <p>Full article coming soon — check back after publication.</p>
+          <div className="blog-article-meta">{post.status}</div>
+          <h1 className="blog-article-title">{post.title}</h1>
+          <div className="post-tags">
+            {tagsForPost(postIndex).map((tag) => (
+              <span className="post-tag" key={tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
+          <hr className="blog-article-rule" />
+          <div className="prose">
+            <p>{post.body}</p>
+            <p className="blog-article-placeholder">
+              Full article coming soon — check back after publication.
+            </p>
           </div>
         </div>
       </article>

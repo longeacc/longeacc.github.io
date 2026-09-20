@@ -5,7 +5,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { dictionaries } from '@/lib/dictionaries';
 import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
-import { slugForPost } from '@/lib/blog';
+import { slugForPost, tagsForPost } from '@/lib/blog';
 
 export function generateStaticParams() {
   return LANG_CODES.map((locale) => ({ locale }));
@@ -41,22 +41,25 @@ export default async function BlogIndex({
     <>
       <Nav dict={dict} lang={locale} />
       <section className="blog-index">
-        <div className="wrap">
-          <div className="section-head">
-            <div className="section-label">{dict.writing.label}</div>
-            <h2>{dict.writing.title}</h2>
-            <p>{dict.writing.subtitle}</p>
-          </div>
-          <div className="writing-grid">
+        <div className="wrap blog-index-wrap">
+          <h1 className="blog-index-title">Blog</h1>
+          <div className="blog-list">
             {dict.writing.posts.map((post, i) => (
               <Link
                 key={post.title}
                 href={`${home}blog/${slugForPost(locale, i)}/`}
-                className="writing-card writing-card-link"
+                className="blog-list-item"
               >
                 <div className="writing-status">{post.status}</div>
-                <h3>{post.title}</h3>
+                <h2>{post.title}</h2>
                 <p>{post.body}</p>
+                <div className="post-tags">
+                  {tagsForPost(i).map((tag) => (
+                    <span className="post-tag" key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </Link>
             ))}
           </div>

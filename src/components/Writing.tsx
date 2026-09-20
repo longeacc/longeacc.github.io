@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Dictionary } from '@/lib/dictionaries';
 import { pathForLang, type Lang } from '@/lib/languages';
-import { slugForPost } from '@/lib/blog';
+import { slugForPost, tagsForPost } from '@/lib/blog';
 
 export default function Writing({ dict, lang }: { dict: Dictionary; lang: Lang }) {
   const { writing } = dict;
@@ -26,6 +26,13 @@ export default function Writing({ dict, lang }: { dict: Dictionary; lang: Lang }
               <div className="writing-status">{post.status}</div>
               <h3>{post.title}</h3>
               <p>{post.body}</p>
+              <div className="post-tags">
+                {tagsForPost(i).map((tag) => (
+                  <span className="post-tag" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </Link>
           ))}
         </div>
