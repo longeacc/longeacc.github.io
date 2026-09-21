@@ -67,16 +67,14 @@ h1, h2, h3, .display {
   color: var(--text);
 }
 
-/* subtle grid texture on the background, evokes lab/schematic paper without being a newspaper */
-.grid-texture {
+/* slow WebGL noise field behind the page; fades toward the fold, evokes a scalar field rather than a decorative pattern */
+.noise-bg {
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(var(--line-soft) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
-  background-size: 64px 64px;
-  opacity: 0.35;
+  width: 100vw;
+  height: 100vh;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -545,12 +543,7 @@ section { position: relative; z-index: 1; padding: 88px 0; }
 /* ---------- CONTACT / FOOTER ---------- */
 .contact-section { overflow: hidden; }
 .contact-bg { position: absolute; inset: 0; z-index: 0; }
-.contact-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.15;
-}
+.constellation-bg { position: absolute; inset: 0; opacity: 0.4; }
 .contact-bg-overlay {
   position: absolute;
   inset: 0;

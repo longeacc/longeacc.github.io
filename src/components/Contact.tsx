@@ -1,11 +1,12 @@
 import type { Dictionary } from '@/lib/dictionaries';
+import { ConstellationBackground } from './ConstellationBackground';
 
 export default function Contact({ dict }: { dict: Dictionary }) {
   const { contact } = dict;
   return (
     <section id="contact" className="contact-section">
       <div className="contact-bg">
-        <img src="/images/bg-contact.webp" alt="" />
+        <ConstellationBackground />
         <div className="contact-bg-overlay" />
       </div>
       <div className="wrap contact-inner">
