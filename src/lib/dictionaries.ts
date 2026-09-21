@@ -15,6 +15,10 @@ export type Metric = {
 };
 export type TimelineItem = { date: string; title: string; org: string; body: string; current?: boolean };
 export type WritingPost = { status: string; title: string; body: string };
+export type Project = { date: string; title: string; description: string; tags: string[]; url: string };
+export type StackCategory = { title: string; lines: string[][] };
+export type LanguageSkill = { flag: string; level: string };
+export type FocusArea = { title: string; body: string };
 
 export type Dictionary = {
   htmlLang: string;
@@ -92,6 +96,25 @@ export type Dictionary = {
     journal: string;
     description: string;
   };
+  projects: {
+    label: string;
+    title: string;
+    subtitle: string;
+    items: Project[];
+  };
+  techStack: {
+    label: string;
+    title: string;
+    subtitle: string;
+    categories: StackCategory[];
+    languagesTitle: string;
+    languages: LanguageSkill[];
+  };
+  areasOfFocus: {
+    label: string;
+    title: string;
+    items: FocusArea[];
+  };
   writing: {
     label: string;
     title: string;
@@ -100,6 +123,8 @@ export type Dictionary = {
   };
   contact: {
     title: string;
+    directLabel: string;
+    elsewhereLabel: string;
     email: string;
     github: string;
     linkedin: string;
@@ -130,11 +155,11 @@ const en: Dictionary = {
     menuToggleLabel: 'Toggle menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Building NLP systems that ',
-    h1Accent: 'read clinical language',
-    h1Post: ' the way oncologists do.',
-    sub: "I'm Clément Longeac, an engineering student working at the intersection of clinical NLP and biomedical AI — currently building hybrid extraction pipelines for French oncology records, on the way to a PhD in AI applied to biomedical research.",
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Extracting biomarkers from clinical text ',
+    h1Accent: 'without waking the GPU',
+    h1Post: '.',
+    sub: "I'm Clément Longeac. I'm working on DEMNE, a routing framework that decides — per entity type — whether a regex, a CRF, a transformer, or an LLM is the honest tool for the job. First result: 93.7% of clinical entities extracted without a GPU, F1 = 0.941 on 300 AP-HP notes.",
     ctaResearch: 'See the research',
     ctaCV: 'Download CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, live schematic',
@@ -144,7 +169,7 @@ const en: Dictionary = {
     title: 'From tutoring math to modeling tumor markers',
     p1: "I'm a fourth-year student at ESIEE Paris, specializing in Data Science & AI, and enrolled in the school's Tremplin Recherche track — a program built for students heading toward doctoral research rather than a standard industry placement.",
     p2: 'My work centers on making unstructured clinical text usable for research: extracting the biomarkers, staging information, and treatment details buried in French oncology reports, where general-purpose NLP tools consistently fail on domain vocabulary and document structure.',
-    p3: "Alongside my studies I tutor mathematics, physics, and computer science through Complétude, and I'm preparing applications for a CIFRE industrial PhD in biomedical AI at Sorbonne University.",
+    p3: "Alongside my studies I tutor mathematics and physics-chemistry through Complétude, and I'm preparing applications for a CIFRE industrial PhD in biomedical AI at Sorbonne University.",
     visionLine:
       "Longer term, the same discipline — pulling reliable structure out of messy, high-stakes text — is what draws me to AI safety research: building and evaluating world models through AMI Labs and the Anthropic Fellows Program. (Draft line — replace with your own wording.)",
     facts: [
@@ -247,7 +272,7 @@ const en: Dictionary = {
         date: '2022 — Present',
         title: 'STEM Tutor',
         org: 'Complétude',
-        body: 'Teaching mathematics, physics, and computer science to secondary and university students alongside my engineering studies.',
+        body: 'Teaching mathematics and physics-chemistry to about ten students, from primary school through terminale, alongside my engineering studies.',
       },
     ],
   },
@@ -262,8 +287,91 @@ const en: Dictionary = {
     description:
       'Manuscript detailing the DEMNE cascade framework, the five corpus-characterization metrics used for paradigm selection, and the grid-search calibration results across three French oncology corpora.',
   },
+  projects: {
+    label: '05 — Selected Projects',
+    title: 'Selected Projects',
+    subtitle: 'Beyond DEMNE — tools built end to end for a hackathon and coursework.',
+    items: [
+      {
+        date: 'June 2026',
+        title: 'NeuroStep',
+        description:
+          'A digital catalog of cognitive-compensation tools and apps for people with brain injuries and tumors — communication aids, memory, and planning support. Built for the SN@SU hackathon, with a Streamlit interface over a JSON-based store.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dec. 2025',
+        title: 'Air Quality Dashboard',
+        description:
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015) from INERIS/Zenodo data — SQLite storage, Plotly charts, and a Leaflet heatmap. Built with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Technical Stack',
+    title: 'Technical Stack',
+    subtitle: 'Tools grouped by how they matter to the work above — not a generic list.',
+    categories: [
+      {
+        title: 'Clinical NLP & Biomedical AI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Systems & Infrastructure',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Research Tooling',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Languages',
+    languages: [
+      { flag: '🇫🇷', level: 'Native' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Intermediate' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'In progress' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Areas of Focus',
+    title: 'Areas of Focus',
+    items: [
+      {
+        title: 'Clinical Named Entity Recognition',
+        body: 'Extracting biomarkers, staging, and treatment data from unstructured French oncology text. Where general-purpose NLP breaks and domain adaptation begins.',
+      },
+      {
+        title: 'Frugal & Interpretable AI',
+        body: 'Designing systems that route to the least opaque tier meeting performance thresholds. Compliance with the EU AI Act as a design constraint, not an afterthought.',
+      },
+      {
+        title: 'Multimodal Biomedical Reasoning',
+        body: 'Long-term direction: unifying clinical text, imaging, and genomics into models that reason across modalities. The world-models direction applied to medicine.',
+      },
+      {
+        title: 'Pedagogy of Complex Systems',
+        body: 'Teaching mathematics and physics-chemistry to about ten students at Complétude, from primary school through terminale. Making dense concepts learnable is a research skill, not a side gig.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Writing',
+    label: '08 — Writing',
     title: 'Notes from the research',
     subtitle: 'Longer write-ups on the methods, dead ends, and decisions behind the work above.',
     posts: [
@@ -281,6 +389,8 @@ const en: Dictionary = {
   },
   contact: {
     title: "Let's talk about clinical NLP, biomedical AI, or a PhD collaboration.",
+    directLabel: 'Direct',
+    elsewhereLabel: 'Elsewhere',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -311,11 +421,11 @@ const fr: Dictionary = {
     menuToggleLabel: 'Ouvrir le menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Concevoir des systèmes de NLP qui ',
-    h1Accent: 'lisent le langage clinique',
-    h1Post: ' comme un oncologue.',
-    sub: "Je suis Clément Longeac, étudiant ingénieur à l'intersection du NLP clinique et de l'IA biomédicale — je construis actuellement des pipelines d'extraction hybrides pour des comptes rendus d'oncologie en français, en vue d'un doctorat en IA appliquée à la recherche biomédicale.",
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Extraire des biomarqueurs depuis du texte clinique ',
+    h1Accent: 'sans réveiller le GPU',
+    h1Post: '.',
+    sub: "Je suis Clément Longeac. Je travaille sur DEMNE, un framework de routage qui décide — pour chaque type d'entité — si une regex, un CRF, un transformer ou un LLM est l'outil honnête pour la tâche. Premier résultat : 93,7 % des entités cliniques extraites sans GPU, F1 = 0,941 sur 300 notes AP-HP.",
     ctaResearch: 'Voir la recherche',
     ctaCV: 'Télécharger le CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schéma en direct',
@@ -325,7 +435,7 @@ const fr: Dictionary = {
     title: 'Du soutien scolaire en maths à la modélisation de biomarqueurs tumoraux',
     p1: "Je suis étudiant en quatrième année à ESIEE Paris, spécialisation Data Science & IA, inscrit dans le parcours Tremplin Recherche de l'école — un programme conçu pour les étudiants visant une thèse plutôt qu'un stage classique en entreprise.",
     p2: "Mon travail consiste à rendre exploitable le texte clinique non structuré : extraire les biomarqueurs, les informations de stadification et les détails de traitement enfouis dans les comptes rendus d'oncologie français, là où les outils NLP génériques échouent systématiquement face au vocabulaire et à la structure documentaire du domaine.",
-    p3: "En parallèle de mes études, je donne des cours de mathématiques, physique et informatique via Complétude, et je prépare des candidatures pour une thèse CIFRE en IA biomédicale à Sorbonne Université.",
+    p3: "En parallèle de mes études, je donne des cours de mathématiques et de physique-chimie via Complétude, et je prépare des candidatures pour une thèse CIFRE en IA biomédicale à Sorbonne Université.",
     visionLine:
       "À plus long terme, cette même discipline — extraire une structure fiable d'un texte désordonné et à fort enjeu — est ce qui m'attire vers la recherche en sûreté de l'IA : construire et évaluer des world models via AMI Labs et le programme Anthropic Fellows. (Phrase provisoire — à remplacer par ta formulation définitive.)",
     facts: [
@@ -428,7 +538,7 @@ const fr: Dictionary = {
         date: '2022 — Présent',
         title: 'Tuteur scientifique',
         org: 'Complétude',
-        body: "Cours de mathématiques, physique et informatique pour élèves du secondaire et étudiants, en parallèle de mes études d'ingénieur.",
+        body: "Cours de mathématiques et de physique-chimie à une dizaine d'élèves, du primaire jusqu'à la terminale, en parallèle de mes études d'ingénieur.",
       },
     ],
   },
@@ -443,8 +553,93 @@ const fr: Dictionary = {
     description:
       "Manuscrit détaillant le framework en cascade DEMNE, les cinq métriques de caractérisation de corpus utilisées pour la sélection de paradigme, et les résultats de calibration par recherche en grille sur trois corpus d'oncologie français.",
   },
+  projects: {
+    label: '05 — Projets sélectionnés',
+    title: 'Projets sélectionnés',
+    subtitle:
+      "Au-delà de DEMNE — des outils construits de bout en bout pour un hackathon et des projets de cours.",
+    items: [
+      {
+        date: 'Juin 2026',
+        title: 'NeuroStep',
+        description:
+          "Un catalogue numérique d'outils et d'applications de compensation cognitive pour les personnes cérébrolésées ou atteintes de tumeurs — aide à la communication, mémoire, planification. Réalisé pour le hackathon SN@SU, avec une interface Streamlit reposant sur un stockage JSON.",
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Déc. 2025',
+        title: "Tableau de bord qualité de l'air",
+        description:
+          "Un tableau de bord interactif reconstituant 15 ans de pollution atmosphérique de fond en France (2000–2015) à partir des données INERIS/Zenodo — stockage SQLite, graphiques Plotly et carte de chaleur Leaflet. Réalisé avec mon coéquipier William Zee.",
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Stack technique',
+    title: 'Stack technique',
+    subtitle:
+      "Des outils regroupés selon leur pertinence pour le travail ci-dessus — pas une liste générique.",
+    categories: [
+      {
+        title: 'NLP clinique & IA biomédicale',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Systèmes & Infrastructure',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Outils de recherche',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Langues',
+    languages: [
+      { flag: '🇫🇷', level: 'Langue maternelle' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Intermédiaire' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: "En cours d'apprentissage" },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Axes de recherche',
+    title: 'Axes de recherche',
+    items: [
+      {
+        title: "Reconnaissance d'entités nommées cliniques",
+        body: "Extraction de biomarqueurs, du stade et des données de traitement à partir de comptes rendus d'oncologie française non structurés. Là où le NLP généraliste échoue et où l'adaptation au domaine commence.",
+      },
+      {
+        title: 'IA frugale et interprétable',
+        body: "Concevoir des systèmes qui privilégient le niveau le moins opaque satisfaisant les seuils de performance. La conformité à l'AI Act européen comme contrainte de conception, pas comme réflexion après coup.",
+      },
+      {
+        title: 'Raisonnement biomédical multimodal',
+        body: "Direction à long terme : unifier texte clinique, imagerie et génomique dans des modèles capables de raisonner à travers les modalités. L'approche des world models appliquée à la médecine.",
+      },
+      {
+        title: 'Pédagogie des systèmes complexes',
+        body: "Enseignement des mathématiques et de la physique-chimie à une dizaine d'élèves chez Complétude, du primaire jusqu'à la terminale. Rendre des concepts denses accessibles est une compétence de recherche, pas un à-côté.",
+      },
+    ],
+  },
   writing: {
-    label: '05 — Écrits',
+    label: '08 — Écrits',
     title: 'Notes de recherche',
     subtitle: "Des articles plus longs sur les méthodes, les impasses et les décisions derrière le travail ci-dessus.",
     posts: [
@@ -462,6 +657,8 @@ const fr: Dictionary = {
   },
   contact: {
     title: 'Parlons NLP clinique, IA biomédicale, ou collaboration doctorale.',
+    directLabel: 'Direct',
+    elsewhereLabel: 'Ailleurs',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -492,11 +689,11 @@ const es: Dictionary = {
     menuToggleLabel: 'Abrir el menú',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Construyo sistemas de PLN que ',
-    h1Accent: 'leen el lenguaje clínico',
-    h1Post: ' como lo haría un oncólogo.',
-    sub: 'Soy Clément Longeac, estudiante de ingeniería en la intersección del PLN clínico y la IA biomédica — actualmente construyo pipelines de extracción híbridos para informes de oncología en francés, camino a un doctorado en IA aplicada a la investigación biomédica.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Extrayendo biomarcadores de texto clínico ',
+    h1Accent: 'sin despertar la GPU',
+    h1Post: '.',
+    sub: 'Soy Clément Longeac. Estoy trabajando en DEMNE, un framework de enrutamiento que decide — para cada tipo de entidad — si una expresión regular, un CRF, un transformer o un LLM es la herramienta honesta para la tarea. Primer resultado: 93,7 % de las entidades clínicas extraídas sin GPU, F1 = 0,941 sobre 300 notas de AP-HP.',
     ctaResearch: 'Ver la investigación',
     ctaCV: 'Descargar el CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, esquema en vivo',
@@ -506,7 +703,7 @@ const es: Dictionary = {
     title: 'De dar clases de matemáticas a modelar biomarcadores tumorales',
     p1: 'Soy estudiante de cuarto año en ESIEE Paris, especialización Data Science & IA, inscrito en el itinerario Tremplin Recherche de la escuela — un programa pensado para estudiantes que se dirigen hacia un doctorado en lugar de unas prácticas industriales estándar.',
     p2: 'Mi trabajo se centra en hacer utilizable el texto clínico no estructurado: extraer los biomarcadores, la información de estadificación y los detalles de tratamiento ocultos en informes de oncología franceses, donde las herramientas de PLN genéricas fallan sistemáticamente ante el vocabulario y la estructura documental del dominio.',
-    p3: 'Además de mis estudios, doy clases de matemáticas, física e informática a través de Complétude, y preparo solicitudes para un doctorado industrial CIFRE en IA biomédica en la Universidad de la Sorbona.',
+    p3: 'Además de mis estudios, doy clases de matemáticas y física-química a través de Complétude, y preparo solicitudes para un doctorado industrial CIFRE en IA biomédica en la Universidad de la Sorbona.',
     visionLine:
       'A más largo plazo, esa misma disciplina — extraer una estructura fiable de un texto desordenado y de alto riesgo — es lo que me atrae hacia la investigación en seguridad de la IA: construir y evaluar world models a través de AMI Labs y el programa Anthropic Fellows. (Frase provisional — reemplázala por tu redacción definitiva.)',
     facts: [
@@ -561,7 +758,7 @@ const es: Dictionary = {
       { current: true, date: '2026 — Presente', title: 'Fundador y Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construcción de una plataforma que da a pacientes con daño cerebral y a sus terapeutas ocupacionales una forma estructurada de comparar herramientas digitales de compensación cognitiva. Nacido como prototipo Python/Streamlit en el hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapeuta ocupacional en UEROS L\'ADAPT Île-de-France); actualmente en fase de definición de una reconstrucción de producción (FastAPI, PostgreSQL, Next.js) con alojamiento conforme a HDS/RGPD y un motor de búsqueda semántica para el emparejamiento clínico.' },
       { date: '2024 — 2027', title: 'Estudiante de ingeniería — Data Science & IA', org: 'ESIEE Paris', body: 'Estudiante de cuarto año del programa de ingeniería de cinco años de ESIEE Paris, especialización Data Science & IA (DSIA).' },
       { date: '2025', title: 'Becario de ingeniería, división GRADES', org: 'Synchrotron SOLEIL', body: 'Desarrollo de autopkgtests en OpenCL para la compatibilidad de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) en la infraestructura Debian/ROCm vía GitLab Salsa.' },
-      { date: '2022 — Presente', title: 'Tutor de ciencias', org: 'Complétude', body: 'Clases de matemáticas, física e informática a estudiantes de secundaria y universidad junto a mis estudios de ingeniería.' },
+      { date: '2022 — Presente', title: 'Tutor de ciencias', org: 'Complétude', body: 'Clases de matemáticas y física-química a una decena de estudiantes, desde primaria hasta el último año de secundaria, junto a mis estudios de ingeniería.' },
     ],
   },
   publications: {
@@ -574,8 +771,93 @@ const es: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manuscrito que detalla el framework en cascada DEMNE, las cinco métricas de caracterización de corpus usadas para la selección de paradigma, y los resultados de calibración de la búsqueda en cuadrícula en tres corpus de oncología franceses.',
   },
+  projects: {
+    label: '05 — Proyectos seleccionados',
+    title: 'Proyectos seleccionados',
+    subtitle:
+      'Más allá de DEMNE — herramientas construidas de principio a fin para un hackathon y trabajos de curso.',
+    items: [
+      {
+        date: 'Junio 2026',
+        title: 'NeuroStep',
+        description:
+          'Un catálogo digital de herramientas y aplicaciones de compensación cognitiva para personas con daño cerebral o tumores — ayuda a la comunicación, memoria y planificación. Creado para el hackathon SN@SU, con una interfaz Streamlit sobre un almacenamiento en JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dic. 2025',
+        title: 'Panel de calidad del aire',
+        description:
+          'Un panel interactivo que reconstruye 15 años de contaminación atmosférica de fondo en Francia (2000–2015) a partir de datos de INERIS/Zenodo — almacenamiento en SQLite, gráficos con Plotly y mapa de calor con Leaflet. Creado con mi compañero William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Stack técnico',
+    title: 'Stack técnico',
+    subtitle:
+      'Herramientas agrupadas según su relevancia para el trabajo anterior — no una lista genérica.',
+    categories: [
+      {
+        title: 'PLN clínico e IA biomédica',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Sistemas e infraestructura',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Herramientas de investigación',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Idiomas',
+    languages: [
+      { flag: '🇫🇷', level: 'Nativo' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Intermedio' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'En progreso' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Áreas de enfoque',
+    title: 'Áreas de enfoque',
+    items: [
+      {
+        title: 'Reconocimiento de entidades nombradas clínicas',
+        body: 'Extracción de biomarcadores, estadificación y datos de tratamiento a partir de textos oncológicos franceses no estructurados. Donde el NLP genérico falla y comienza la adaptación de dominio.',
+      },
+      {
+        title: 'IA frugal e interpretable',
+        body: 'Diseñar sistemas que recurren al nivel menos opaco que cumpla los umbrales de rendimiento. El cumplimiento de la Ley de IA de la UE como restricción de diseño, no como una idea de último momento.',
+      },
+      {
+        title: 'Razonamiento biomédico multimodal',
+        body: 'Dirección a largo plazo: unificar texto clínico, imágenes y genómica en modelos que razonen entre modalidades. El enfoque de los world models aplicado a la medicina.',
+      },
+      {
+        title: 'Pedagogía de sistemas complejos',
+        body: 'Enseñanza de matemáticas y física-química a una decena de estudiantes en Complétude, desde primaria hasta el último año de secundaria. Hacer que conceptos densos sean comprensibles es una habilidad de investigación, no un pasatiempo.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Artículos',
+    label: '08 — Artículos',
     title: 'Notas de la investigación',
     subtitle: 'Artículos más extensos sobre los métodos, callejones sin salida y decisiones detrás del trabajo anterior.',
     posts: [
@@ -585,6 +867,8 @@ const es: Dictionary = {
   },
   contact: {
     title: 'Hablemos de PLN clínico, IA biomédica, o una colaboración doctoral.',
+    directLabel: 'Directo',
+    elsewhereLabel: 'En otros lugares',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -615,11 +899,11 @@ const de: Dictionary = {
     menuToggleLabel: 'Menü öffnen',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Ich baue NLP-Systeme, die ',
-    h1Accent: 'klinische Sprache so lesen',
-    h1Post: ' wie ein Onkologe.',
-    sub: 'Ich bin Clément Longeac, Ingenieurstudent an der Schnittstelle von klinischem NLP und biomedizinischer KI — derzeit entwickle ich hybride Extraktionspipelines für französische Onkologieberichte, auf dem Weg zu einer Promotion in KI angewandt auf biomedizinische Forschung.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Biomarker aus klinischem Text extrahieren ',
+    h1Accent: 'ohne die GPU zu wecken',
+    h1Post: '.',
+    sub: 'Ich bin Clément Longeac. Ich arbeite an DEMNE, einem Routing-Framework, das für jeden Entitätstyp entscheidet, ob eine Regex, ein CRF, ein Transformer oder ein LLM das ehrliche Werkzeug für die Aufgabe ist. Erstes Ergebnis: 93,7 % der klinischen Entitäten ohne GPU extrahiert, F1 = 0,941 bei 300 AP-HP-Notizen.',
     ctaResearch: 'Zur Forschung',
     ctaCV: 'Lebenslauf herunterladen',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, Live-Schema',
@@ -629,7 +913,7 @@ const de: Dictionary = {
     title: 'Von Mathe-Nachhilfe zur Modellierung von Tumormarkern',
     p1: 'Ich bin Student im vierten Jahr an der ESIEE Paris, Schwerpunkt Data Science & KI, eingeschrieben im Tremplin-Recherche-Programm der Schule — einem Programm für Studierende, die eine Promotion anstreben statt eines klassischen Industriepraktikums.',
     p2: 'Meine Arbeit dreht sich darum, unstrukturierten klinischen Text für die Forschung nutzbar zu machen: Extraktion von Biomarkern, Staging-Informationen und Behandlungsdetails aus französischen Onkologieberichten, wo generische NLP-Tools an domänenspezifischem Vokabular und Dokumentstruktur systematisch scheitern.',
-    p3: 'Neben dem Studium unterrichte ich Mathematik, Physik und Informatik bei Complétude und bereite Bewerbungen für eine CIFRE-Industriepromotion in biomedizinischer KI an der Sorbonne-Universität vor.',
+    p3: 'Neben dem Studium unterrichte ich Mathematik und Physik-Chemie bei Complétude und bereite Bewerbungen für eine CIFRE-Industriepromotion in biomedizinischer KI an der Sorbonne-Universität vor.',
     visionLine:
       'Langfristig ist es genau diese Disziplin — verlässliche Struktur aus unordentlichem, hochriskantem Text zu ziehen —, die mich zur KI-Sicherheitsforschung zieht: den Aufbau und die Evaluierung von World Models über AMI Labs und das Anthropic Fellows Program. (Entwurfszeile — durch deine endgültige Formulierung ersetzen.)',
     facts: [
@@ -684,7 +968,7 @@ const de: Dictionary = {
       { current: true, date: '2026 — Heute', title: 'Gründer & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Aufbau einer Plattform, die hirnverletzten Patienten und ihren Ergotherapeuten eine strukturierte Möglichkeit gibt, digitale Werkzeuge zur kognitiven Kompensation zu vergleichen. Entstanden als Python/Streamlit-Prototyp beim SN@SU-Hackathon (Sorbonne-Universität, mit Flor Sanchez-Luizard, Ergotherapeutin bei UEROS L\'ADAPT Île-de-France); derzeit in der Planungsphase für einen Produktions-Relaunch (FastAPI, PostgreSQL, Next.js) mit HDS/RGPD-konformem Hosting und einer semantischen Suchmaschine für klinisches Matching.' },
       { date: '2024 — 2027', title: 'Ingenieurstudent — Data Science & KI', org: 'ESIEE Paris', body: 'Student im vierten Jahr des fünfjährigen Ingenieurstudiengangs der ESIEE Paris, Schwerpunkt Data Science & KI (DSIA).' },
       { date: '2025', title: 'Ingenieurpraktikant, GRADES-Abteilung', org: 'Synchrotron SOLEIL', body: 'Entwicklung von Autopkgtests in OpenCL für AMD-GPU-Kompatibilität (pyopencl, nabu, ufo-filters, pyvkfft) auf Debian/ROCm-Infrastruktur über GitLab Salsa.' },
-      { date: '2022 — Heute', title: 'MINT-Nachhilfelehrer', org: 'Complétude', body: 'Unterricht in Mathematik, Physik und Informatik für Sekundarschüler und Studierende, parallel zu meinem Ingenieurstudium.' },
+      { date: '2022 — Heute', title: 'MINT-Nachhilfelehrer', org: 'Complétude', body: 'Unterricht in Mathematik und Physik-Chemie für etwa zehn Schüler, von der Grundschule bis zum Abitur, parallel zu meinem Ingenieurstudium.' },
     ],
   },
   publications: {
@@ -697,8 +981,92 @@ const de: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manuskript zum DEMNE-Kaskadenframework, den fünf Korpus-Charakterisierungsmetriken zur Paradigmenauswahl und den Kalibrierungsergebnissen der Grid-Search über drei französische Onkologie-Korpora.',
   },
+  projects: {
+    label: '05 — Ausgewählte Projekte',
+    title: 'Ausgewählte Projekte',
+    subtitle:
+      'Jenseits von DEMNE — Tools, die für einen Hackathon und Studienprojekte von Grund auf entwickelt wurden.',
+    items: [
+      {
+        date: 'Juni 2026',
+        title: 'NeuroStep',
+        description:
+          'Ein digitaler Katalog kognitiver Hilfsmittel und Apps für Menschen mit Hirnverletzungen und Tumoren — Kommunikationshilfen, Gedächtnis- und Planungsunterstützung. Entwickelt für den SN@SU-Hackathon, mit einer Streamlit-Oberfläche über einem JSON-basierten Speicher.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dez. 2025',
+        title: 'Luftqualitäts-Dashboard',
+        description:
+          'Ein interaktives Dashboard, das 15 Jahre Hintergrund-Luftverschmutzung in Frankreich (2000–2015) anhand von INERIS-/Zenodo-Daten rekonstruiert — SQLite-Speicherung, Plotly-Diagramme und eine Leaflet-Heatmap. Entwickelt mit meinem Teamkollegen William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Technischer Stack',
+    title: 'Technischer Stack',
+    subtitle: 'Werkzeuge gruppiert nach ihrer Relevanz für die obige Arbeit — keine generische Liste.',
+    categories: [
+      {
+        title: 'Klinisches NLP & biomedizinische KI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Systeme & Infrastruktur',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Forschungswerkzeuge',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Sprachen',
+    languages: [
+      { flag: '🇫🇷', level: 'Muttersprache' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Mittelstufe' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'Im Aufbau' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Schwerpunkte',
+    title: 'Schwerpunkte',
+    items: [
+      {
+        title: 'Klinische Named Entity Recognition',
+        body: 'Extraktion von Biomarkern, Staging- und Behandlungsdaten aus unstrukturierten französischen Onkologietexten. Dort, wo allgemeines NLP versagt und Domänenanpassung beginnt.',
+      },
+      {
+        title: 'Frugale & interpretierbare KI',
+        body: 'Entwicklung von Systemen, die auf die am wenigsten intransparente Stufe zurückgreifen, die die Leistungsschwellen erfüllt. Die Einhaltung des EU AI Act als Designvorgabe, nicht als nachträglicher Gedanke.',
+      },
+      {
+        title: 'Multimodales biomedizinisches Reasoning',
+        body: 'Langfristige Richtung: klinischen Text, Bildgebung und Genomik in Modellen vereinen, die über Modalitäten hinweg schlussfolgern. Der World-Models-Ansatz, angewandt auf die Medizin.',
+      },
+      {
+        title: 'Didaktik komplexer Systeme',
+        body: 'Unterricht in Mathematik und Physik-Chemie für etwa zehn Schüler bei Complétude, von der Grundschule bis zum Abitur. Dichte Konzepte lernbar zu machen ist eine Forschungsfähigkeit, kein Nebenjob.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Beiträge',
+    label: '08 — Beiträge',
     title: 'Notizen aus der Forschung',
     subtitle: 'Längere Beiträge zu Methoden, Sackgassen und Entscheidungen hinter der obigen Arbeit.',
     posts: [
@@ -708,6 +1076,8 @@ const de: Dictionary = {
   },
   contact: {
     title: 'Lass uns über klinisches NLP, biomedizinische KI oder eine Promotionskooperation sprechen.',
+    directLabel: 'Direkt',
+    elsewhereLabel: 'Anderswo',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -738,11 +1108,11 @@ const it: Dictionary = {
     menuToggleLabel: 'Apri il menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Costruisco sistemi di NLP che ',
-    h1Accent: 'leggono il linguaggio clinico',
-    h1Post: ' come farebbe un oncologo.',
-    sub: 'Sono Clément Longeac, studente di ingegneria all\'intersezione tra NLP clinico e IA biomedica — attualmente costruisco pipeline di estrazione ibride per referti di oncologia francesi, in vista di un dottorato in IA applicata alla ricerca biomedica.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Estraggo biomarcatori da testo clinico ',
+    h1Accent: 'senza svegliare la GPU',
+    h1Post: '.',
+    sub: 'Sono Clément Longeac. Sto lavorando a DEMNE, un framework di routing che decide — per ogni tipo di entità — se una regex, un CRF, un transformer o un LLM sia lo strumento onesto per il compito. Primo risultato: 93,7% delle entità cliniche estratte senza GPU, F1 = 0,941 su 300 note AP-HP.',
     ctaResearch: 'Vedi la ricerca',
     ctaCV: 'Scarica il CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schema dal vivo',
@@ -752,7 +1122,7 @@ const it: Dictionary = {
     title: 'Dal ripetizioni di matematica alla modellazione di biomarcatori tumorali',
     p1: 'Sono uno studente del quarto anno a ESIEE Paris, specializzazione Data Science & IA, iscritto al percorso Tremplin Recherche della scuola — un programma pensato per studenti orientati verso il dottorato piuttosto che verso uno stage aziendale standard.',
     p2: 'Il mio lavoro consiste nel rendere utilizzabile il testo clinico non strutturato: estrarre biomarcatori, informazioni di stadiazione e dettagli di trattamento sepolti nei referti di oncologia francesi, dove gli strumenti NLP generici falliscono sistematicamente di fronte al vocabolario e alla struttura documentale del dominio.',
-    p3: 'Parallelamente agli studi, insegno matematica, fisica e informatica tramite Complétude, e sto preparando candidature per un dottorato industriale CIFRE in IA biomedica alla Sorbona.',
+    p3: 'Parallelamente agli studi, insegno matematica e fisica-chimica tramite Complétude, e sto preparando candidature per un dottorato industriale CIFRE in IA biomedica alla Sorbona.',
     visionLine:
       'Nel lungo periodo, la stessa disciplina — estrarre una struttura affidabile da un testo disordinato e ad alto rischio — è ciò che mi attira verso la ricerca sulla sicurezza dell\'IA: costruire e valutare world model tramite AMI Labs e l\'Anthropic Fellows Program. (Frase provvisoria — sostituiscila con la tua formulazione definitiva.)',
     facts: [
@@ -807,7 +1177,7 @@ const it: Dictionary = {
       { current: true, date: '2026 — Presente', title: 'Fondatore e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Costruzione di una piattaforma che offre a pazienti con lesioni cerebrali e ai loro terapisti occupazionali un modo strutturato per confrontare strumenti digitali di compensazione cognitiva. Nato come prototipo Python/Streamlit all\'hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapista occupazionale presso UEROS L\'ADAPT Île-de-France); ora in fase di definizione per una riprogettazione in produzione (FastAPI, PostgreSQL, Next.js) con hosting conforme a HDS/RGPD e un motore di ricerca semantica per l\'abbinamento clinico.' },
       { date: '2024 — 2027', title: 'Studente di ingegneria — Data Science & IA', org: 'ESIEE Paris', body: 'Studente del quarto anno del percorso di ingegneria quinquennale di ESIEE Paris, specializzazione Data Science & IA (DSIA).' },
       { date: '2025', title: 'Stagista ingegnere, divisione GRADES', org: 'Synchrotron SOLEIL', body: 'Sviluppo di autopkgtest in OpenCL per la compatibilità GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sull\'infrastruttura Debian/ROCm via GitLab Salsa.' },
-      { date: '2022 — Presente', title: 'Tutor STEM', org: 'Complétude', body: 'Insegnamento di matematica, fisica e informatica a studenti delle superiori e universitari, in parallelo ai miei studi di ingegneria.' },
+      { date: '2022 — Presente', title: 'Tutor STEM', org: 'Complétude', body: "Insegnamento di matematica e fisica-chimica a una decina di studenti, dalle elementari fino all'ultimo anno delle superiori, in parallelo ai miei studi di ingegneria." },
     ],
   },
   publications: {
@@ -820,8 +1190,93 @@ const it: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manoscritto che descrive il framework a cascata DEMNE, le cinque metriche di caratterizzazione del corpus usate per la selezione del paradigma, e i risultati di calibrazione della grid search su tre corpus di oncologia francesi.',
   },
+  projects: {
+    label: '05 — Progetti selezionati',
+    title: 'Progetti selezionati',
+    subtitle:
+      'Oltre DEMNE — strumenti realizzati end-to-end per un hackathon e progetti universitari.',
+    items: [
+      {
+        date: 'Giugno 2026',
+        title: 'NeuroStep',
+        description:
+          "Un catalogo digitale di strumenti e app di compensazione cognitiva per persone con lesioni cerebrali e tumori — supporto alla comunicazione, memoria e pianificazione. Realizzato per l'hackathon SN@SU, con un'interfaccia Streamlit su un archivio basato su JSON.",
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dic. 2025',
+        title: "Dashboard sulla qualità dell'aria",
+        description:
+          "Una dashboard interattiva che ricostruisce 15 anni di inquinamento atmosferico di fondo in Francia (2000–2015) a partire dai dati INERIS/Zenodo — archiviazione SQLite, grafici Plotly e mappa di calore Leaflet. Realizzata con il mio compagno di squadra William Zee.",
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Stack tecnico',
+    title: 'Stack tecnico',
+    subtitle:
+      'Strumenti raggruppati in base alla loro rilevanza per il lavoro sopra descritto — non un elenco generico.',
+    categories: [
+      {
+        title: 'NLP clinico e IA biomedica',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Sistemi e infrastruttura',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Strumenti di ricerca',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Lingue',
+    languages: [
+      { flag: '🇫🇷', level: 'Madrelingua' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Intermedio' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'In corso' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Aree di interesse',
+    title: 'Aree di interesse',
+    items: [
+      {
+        title: 'Riconoscimento di entità nominate cliniche',
+        body: 'Estrazione di biomarcatori, stadiazione e dati di trattamento da testi oncologici francesi non strutturati. Dove il NLP generico fallisce e inizia l\'adattamento al dominio.',
+      },
+      {
+        title: 'IA frugale e interpretabile',
+        body: "Progettare sistemi che ricorrono al livello meno opaco in grado di soddisfare le soglie di prestazione. La conformità all'AI Act europeo come vincolo di progettazione, non come ripensamento.",
+      },
+      {
+        title: 'Ragionamento biomedico multimodale',
+        body: "Direzione a lungo termine: unificare testo clinico, imaging e genomica in modelli capaci di ragionare tra le modalità. L'approccio dei world model applicato alla medicina.",
+      },
+      {
+        title: 'Didattica dei sistemi complessi',
+        body: "Insegnamento di matematica e fisica-chimica a una decina di studenti presso Complétude, dalle elementari fino all'ultimo anno delle superiori. Rendere apprendibili concetti densi è una competenza di ricerca, non un'attività secondaria.",
+      },
+    ],
+  },
   writing: {
-    label: '05 — Articoli',
+    label: '08 — Articoli',
     title: 'Note dalla ricerca',
     subtitle: 'Approfondimenti sui metodi, i vicoli ciechi e le decisioni dietro al lavoro sopra descritto.',
     posts: [
@@ -831,6 +1286,8 @@ const it: Dictionary = {
   },
   contact: {
     title: 'Parliamo di NLP clinico, IA biomedica, o di una collaborazione dottorale.',
+    directLabel: 'Diretto',
+    elsewhereLabel: 'Altrove',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -861,11 +1318,11 @@ const pt: Dictionary = {
     menuToggleLabel: 'Abrir menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Eu construo sistemas de PLN que ',
-    h1Accent: 'leem a linguagem clínica',
-    h1Post: ' como um oncologista faria.',
-    sub: 'Sou Clément Longeac, estudante de engenharia na interseção entre PLN clínico e IA biomédica — atualmente construo pipelines de extração híbridos para laudos de oncologia franceses, a caminho de um doutorado em IA aplicada à pesquisa biomédica.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Extraindo biomarcadores de texto clínico ',
+    h1Accent: 'sem acordar a GPU',
+    h1Post: '.',
+    sub: 'Sou Clément Longeac. Estou trabalhando no DEMNE, um framework de roteamento que decide — para cada tipo de entidade — se uma regex, um CRF, um transformer ou um LLM é a ferramenta honesta para a tarefa. Primeiro resultado: 93,7% das entidades clínicas extraídas sem GPU, F1 = 0,941 em 300 notas AP-HP.',
     ctaResearch: 'Ver a pesquisa',
     ctaCV: 'Baixar o currículo',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, esquema ao vivo',
@@ -875,7 +1332,7 @@ const pt: Dictionary = {
     title: 'De dar aulas de matemática à modelagem de biomarcadores tumorais',
     p1: 'Sou estudante do quarto ano na ESIEE Paris, especialização em Data Science & IA, matriculado na trilha Tremplin Recherche da escola — um programa voltado a estudantes que buscam o doutorado em vez de um estágio industrial padrão.',
     p2: 'Meu trabalho é centrado em tornar o texto clínico não estruturado utilizável: extrair biomarcadores, informações de estadiamento e detalhes de tratamento enterrados em laudos de oncologia franceses, onde ferramentas de PLN genéricas falham sistematicamente diante do vocabulário e da estrutura documental do domínio.',
-    p3: 'Paralelamente aos estudos, dou aulas de matemática, física e computação pela Complétude, e estou preparando candidaturas para um doutorado industrial CIFRE em IA biomédica na Universidade Sorbonne.',
+    p3: 'Paralelamente aos estudos, dou aulas de matemática e físico-química pela Complétude, e estou preparando candidaturas para um doutorado industrial CIFRE em IA biomédica na Universidade Sorbonne.',
     visionLine:
       'A longo prazo, essa mesma disciplina — extrair estrutura confiável de um texto desorganizado e de alto risco — é o que me atrai para a pesquisa em segurança de IA: construir e avaliar world models via AMI Labs e o Anthropic Fellows Program. (Linha provisória — substitua pela sua formulação definitiva.)',
     facts: [
@@ -930,7 +1387,7 @@ const pt: Dictionary = {
       { current: true, date: '2026 — Atualmente', title: 'Fundador e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construção de uma plataforma que dá a pacientes com lesão cerebral e a seus terapeutas ocupacionais uma forma estruturada de comparar ferramentas digitais de compensação cognitiva. Nasceu como protótipo Python/Streamlit no hackathon SN@SU (Sorbonne, com Flor Sanchez-Luizard, terapeuta ocupacional na UEROS L\'ADAPT Île-de-France); atualmente em fase de definição de uma reconstrução de produção (FastAPI, PostgreSQL, Next.js) com hospedagem compatível com HDS/RGPD e um motor de busca semântica para correspondência clínica.' },
       { date: '2024 — 2027', title: 'Estudante de engenharia — Data Science & IA', org: 'ESIEE Paris', body: 'Estudante do quarto ano do programa de engenharia de cinco anos da ESIEE Paris, especialização em Data Science & IA (DSIA).' },
       { date: '2025', title: 'Estagiário de engenharia, divisão GRADES', org: 'Synchrotron SOLEIL', body: 'Desenvolvimento de autopkgtests em OpenCL para compatibilidade de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infraestrutura Debian/ROCm via GitLab Salsa.' },
-      { date: '2022 — Atualmente', title: 'Tutor de ciências exatas', org: 'Complétude', body: 'Aulas de matemática, física e computação para alunos do ensino médio e universitário, paralelamente aos meus estudos de engenharia.' },
+      { date: '2022 — Atualmente', title: 'Tutor de ciências exatas', org: 'Complétude', body: 'Aulas de matemática e físico-química para cerca de dez alunos, do ensino fundamental até o último ano do ensino médio, paralelamente aos meus estudos de engenharia.' },
     ],
   },
   publications: {
@@ -943,8 +1400,92 @@ const pt: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manuscrito detalhando o framework em cascata DEMNE, as cinco métricas de caracterização de corpus usadas para seleção de paradigma, e os resultados de calibração da busca em grade em três corpus de oncologia franceses.',
   },
+  projects: {
+    label: '05 — Projetos selecionados',
+    title: 'Projetos selecionados',
+    subtitle:
+      'Além do DEMNE — ferramentas construídas de ponta a ponta para um hackathon e trabalhos acadêmicos.',
+    items: [
+      {
+        date: 'Junho de 2026',
+        title: 'NeuroStep',
+        description:
+          'Um catálogo digital de ferramentas e aplicativos de compensação cognitiva para pessoas com lesões cerebrais e tumores — apoio à comunicação, memória e planejamento. Criado para o hackathon SN@SU, com uma interface Streamlit sobre um armazenamento em JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dez. 2025',
+        title: 'Painel de qualidade do ar',
+        description:
+          'Um painel interativo que reconstrói 15 anos de poluição atmosférica de fundo na França (2000–2015) a partir de dados do INERIS/Zenodo — armazenamento em SQLite, gráficos em Plotly e mapa de calor em Leaflet. Criado com meu colega de equipe William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Stack técnica',
+    title: 'Stack técnica',
+    subtitle: 'Ferramentas agrupadas pela relevância para o trabalho acima — não uma lista genérica.',
+    categories: [
+      {
+        title: 'PLN clínico e IA biomédica',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Sistemas e infraestrutura',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Ferramentas de pesquisa',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Idiomas',
+    languages: [
+      { flag: '🇫🇷', level: 'Nativo' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Intermediário' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'Em progresso' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Áreas de foco',
+    title: 'Áreas de foco',
+    items: [
+      {
+        title: 'Reconhecimento de entidades nomeadas clínicas',
+        body: 'Extração de biomarcadores, estadiamento e dados de tratamento a partir de textos oncológicos franceses não estruturados. Onde o NLP genérico falha e a adaptação de domínio começa.',
+      },
+      {
+        title: 'IA frugal e interpretável',
+        body: 'Projetar sistemas que recorrem ao nível menos opaco que atenda aos limiares de desempenho. A conformidade com o AI Act da UE como restrição de design, não uma reflexão tardia.',
+      },
+      {
+        title: 'Raciocínio biomédico multimodal',
+        body: 'Direção de longo prazo: unificar texto clínico, imagem e genômica em modelos que raciocinam entre modalidades. A abordagem de world models aplicada à medicina.',
+      },
+      {
+        title: 'Pedagogia de sistemas complexos',
+        body: 'Ensino de matemática e físico-química para cerca de dez alunos na Complétude, do ensino fundamental até o último ano do ensino médio. Tornar conceitos densos ensináveis é uma habilidade de pesquisa, não um bico.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Artigos',
+    label: '08 — Artigos',
     title: 'Notas da pesquisa',
     subtitle: 'Textos mais longos sobre os métodos, becos sem saída e decisões por trás do trabalho acima.',
     posts: [
@@ -954,6 +1495,8 @@ const pt: Dictionary = {
   },
   contact: {
     title: 'Vamos falar sobre PLN clínico, IA biomédica, ou uma colaboração de doutorado.',
+    directLabel: 'Direto',
+    elsewhereLabel: 'Em outros lugares',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -984,11 +1527,11 @@ const nl: Dictionary = {
     menuToggleLabel: 'Menu openen',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Ik bouw NLP-systemen die ',
-    h1Accent: 'klinische taal lezen',
-    h1Post: ' zoals een oncoloog dat doet.',
-    sub: 'Ik ben Clément Longeac, ingenieursstudent op het snijvlak van klinische NLP en biomedische AI — momenteel bouw ik hybride extractiepipelines voor Franse oncologierapporten, op weg naar een PhD in AI toegepast op biomedisch onderzoek.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Biomarkers uit klinische tekst halen ',
+    h1Accent: 'zonder de GPU wakker te maken',
+    h1Post: '.',
+    sub: 'Ik ben Clément Longeac. Ik werk aan DEMNE, een routeringsframework dat per entiteitstype beslist of een regex, een CRF, een transformer of een LLM het eerlijke gereedschap voor de taak is. Eerste resultaat: 93,7% van de klinische entiteiten geëxtraheerd zonder GPU, F1 = 0,941 op 300 AP-HP-notities.',
     ctaResearch: 'Bekijk het onderzoek',
     ctaCV: 'Download CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, live schema',
@@ -998,7 +1541,7 @@ const nl: Dictionary = {
     title: 'Van bijles wiskunde tot het modelleren van tumormarkers',
     p1: 'Ik ben een vierdejaars student aan ESIEE Paris, specialisatie Data Science & AI, ingeschreven in het Tremplin Recherche-traject van de school — een programma voor studenten die op een doctoraat mikken in plaats van een standaard bedrijfsstage.',
     p2: 'Mijn werk draait om ongestructureerde klinische tekst bruikbaar te maken voor onderzoek: het extraheren van biomarkers, stadiëringsinformatie en behandelingsdetails verborgen in Franse oncologierapporten, waar generieke NLP-tools stelselmatig falen op domeinspecifieke woordenschat en documentstructuur.',
-    p3: 'Naast mijn studie geef ik bijles wiskunde, natuurkunde en informatica via Complétude, en bereid ik sollicitaties voor een CIFRE-industrieel doctoraat in biomedische AI aan de Sorbonne-universiteit voor.',
+    p3: 'Naast mijn studie geef ik bijles wiskunde en natuurkunde-scheikunde via Complétude, en bereid ik sollicitaties voor een CIFRE-industrieel doctoraat in biomedische AI aan de Sorbonne-universiteit voor.',
     visionLine:
       'Op langere termijn is het diezelfde discipline — betrouwbare structuur halen uit rommelige, hoog-risicotekst — die me naar AI-veiligheidsonderzoek trekt: het bouwen en evalueren van world models via AMI Labs en het Anthropic Fellows Program. (Concepttekst — vervang door je eigen definitieve formulering.)',
     facts: [
@@ -1053,7 +1596,7 @@ const nl: Dictionary = {
       { current: true, date: '2026 — Heden', title: 'Oprichter & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bouw van een platform dat hersenletselpatiënten en hun ergotherapeuten een gestructureerde manier geeft om digitale hulpmiddelen voor cognitieve compensatie te vergelijken. Ontstaan als Python/Streamlit-prototype tijdens de SN@SU-hackathon (Sorbonne-universiteit, met Flor Sanchez-Luizard, ergotherapeut bij UEROS L\'ADAPT Île-de-France); momenteel in de planningsfase voor een productieherbouw (FastAPI, PostgreSQL, Next.js) met HDS/RGPD-conforme hosting en een semantische zoekmachine voor klinische matching.' },
       { date: '2024 — 2027', title: 'Ingenieursstudent — Data Science & AI', org: 'ESIEE Paris', body: 'Vierdejaars student in het vijfjarige ingenieursprogramma van ESIEE Paris, specialisatie Data Science & AI (DSIA).' },
       { date: '2025', title: 'Ingenieursstagiair, afdeling GRADES', org: 'Synchrotron SOLEIL', body: 'Ontwikkeling van autopkgtests in OpenCL voor AMD-GPU-compatibiliteit (pyopencl, nabu, ufo-filters, pyvkfft) op Debian/ROCm-infrastructuur via GitLab Salsa.' },
-      { date: '2022 — Heden', title: 'Bijlesdocent bèta-vakken', org: 'Complétude', body: 'Bijles wiskunde, natuurkunde en informatica aan middelbare scholieren en studenten, naast mijn ingenieursstudie.' },
+      { date: '2022 — Heden', title: 'Bijlesdocent bèta-vakken', org: 'Complétude', body: 'Bijles wiskunde en natuurkunde-scheikunde aan een tiental leerlingen, van de basisschool tot het laatste jaar middelbare school, naast mijn ingenieursstudie.' },
     ],
   },
   publications: {
@@ -1066,8 +1609,92 @@ const nl: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manuscript met details over het DEMNE-cascadeframework, de vijf corpuskarakteriseringsmetrieken voor paradigmakeuze, en de kalibratieresultaten van de grid search over drie Franse oncologiecorpora.',
   },
+  projects: {
+    label: '05 — Uitgelichte projecten',
+    title: 'Uitgelichte projecten',
+    subtitle:
+      'Naast DEMNE — tools die volledig van begin tot eind zijn gebouwd voor een hackathon en studieprojecten.',
+    items: [
+      {
+        date: 'Juni 2026',
+        title: 'NeuroStep',
+        description:
+          'Een digitale catalogus van cognitieve hulpmiddelen en apps voor mensen met hersenletsel en tumoren — hulp bij communicatie, geheugen en planning. Gebouwd voor de SN@SU-hackathon, met een Streamlit-interface bovenop een op JSON gebaseerde opslag.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dec. 2025',
+        title: 'Luchtkwaliteitsdashboard',
+        description:
+          'Een interactief dashboard dat 15 jaar achtergrondluchtvervuiling in Frankrijk (2000–2015) reconstrueert op basis van INERIS/Zenodo-data — SQLite-opslag, Plotly-grafieken en een Leaflet-heatmap. Gebouwd samen met teamgenoot William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Technische stack',
+    title: 'Technische stack',
+    subtitle: 'Tools gegroepeerd naar relevantie voor het werk hierboven — geen generieke lijst.',
+    categories: [
+      {
+        title: 'Klinische NLP & biomedische AI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Systemen & infrastructuur',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Onderzoekshulpmiddelen',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Talen',
+    languages: [
+      { flag: '🇫🇷', level: 'Moedertaal' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Gemiddeld' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'In ontwikkeling' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Aandachtsgebieden',
+    title: 'Aandachtsgebieden',
+    items: [
+      {
+        title: 'Klinische named entity recognition',
+        body: 'Extractie van biomarkers, stadiëring en behandelgegevens uit ongestructureerde Franse oncologische teksten. Waar generieke NLP faalt en domeinadaptatie begint.',
+      },
+      {
+        title: 'Frugale & interpreteerbare AI',
+        body: 'Systemen ontwerpen die naar het minst ondoorzichtige niveau routeren dat aan de prestatiedrempels voldoet. Naleving van de EU AI Act als ontwerpbeperking, niet als bijgedachte.',
+      },
+      {
+        title: 'Multimodaal biomedisch redeneren',
+        body: 'Langetermijnrichting: klinische tekst, beeldvorming en genomica verenigen in modellen die over modaliteiten heen redeneren. De world-models-aanpak toegepast op de geneeskunde.',
+      },
+      {
+        title: 'Didactiek van complexe systemen',
+        body: 'Wiskunde en natuurkunde-scheikunde geven aan een tiental leerlingen bij Complétude, van de basisschool tot het laatste jaar middelbare school. Dichte concepten leerbaar maken is een onderzoeksvaardigheid, geen bijbaantje.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Artikelen',
+    label: '08 — Artikelen',
     title: 'Notities uit het onderzoek',
     subtitle: 'Langere stukken over de methoden, doodlopende wegen en beslissingen achter het werk hierboven.',
     posts: [
@@ -1077,6 +1704,8 @@ const nl: Dictionary = {
   },
   contact: {
     title: 'Laten we praten over klinische NLP, biomedische AI, of een doctoraatssamenwerking.',
+    directLabel: 'Direct',
+    elsewhereLabel: 'Elders',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1107,11 +1736,11 @@ const zh: Dictionary = {
     menuToggleLabel: '打开菜单',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: '我构建的自然语言处理系统能够',
-    h1Accent: '像肿瘤学家一样解读临床语言',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: '从临床文本中提取生物标志物，',
+    h1Accent: '却不必唤醒GPU',
     h1Post: '。',
-    sub: '我是Clément Longeac，一名工程学学生，专注于临床自然语言处理与生物医学人工智能的交叉领域——目前正在为法语肿瘤学报告构建混合抽取流水线，未来目标是攻读应用于生物医学研究的人工智能博士学位。',
+    sub: '我是Clément Longeac。我正在研发DEMNE，一个路由框架——针对每种实体类型，决定正则表达式、CRF、Transformer还是LLM才是诚实可靠的工具。首个成果：93.7%的临床实体在无需GPU的情况下被提取，在300份AP-HP病历上F1值达到0.941。',
     ctaResearch: '查看研究',
     ctaCV: '下载简历',
     caption: 'DEMNE — 规则 → CRF → Transformer → LLM，实时示意图',
@@ -1121,7 +1750,7 @@ const zh: Dictionary = {
     title: '从数学家教到肿瘤标志物建模',
     p1: '我是巴黎ESIEE工程学院四年级学生，专攻数据科学与人工智能，就读于学校的Tremplin Recherche项目——该项目面向以博士研究为目标而非常规企业实习的学生。',
     p2: '我的工作核心是让非结构化的临床文本可用于研究：从法语肿瘤学报告中提取生物标志物、分期信息和治疗细节，而通用自然语言处理工具在面对该领域的专业词汇和文档结构时往往表现不佳。',
-    p3: '在学习之余，我通过Complétude机构教授数学、物理和计算机课程,并正在准备申请索邦大学生物医学人工智能方向的CIFRE产学合作博士项目。',
+    p3: '在学习之余，我通过Complétude机构教授数学和物理化学课程，并正在准备申请索邦大学生物医学人工智能方向的CIFRE产学合作博士项目。',
     visionLine:
       '从长远看，正是这种从混乱、高风险文本中提取可靠结构的能力，吸引我投身于人工智能安全研究：通过AMI Labs和Anthropic Fellows项目构建并评估world model。（此句为草稿——请替换为你自己的最终表述。）',
     facts: [
@@ -1176,7 +1805,7 @@ const zh: Dictionary = {
       { current: true, date: '2026年 — 至今', title: '创始人兼产品负责人，NeuroStep', org: 'ESIEE Paris学生创业公司', body: '构建一个平台，让脑损伤患者及其职业治疗师能够以结构化方式比较认知补偿数字工具。项目起源于索邦大学SN@SU黑客松上的Python/Streamlit原型（与UEROS L\'ADAPT法兰西岛的职业治疗师Flor Sanchez-Luizard合作）；目前正规划以FastAPI、PostgreSQL和Next.js重构为生产版本，采用符合HDS/RGPD标准的托管方案,并配备用于临床工具匹配的语义搜索引擎。' },
       { date: '2024年 — 2027年', title: '工程学学生 — 数据科学与人工智能', org: 'ESIEE Paris', body: '巴黎ESIEE工程学院五年制工程学项目四年级学生，专攻数据科学与人工智能（DSIA）。' },
       { date: '2025年', title: '工程实习生，GRADES部门', org: 'Synchrotron SOLEIL（法国索莱伊同步辐射光源）', body: '使用OpenCL开发autopkgtest测试脚本，用于AMD GPU兼容性测试（pyopencl、nabu、ufo-filters、pyvkfft），并通过GitLab Salsa在Debian/ROCm基础设施上运行。' },
-      { date: '2022年 — 至今', title: '理科家教', org: 'Complétude', body: '在攻读工程学学位的同时，为中学生和大学生教授数学、物理和计算机课程。' },
+      { date: '2022年 — 至今', title: '理科家教', org: 'Complétude', body: '在攻读工程学学位的同时，为约十名学生教授数学和物理化学，从小学到高中毕业班（不含高等教育阶段）。' },
     ],
   },
   publications: {
@@ -1189,8 +1818,91 @@ const zh: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: '详细介绍DEMNE级联框架、用于范式选择的五项语料库特征化指标，以及在三个法语肿瘤学语料库上进行网格搜索校准的结果的手稿。',
   },
+  projects: {
+    label: '05 — 精选项目',
+    title: '精选项目',
+    subtitle: '除 DEMNE 之外，还有为黑客松和课程项目从零到一构建的工具。',
+    items: [
+      {
+        date: '2026年6月',
+        title: 'NeuroStep',
+        description:
+          '一个面向脑损伤和肿瘤患者的认知辅助工具与应用数字目录——涵盖沟通辅助、记忆和日程规划。为 SN@SU 黑客松开发，使用 Streamlit 界面，数据存储于 JSON。',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: '2025年12月',
+        title: '空气质量仪表盘',
+        description:
+          '一个交互式仪表盘，基于 INERIS/Zenodo 数据重建了法国 2000 至 2015 年间 15 年的背景空气污染情况——使用 SQLite 存储、Plotly 图表和 Leaflet 热力图。与队友 William Zee 共同完成。',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — 技术栈',
+    title: '技术栈',
+    subtitle: '按与上述工作的相关性分组的工具——而非泛泛的列表。',
+    categories: [
+      {
+        title: '临床NLP与生物医学人工智能',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: '系统与基础设施',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: '科研工具',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: '语言',
+    languages: [
+      { flag: '🇫🇷', level: '母语' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: '中级' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: '学习中' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — 研究方向',
+    title: '研究方向',
+    items: [
+      {
+        title: '临床命名实体识别',
+        body: '从非结构化的法语肿瘤学文本中提取生物标志物、分期和治疗数据——通用NLP失效、领域自适应开始发挥作用之处。',
+      },
+      {
+        title: '节俭且可解释的人工智能',
+        body: '设计能够路由到满足性能阈值的最不透明层级的系统，将符合欧盟《人工智能法案》作为设计约束，而非事后考量。',
+      },
+      {
+        title: '多模态生物医学推理',
+        body: '长期方向：将临床文本、影像与基因组学统一到能够跨模态推理的模型中——将世界模型方向应用于医学。',
+      },
+      {
+        title: '复杂系统教学法',
+        body: '在Complétude为约十名学生教授数学和物理化学，从小学到高中毕业班（不含高等教育阶段）。让密集的概念变得可学习是一项研究技能，而非副业。',
+      },
+    ],
+  },
   writing: {
-    label: '05 — 文章',
+    label: '08 — 文章',
     title: '研究札记',
     subtitle: '关于上述工作背后的方法、弯路与决策的深入文章。',
     posts: [
@@ -1200,6 +1912,8 @@ const zh: Dictionary = {
   },
   contact: {
     title: '欢迎交流临床自然语言处理、生物医学人工智能，或博士合作事宜。',
+    directLabel: '直接联系',
+    elsewhereLabel: '其他平台',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1230,11 +1944,11 @@ const ja: Dictionary = {
     menuToggleLabel: 'メニューを開く',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: '腫瘍医のように',
-    h1Accent: '臨床言語を読み解く',
-    h1Post: 'NLPシステムを構築しています。',
-    sub: '私はClément Longeac、臨床NLPと生物医学AIの交差領域で活動する工学系の学生です。現在、フランス語の腫瘍学レポート向けのハイブリッド抽出パイプラインを構築しており、生物医学研究に応用するAIの博士号取得を目指しています。',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'GPUを起こさずに、',
+    h1Accent: '臨床テキストからバイオマーカーを抽出する',
+    h1Post: '。',
+    sub: '私はClément Longeacです。現在、DEMNEというルーティングフレームワークに取り組んでいます——エンティティの種類ごとに、正規表現、CRF、トランスフォーマー、LLMのどれが誠実な選択かを判断します。最初の成果：GPUを使わずに臨床エンティティの93.7%を抽出し、300件のAP-HPノートでF1値0.941を達成しました。',
     ctaResearch: '研究を見る',
     ctaCV: '履歴書をダウンロード',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM、ライブ図解',
@@ -1244,7 +1958,7 @@ const ja: Dictionary = {
     title: '数学の家庭教師から腫瘍マーカーのモデリングへ',
     p1: '私はパリESIEE工科大学の4年生で、データサイエンス・AIを専攻し、学校のTremplin Rechercheコースに在籍しています。これは標準的な企業インターンではなく、博士研究を目指す学生向けのプログラムです。',
     p2: '私の仕事は、非構造化された臨床テキストを研究に活用できるようにすることです。フランス語の腫瘍学レポートに埋もれた生体マーカー、病期情報、治療の詳細を抽出しますが、汎用のNLPツールはこの分野特有の語彙や文書構造に対して一貫して機能不全に陥ります。',
-    p3: '学業と並行して、Complétudeで数学・物理・情報科学の家庭教師をしており、ソルボンヌ大学の生物医学AI分野でのCIFRE産学連携博士課程への出願準備を進めています。',
+    p3: '学業と並行して、Complétudeで数学・物理化学の家庭教師をしており、ソルボンヌ大学の生物医学AI分野でのCIFRE産学連携博士課程への出願準備を進めています。',
     visionLine:
       '長期的には、乱雑でリスクの高いテキストから信頼できる構造を引き出すという同じ規律が、AMI LabsやAnthropic Fellowsプログラムを通じたworld modelの構築・評価というAI安全性研究への関心につながっています。（この文章は下書きです。最終的な表現に置き換えてください。）',
     facts: [
@@ -1299,7 +2013,7 @@ const ja: Dictionary = {
       { current: true, date: '2026年 — 現在', title: '創業者兼プロダクトリード、NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '脳損傷患者とその作業療法士が認知補償デジタルツールを比較検討できる構造化された手段を提供するプラットフォームを構築中。ソルボンヌ大学のSN@SUハッカソン（UEROS L\'ADAPT イル＝ド＝フランスの作業療法士Flor Sanchez-Luizard氏との共同）でPython/Streamlit製プロトタイプとして誕生し、現在はHDS/RGPD準拠のホスティングと臨床マッチング用のセマンティック検索エンジンを備えた本番版（FastAPI、PostgreSQL、Next.js）への再構築を計画中。' },
       { date: '2024年 — 2027年', title: '工学部学生 — データサイエンス・AI', org: 'ESIEE Paris', body: 'パリESIEE工科大学の5年制工学プログラム4年生、データサイエンス・AI（DSIA）専攻。' },
       { date: '2025年', title: 'エンジニアインターン、GRADES部門', org: 'Synchrotron SOLEIL（シンクロトロン・ソレイユ）', body: 'GitLab Salsa経由のDebian/ROCm基盤上で、AMD GPU互換性検証のためOpenCLを用いたautopkgtestスクリプト（pyopencl、nabu、ufo-filters、pyvkfft）を開発。' },
-      { date: '2022年 — 現在', title: '理系家庭教師', org: 'Complétude', body: '工学の学業と並行して、中高生・大学生に数学・物理・情報科学を指導。' },
+      { date: '2022年 — 現在', title: '理系家庭教師', org: 'Complétude', body: '工学の学業と並行して、約10名の生徒に数学・物理化学を指導（小学校から高校最終学年まで、高等教育は対象外）。' },
     ],
   },
   publications: {
@@ -1312,8 +2026,91 @@ const ja: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'DEMNEのカスケードフレームワーク、パラダイム選択に用いる5つのコーパス特性評価指標、および3つのフランス語腫瘍学コーパスにわたるグリッドサーチ較正結果を詳述する原稿。',
   },
+  projects: {
+    label: '05 — 主な制作物',
+    title: '主な制作物',
+    subtitle: 'DEMNEのほかに、ハッカソンや授業課題のために一から作り上げたツール。',
+    items: [
+      {
+        date: '2026年6月',
+        title: 'NeuroStep',
+        description:
+          '脳損傷や腫瘍を持つ人向けの認知補助ツール・アプリのデジタルカタログ——コミュニケーション支援、記憶、計画立案を対象とする。SN@SUハッカソン向けに開発し、Streamlitのインターフェースと JSON ベースのデータストアを使用。',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: '2025年12月',
+        title: '大気質ダッシュボード',
+        description:
+          'INERIS/Zenodoのデータをもとに、フランスにおける2000年から2015年までの15年間の大気汚染の背景値を再構築したインタラクティブなダッシュボード——SQLiteでのデータ保存、Plotlyによるグラフ、Leafletによるヒートマップを使用。チームメイトのWilliam Zeeと共同制作。',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — 技術スタック',
+    title: '技術スタック',
+    subtitle: '上記の研究との関連性でグループ分けしたツール——一般的な羅列ではない。',
+    categories: [
+      {
+        title: '臨床NLP・生物医学AI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'システム・インフラ',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: '研究ツール',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: '言語',
+    languages: [
+      { flag: '🇫🇷', level: '母語' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: '中級' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: '学習中' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — 研究の焦点',
+    title: '研究の焦点',
+    items: [
+      {
+        title: '臨床固有表現抽出',
+        body: '非構造化のフランス語腫瘍学テキストからバイオマーカー、病期、治療データを抽出する——汎用NLPが破綻し、ドメイン適応が始まる領域。',
+      },
+      {
+        title: '倹約的で解釈可能なAI',
+        body: '性能基準を満たす範囲で最も透明性の高い層へルーティングするシステムを設計する。EU AI法への準拠を後付けではなく設計上の制約として扱う。',
+      },
+      {
+        title: 'マルチモーダル生物医学推論',
+        body: '長期的な方向性：臨床テキスト、画像、ゲノミクスを統合し、モダリティを横断して推論するモデルを構築する。world modelsのアプローチを医学に応用する。',
+      },
+      {
+        title: '複雑系の教育法',
+        body: 'Complétudeで約10名の生徒に数学と物理化学を指導（小学校から高校最終学年まで、高等教育は対象外）。密度の高い概念を学べる形にすることは、片手間の仕事ではなく研究スキルである。',
+      },
+    ],
+  },
   writing: {
-    label: '05 — 記事',
+    label: '08 — 記事',
     title: '研究ノート',
     subtitle: '上記の研究の背後にある手法、行き詰まり、意思決定についての詳しい記事。',
     posts: [
@@ -1323,6 +2120,8 @@ const ja: Dictionary = {
   },
   contact: {
     title: '臨床NLP、生物医学AI、または博士課程での共同研究についてお話ししましょう。',
+    directLabel: '直接連絡',
+    elsewhereLabel: 'その他',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1353,11 +2152,11 @@ const ko: Dictionary = {
     menuToggleLabel: '메뉴 열기',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: '저는 종양학자처럼 ',
-    h1Accent: '임상 언어를 읽는',
-    h1Post: ' NLP 시스템을 만들고 있습니다.',
-    sub: '저는 Clément Longeac이며, 임상 NLP와 생물의학 AI의 교차점에서 활동하는 공학도입니다. 현재 프랑스어 종양학 보고서를 위한 하이브리드 추출 파이프라인을 구축하고 있으며, 생물의학 연구에 응용되는 AI 박사 학위를 목표로 하고 있습니다.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'GPU를 깨우지 않고 ',
+    h1Accent: '임상 텍스트에서 바이오마커를 추출합니다',
+    h1Post: '.',
+    sub: '저는 Clément Longeac입니다. 저는 DEMNE라는 라우팅 프레임워크를 개발하고 있습니다 — 엔티티 유형마다 정규식, CRF, 트랜스포머, LLM 중 어느 것이 그 작업에 정직한 도구인지 결정합니다. 첫 결과: GPU 없이 임상 엔티티의 93.7%를 추출했으며, 300건의 AP-HP 노트에서 F1 = 0.941을 달성했습니다.',
     ctaResearch: '연구 보기',
     ctaCV: '이력서 다운로드',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, 실시간 도식',
@@ -1367,7 +2166,7 @@ const ko: Dictionary = {
     title: '수학 과외에서 종양 마커 모델링까지',
     p1: '저는 파리 ESIEE 공과대학 4학년 학생으로, 데이터 사이언스 & AI를 전공하며 학교의 Tremplin Recherche 트랙에 소속되어 있습니다. 이는 일반적인 기업 인턴십이 아니라 박사 연구를 목표로 하는 학생들을 위한 프로그램입니다.',
     p2: '제 연구는 비정형 임상 텍스트를 연구에 활용 가능하도록 만드는 데 중점을 둡니다. 프랑스어 종양학 보고서에 묻혀 있는 생체표지자, 병기 정보, 치료 세부사항을 추출하는데, 범용 NLP 도구는 이 분야의 전문 어휘와 문서 구조 앞에서 일관되게 실패합니다.',
-    p3: '학업과 병행하여 Complétude를 통해 수학, 물리, 컴퓨터과학을 가르치고 있으며, 소르본 대학교 생물의학 AI 분야의 CIFRE 산학협력 박사과정 지원을 준비하고 있습니다.',
+    p3: '학업과 병행하여 Complétude를 통해 수학과 물리화학을 가르치고 있으며, 소르본 대학교 생물의학 AI 분야의 CIFRE 산학협력 박사과정 지원을 준비하고 있습니다.',
     visionLine:
       '장기적으로, 어수선하고 위험도가 높은 텍스트에서 신뢰할 수 있는 구조를 추출하는 이 동일한 규율이 저를 AI 안전 연구로 이끕니다: AMI Labs와 Anthropic Fellows 프로그램을 통해 world model을 구축하고 평가하는 일입니다. (초안 문장입니다 — 최종 문구로 교체해 주세요.)',
     facts: [
@@ -1422,7 +2221,7 @@ const ko: Dictionary = {
       { current: true, date: '2026년 — 현재', title: '창립자 & 프로덕트 리드, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '뇌손상 환자와 이들을 돕는 작업치료사가 인지 보상 디지털 도구를 구조적으로 비교할 수 있는 플랫폼을 구축 중. 소르본 대학교 SN@SU 해커톤에서 (UEROS L\'ADAPT 일드프랑스 소속 작업치료사 Flor Sanchez-Luizard와 함께) Python/Streamlit 프로토타입으로 시작했으며, 현재 HDS/RGPD 준수 호스팅과 임상 도구 매칭을 위한 시맨틱 검색 엔진을 갖춘 프로덕션 버전(FastAPI, PostgreSQL, Next.js)으로의 재구축을 기획 중.' },
       { date: '2024년 — 2027년', title: '공학도 — 데이터 사이언스 & AI', org: 'ESIEE Paris', body: '파리 ESIEE 공과대학 5년제 공학 프로그램 4학년, 데이터 사이언스 & AI(DSIA) 전공.' },
       { date: '2025년', title: '엔지니어링 인턴, GRADES 부서', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa를 통한 Debian/ROCm 인프라에서 AMD GPU 호환성을 위한 OpenCL 기반 autopkgtest 스크립트(pyopencl, nabu, ufo-filters, pyvkfft) 개발.' },
-      { date: '2022년 — 현재', title: '이공계 과외 교사', org: 'Complétude', body: '공학 학업과 병행하여 중고등학생 및 대학생에게 수학, 물리, 컴퓨터과학을 지도.' },
+      { date: '2022년 — 현재', title: '이공계 과외 교사', org: 'Complétude', body: '공학 학업과 병행하여 약 10명의 학생에게 초등학교부터 고등학교 졸업반까지 수학과 물리화학을 지도(고등교육은 제외).' },
     ],
   },
   publications: {
@@ -1435,8 +2234,91 @@ const ko: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'DEMNE 계단식 프레임워크, 패러다임 선택에 사용된 5가지 코퍼스 특성화 지표, 그리고 세 개의 프랑스어 종양학 코퍼스에 걸친 그리드 서치 보정 결과를 상세히 기술한 원고.',
   },
+  projects: {
+    label: '05 — 주요 프로젝트',
+    title: '주요 프로젝트',
+    subtitle: 'DEMNE 외에도 해커톤과 학업 과제를 위해 처음부터 끝까지 만든 도구들.',
+    items: [
+      {
+        date: '2026년 6월',
+        title: 'NeuroStep',
+        description:
+          '뇌손상 및 종양을 가진 사람들을 위한 인지 보완 도구와 앱의 디지털 카탈로그 — 의사소통 지원, 기억, 일정 계획을 다룹니다. SN@SU 해커톤을 위해 제작했으며, Streamlit 인터페이스와 JSON 기반 저장소를 사용합니다.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: '2025년 12월',
+        title: '대기질 대시보드',
+        description:
+          'INERIS/Zenodo 데이터를 기반으로 프랑스의 2000~2015년 15년간 배경 대기오염을 재구성한 인터랙티브 대시보드 — SQLite 저장소, Plotly 차트, Leaflet 히트맵을 사용합니다. 팀원 William Zee와 함께 제작했습니다.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — 기술 스택',
+    title: '기술 스택',
+    subtitle: '위 연구와의 관련성에 따라 분류한 도구들 — 흔한 나열이 아닙니다.',
+    categories: [
+      {
+        title: '임상 NLP 및 생물의학 AI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: '시스템 및 인프라',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: '연구 도구',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: '언어',
+    languages: [
+      { flag: '🇫🇷', level: '모국어' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: '중급' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: '학습 중' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — 연구 초점',
+    title: '연구 초점',
+    items: [
+      {
+        title: '임상 개체명 인식',
+        body: '비정형 프랑스어 종양학 텍스트에서 바이오마커, 병기, 치료 데이터를 추출합니다 — 범용 NLP가 무너지고 도메인 적응이 시작되는 지점입니다.',
+      },
+      {
+        title: '검소하고 해석 가능한 AI',
+        body: '성능 기준을 충족하는 범위 내에서 가장 투명한 단계로 라우팅하는 시스템을 설계합니다. EU AI Act 준수를 사후 고려가 아닌 설계 제약으로 다룹니다.',
+      },
+      {
+        title: '멀티모달 생물의학 추론',
+        body: '장기적 방향: 임상 텍스트, 영상, 유전체 데이터를 모달리티를 넘나들며 추론하는 모델로 통합합니다. 월드 모델 접근법을 의학에 적용합니다.',
+      },
+      {
+        title: '복잡계 교육법',
+        body: 'Complétude에서 약 10명의 학생에게 수학과 물리화학을 가르칩니다 (초등학교부터 고등학교 졸업반까지, 고등교육은 제외). 밀도 높은 개념을 학습 가능하게 만드는 것은 부업이 아니라 연구 역량입니다.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — 글',
+    label: '08 — 글',
     title: '연구 노트',
     subtitle: '위 연구를 뒷받침하는 방법, 막다른 길, 결정들에 대한 더 긴 글.',
     posts: [
@@ -1446,6 +2328,8 @@ const ko: Dictionary = {
   },
   contact: {
     title: '임상 NLP, 생물의학 AI, 또는 박사과정 공동연구에 대해 이야기해 봅시다.',
+    directLabel: '직접 연락',
+    elsewhereLabel: '다른 곳',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1476,11 +2360,11 @@ const ru: Dictionary = {
     menuToggleLabel: 'Открыть меню',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Я создаю NLP-системы, которые ',
-    h1Accent: 'читают клинический язык',
-    h1Post: ' так же, как онколог.',
-    sub: 'Я Clément Longeac, студент-инженер на стыке клинического NLP и биомедицинского ИИ — сейчас разрабатываю гибридные конвейеры извлечения информации для французских онкологических заключений, на пути к докторской степени в области ИИ, применяемого в биомедицинских исследованиях.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Извлекаю биомаркеры из клинического текста ',
+    h1Accent: 'не пробуждая GPU',
+    h1Post: '.',
+    sub: 'Я Clément Longeac. Я работаю над DEMNE — фреймворком маршрутизации, который для каждого типа сущности решает, что является честным инструментом для задачи: регулярное выражение, CRF, трансформер или LLM. Первый результат: 93,7% клинических сущностей извлечено без GPU, F1 = 0,941 на 300 заметках AP-HP.',
     ctaResearch: 'Смотреть исследование',
     ctaCV: 'Скачать резюме',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, живая схема',
@@ -1490,7 +2374,7 @@ const ru: Dictionary = {
     title: 'От репетиторства по математике до моделирования опухолевых маркеров',
     p1: 'Я студент четвёртого курса ESIEE Paris, специализация Data Science & AI, обучаюсь по программе Tremplin Recherche школы — программе для студентов, нацеленных на докторантуру, а не на стандартную стажировку в индустрии.',
     p2: 'Моя работа сосредоточена на том, чтобы сделать неструктурированный клинический текст пригодным для исследований: извлечение биомаркеров, информации о стадировании и деталей лечения, скрытых во французских онкологических заключениях, где универсальные инструменты NLP систематически терпят неудачу из-за специфической лексики и структуры документов.',
-    p3: 'Параллельно с учёбой я преподаю математику, физику и информатику через Complétude, а также готовлю заявки на промышленную докторантуру CIFRE в области биомедицинского ИИ в Сорбоннском университете.',
+    p3: 'Параллельно с учёбой я преподаю математику и физику-химию через Complétude, а также готовлю заявки на промышленную докторантуру CIFRE в области биомедицинского ИИ в Сорбоннском университете.',
     visionLine:
       'В долгосрочной перспективе именно эта дисциплина — извлечение надёжной структуры из хаотичного, высокорискового текста — привлекает меня к исследованиям безопасности ИИ: построению и оценке world model через AMI Labs и программу Anthropic Fellows. (Черновая строка — замените на свою окончательную формулировку.)',
     facts: [
@@ -1545,7 +2429,7 @@ const ru: Dictionary = {
       { current: true, date: '2026 — настоящее время', title: 'Основатель и Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Разработка платформы, которая даёт пациентам с черепно-мозговыми травмами и их эрготерапевтам структурированный способ сравнивать цифровые инструменты когнитивной компенсации. Проект начался как прототип на Python/Streamlit на хакатоне SN@SU (Сорбоннский университет, совместно с Flor Sanchez-Luizard, эрготерапевтом из UEROS L\'ADAPT Иль-де-Франс); сейчас на стадии планирования продакшн-версии (FastAPI, PostgreSQL, Next.js) с хостингом, соответствующим HDS/RGPD, и семантическим поисковым движком для клинического сопоставления.' },
       { date: '2024 — 2027', title: 'Студент-инженер — Data Science & AI', org: 'ESIEE Paris', body: 'Студент четвёртого курса пятилетней инженерной программы ESIEE Paris, специализация Data Science & AI (DSIA).' },
       { date: '2025', title: 'Инженер-стажёр, отдел GRADES', org: 'Synchrotron SOLEIL', body: 'Разработка autopkgtest-скриптов на OpenCL для проверки совместимости с GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) на инфраструктуре Debian/ROCm через GitLab Salsa.' },
-      { date: '2022 — настоящее время', title: 'Репетитор по точным наукам', org: 'Complétude', body: 'Преподавание математики, физики и информатики школьникам и студентам параллельно с инженерной учёбой.' },
+      { date: '2022 — настоящее время', title: 'Репетитор по точным наукам', org: 'Complétude', body: 'Преподавание математики и физики-химии примерно десяти ученикам, от начальной школы до выпускного класса лицея, параллельно с инженерной учёбой.' },
     ],
   },
   publications: {
@@ -1558,8 +2442,92 @@ const ru: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Рукопись, подробно описывающая каскадную структуру DEMNE, пять метрик характеризации корпуса, используемых для выбора парадигмы, и результаты калибровки решётчатого поиска на трёх французских онкологических корпусах.',
   },
+  projects: {
+    label: '05 — Избранные проекты',
+    title: 'Избранные проекты',
+    subtitle:
+      'Помимо DEMNE — инструменты, созданные от начала до конца для хакатона и учебных проектов.',
+    items: [
+      {
+        date: 'Июнь 2026',
+        title: 'NeuroStep',
+        description:
+          'Цифровой каталог инструментов и приложений когнитивной компенсации для людей с черепно-мозговыми травмами и опухолями — помощь в общении, памяти и планировании. Создан для хакатона SN@SU, с интерфейсом на Streamlit поверх хранилища на основе JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Дек. 2025',
+        title: 'Панель качества воздуха',
+        description:
+          'Интерактивная панель, реконструирующая 15 лет фонового загрязнения воздуха во Франции (2000–2015) на основе данных INERIS/Zenodo — хранение в SQLite, графики Plotly и тепловая карта Leaflet. Создана вместе с напарником по команде William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Технический стек',
+    title: 'Технический стек',
+    subtitle: 'Инструменты, сгруппированные по значимости для работы выше — не общий список.',
+    categories: [
+      {
+        title: 'Клинический NLP и биомедицинский ИИ',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Системы и инфраструктура',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Инструменты для исследований',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Языки',
+    languages: [
+      { flag: '🇫🇷', level: 'Родной' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Средний уровень' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'В процессе изучения' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Направления работы',
+    title: 'Направления работы',
+    items: [
+      {
+        title: 'Клиническое распознавание именованных сущностей',
+        body: 'Извлечение биомаркеров, стадии и данных о лечении из неструктурированных французских онкологических текстов — там, где общий NLP даёт сбой и начинается адаптация к предметной области.',
+      },
+      {
+        title: 'Бережливый и интерпретируемый ИИ',
+        body: 'Проектирование систем, которые направляют задачу к наименее непрозрачному уровню, удовлетворяющему порогам производительности. Соответствие Закону ЕС об ИИ как ограничение проектирования, а не запоздалая мысль.',
+      },
+      {
+        title: 'Мультимодальное биомедицинское рассуждение',
+        body: 'Долгосрочное направление: объединение клинического текста, изображений и геномики в моделях, рассуждающих между модальностями. Подход world models, применённый к медицине.',
+      },
+      {
+        title: 'Педагогика сложных систем',
+        body: 'Преподавание математики и физики-химии примерно десяти ученикам в Complétude — от начальной школы до выпускного класса лицея (без высшего образования). Сделать плотные концепции доступными для понимания — это исследовательский навык, а не подработка.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Статьи',
+    label: '08 — Статьи',
     title: 'Заметки из исследования',
     subtitle: 'Более развёрнутые материалы о методах, тупиках и решениях, стоящих за работой выше.',
     posts: [
@@ -1569,6 +2537,8 @@ const ru: Dictionary = {
   },
   contact: {
     title: 'Давайте обсудим клинический NLP, биомедицинский ИИ или сотрудничество в рамках докторантуры.',
+    directLabel: 'Напрямую',
+    elsewhereLabel: 'В других местах',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1599,11 +2569,11 @@ const ar: Dictionary = {
     menuToggleLabel: 'فتح القائمة',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'أبني أنظمة معالجة لغة طبيعية ',
-    h1Accent: 'تقرأ اللغة السريرية',
-    h1Post: ' بالطريقة التي يقرأها بها طبيب الأورام.',
-    sub: 'أنا كليمون لونجياك، طالب هندسة أعمل عند تقاطع معالجة اللغة السريرية والذكاء الاصطناعي الحيوي الطبي — أقوم حاليًا ببناء خطوط استخراج هجينة لتقارير الأورام الفرنسية، في طريقي لنيل درجة الدكتوراه في الذكاء الاصطناعي المطبق على البحث الطبي الحيوي.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'أستخرج المؤشرات الحيوية من النص السريري ',
+    h1Accent: 'دون إيقاظ وحدة معالجة الرسومات',
+    h1Post: '.',
+    sub: 'أنا كليمون لونجياك. أعمل على DEMNE، إطار عمل للتوجيه يقرر — لكل نوع من الكيانات — ما إذا كانت الأداة الصادقة للمهمة هي تعبير نمطي (regex)، أو CRF، أو محول (transformer)، أو نموذج لغوي كبير (LLM). النتيجة الأولى: استخراج 93.7% من الكيانات السريرية دون استخدام وحدة معالجة الرسومات، بدقة F1 = 0.941 على 300 ملاحظة من AP-HP.',
     ctaResearch: 'استعرض الأبحاث',
     ctaCV: 'تحميل السيرة الذاتية',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM، مخطط حي',
@@ -1613,7 +2583,7 @@ const ar: Dictionary = {
     title: 'من تدريس الرياضيات إلى نمذجة العلامات الحيوية للأورام',
     p1: 'أنا طالب في السنة الرابعة في ESIEE Paris، تخصص علوم البيانات والذكاء الاصطناعي، ومسجل في مسار Tremplin Recherche بالمدرسة — وهو برنامج مصمم للطلاب المتجهين نحو البحث الدكتوراهي بدلًا من التدريب الصناعي القياسي.',
     p2: 'يتمحور عملي حول جعل النص السريري غير المنظم قابلًا للاستخدام في البحث: استخراج العلامات الحيوية ومعلومات التدريج وتفاصيل العلاج المدفونة في تقارير الأورام الفرنسية، حيث تفشل أدوات معالجة اللغة الطبيعية العامة باستمرار أمام المفردات وبنية الوثائق الخاصة بهذا المجال.',
-    p3: 'إلى جانب دراستي، أُدرّس الرياضيات والفيزياء والمعلوماتية عبر Complétude، وأُحضّر طلبات الالتحاق ببرنامج دكتوراه صناعي CIFRE في الذكاء الاصطناعي الحيوي الطبي بجامعة السوربون.',
+    p3: 'إلى جانب دراستي، أُدرّس الرياضيات والفيزياء والكيمياء عبر Complétude، وأُحضّر طلبات الالتحاق ببرنامج دكتوراه صناعي CIFRE في الذكاء الاصطناعي الحيوي الطبي بجامعة السوربون.',
     visionLine:
       'على المدى الطويل، هذا الانضباط نفسه — استخلاص بنية موثوقة من نص فوضوي وعالي المخاطر — هو ما يجذبني نحو أبحاث سلامة الذكاء الاصطناعي: بناء وتقييم نماذج العالم (world models) عبر AMI Labs وبرنامج Anthropic Fellows. (هذه جملة أولية — استبدلها بصياغتك النهائية.)',
     facts: [
@@ -1668,7 +2638,7 @@ const ar: Dictionary = {
       { current: true, date: '2026 — حتى الآن', title: 'مؤسس ورئيس المنتج، NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'بناء منصة تمنح مرضى الإصابات الدماغية ومعالجيهم الوظيفيين طريقة منظمة لمقارنة الأدوات الرقمية للتعويض المعرفي. وُلد المشروع كنموذج أولي بلغة Python وStreamlit في هاكاثون SN@SU (جامعة السوربون، بالتعاون مع Flor Sanchez-Luizard، معالجة وظيفية في UEROS L\'ADAPT إيل دو فرانس)؛ وهو الآن في مرحلة التخطيط لإعادة بناء إنتاجية (FastAPI، PostgreSQL، Next.js) باستضافة متوافقة مع معايير HDS/RGPD ومحرك بحث دلالي لمطابقة الأدوات السريرية.' },
       { date: '2024 — 2027', title: 'طالب هندسة — علوم البيانات والذكاء الاصطناعي', org: 'ESIEE Paris', body: 'طالب في السنة الرابعة من برنامج الهندسة الخماسي في ESIEE Paris، تخصص علوم البيانات والذكاء الاصطناعي (DSIA).' },
       { date: '2025', title: 'متدرب هندسي، قسم GRADES', org: 'Synchrotron SOLEIL', body: 'تطوير سكريبتات autopkgtest باستخدام OpenCL لاختبار توافق معالجات AMD الرسومية (pyopencl، nabu، ufo-filters، pyvkfft) على بنية Debian/ROCm عبر GitLab Salsa.' },
-      { date: '2022 — حتى الآن', title: 'مدرّس خصوصي في العلوم', org: 'Complétude', body: 'تدريس الرياضيات والفيزياء والمعلوماتية لطلاب الثانوية والجامعة إلى جانب دراستي الهندسية.' },
+      { date: '2022 — حتى الآن', title: 'مدرّس خصوصي في العلوم', org: 'Complétude', body: 'تدريس الرياضيات والفيزياء والكيمياء لنحو عشرة طلاب، من المرحلة الابتدائية حتى الصف الأخير من الثانوية، إلى جانب دراستي الهندسية.' },
     ],
   },
   publications: {
@@ -1681,8 +2651,91 @@ const ar: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'مخطوطة تفصّل إطار عمل DEMNE المتتالي، ومقاييس توصيف المجموعات النصية الخمسة المستخدمة لاختيار النموذج، ونتائج معايرة البحث الشبكي عبر ثلاث مجموعات نصوص أورام فرنسية.',
   },
+  projects: {
+    label: '05 — مشاريع مختارة',
+    title: 'مشاريع مختارة',
+    subtitle: 'إلى جانب DEMNE — أدوات مبنية من الألف إلى الياء من أجل هاكاثون ومشاريع دراسية.',
+    items: [
+      {
+        date: 'يونيو 2026',
+        title: 'NeuroStep',
+        description:
+          'كتالوج رقمي لأدوات وتطبيقات التعويض المعرفي لذوي الإصابات الدماغية والأورام — دعم التواصل والذاكرة والتخطيط. صُمم من أجل هاكاثون SN@SU، بواجهة Streamlit فوق تخزين بصيغة JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'ديسمبر 2025',
+        title: 'لوحة جودة الهواء',
+        description:
+          'لوحة تحكم تفاعلية تعيد بناء 15 عامًا من التلوث الجوي الخلفي في فرنسا (2000–2015) اعتمادًا على بيانات INERIS/Zenodo — تخزين بواسطة SQLite، رسوم بيانية بواسطة Plotly، وخريطة حرارية بواسطة Leaflet. أُنجزت مع زميل الفريق William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — الحزمة التقنية',
+    title: 'الحزمة التقنية',
+    subtitle: 'أدوات مصنّفة حسب صلتها بالعمل أعلاه — وليست قائمة عامة.',
+    categories: [
+      {
+        title: 'معالجة اللغة السريرية والذكاء الاصطناعي الحيوي الطبي',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'الأنظمة والبنية التحتية',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'أدوات البحث',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'اللغات',
+    languages: [
+      { flag: '🇫🇷', level: 'اللغة الأم' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'متوسط' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'قيد التعلم' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — مجالات التركيز',
+    title: 'مجالات التركيز',
+    items: [
+      {
+        title: 'التعرف على الكيانات المسماة السريرية',
+        body: 'استخراج المؤشرات الحيوية ومرحلة المرض وبيانات العلاج من نصوص الأورام الفرنسية غير المهيكلة — حيث تفشل معالجة اللغة الطبيعية العامة ويبدأ التكيف مع المجال.',
+      },
+      {
+        title: 'ذكاء اصطناعي مقتصد وقابل للتفسير',
+        body: 'تصميم أنظمة توجّه المهمة إلى المستوى الأقل غموضًا الذي يحقق عتبات الأداء المطلوبة. الامتثال لقانون الذكاء الاصطناعي الأوروبي كقيد تصميمي، لا كفكرة لاحقة.',
+      },
+      {
+        title: 'الاستدلال الحيوي الطبي متعدد الوسائط',
+        body: 'التوجه طويل المدى: توحيد النص السريري والتصوير والجينوم في نماذج تستدل عبر الوسائط المختلفة — تطبيق منهج نماذج العالم على الطب.',
+      },
+      {
+        title: 'تربية الأنظمة المعقدة',
+        body: 'تدريس الرياضيات والفيزياء والكيمياء لنحو عشرة طلاب في Complétude، من المرحلة الابتدائية حتى الصف الأخير من الثانوية (دون التعليم العالي). جعل المفاهيم الكثيفة قابلة للتعلّم مهارة بحثية، لا عمل جانبي.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — مقالات',
+    label: '08 — مقالات',
     title: 'ملاحظات من البحث',
     subtitle: 'مقالات أطول حول الأساليب والطرق المسدودة والقرارات التي شكّلت العمل أعلاه.',
     posts: [
@@ -1692,6 +2745,8 @@ const ar: Dictionary = {
   },
   contact: {
     title: 'لنتحدث عن معالجة اللغة السريرية، أو الذكاء الاصطناعي الحيوي الطبي، أو تعاون بحثي دكتوراهي.',
+    directLabel: 'مباشر',
+    elsewhereLabel: 'في أماكن أخرى',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1722,11 +2777,11 @@ const hi: Dictionary = {
     menuToggleLabel: 'मेनू खोलें',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'मैं ऐसे एनएलपी सिस्टम बनाता हूँ जो ',
-    h1Accent: 'क्लिनिकल भाषा को उसी तरह पढ़ते हैं',
-    h1Post: ' जैसे एक ऑन्कोलॉजिस्ट पढ़ता है।',
-    sub: 'मैं क्लेमों लोंज्याक हूँ, एक इंजीनियरिंग छात्र जो क्लिनिकल एनएलपी और बायोमेडिकल एआई के संगम पर काम करता है — अभी फ्रेंच ऑन्कोलॉजी रिपोर्टों के लिए हाइब्रिड एक्सट्रैक्शन पाइपलाइन बना रहा हूँ, और बायोमेडिकल शोध में लागू एआई पर पीएचडी की दिशा में अग्रसर हूँ।',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'क्लिनिकल टेक्स्ट से बायोमार्कर निकालना, ',
+    h1Accent: 'बिना GPU जगाए',
+    h1Post: '।',
+    sub: 'मैं क्लेमों लोंज्याक हूँ। मैं DEMNE पर काम कर रहा हूँ, एक रूटिंग फ्रेमवर्क जो हर एंटिटी टाइप के लिए तय करता है — कि क्या रेगेक्स, CRF, ट्रांसफॉर्मर, या LLM उस काम के लिए ईमानदार टूल है। पहला परिणाम: बिना GPU के 93.7% क्लिनिकल एंटिटी निकाली गईं, 300 AP-HP नोट्स पर F1 = 0.941।',
     ctaResearch: 'अनुसंधान देखें',
     ctaCV: 'सीवी डाउनलोड करें',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, लाइव योजनाबद्ध चित्र',
@@ -1736,7 +2791,7 @@ const hi: Dictionary = {
     title: 'गणित पढ़ाने से ट्यूमर मार्करों के मॉडलिंग तक',
     p1: 'मैं ESIEE Paris में चौथे वर्ष का छात्र हूँ, डेटा साइंस और एआई में विशेषज्ञता के साथ, और स्कूल के Tremplin Recherche ट्रैक में नामांकित हूँ — यह कार्यक्रम मानक इंडस्ट्री इंटर्नशिप के बजाय डॉक्टरेट शोध की ओर बढ़ रहे छात्रों के लिए बनाया गया है।',
     p2: 'मेरा काम असंरचित क्लिनिकल टेक्स्ट को शोध के लिए उपयोगी बनाने पर केंद्रित है: फ्रेंच ऑन्कोलॉजी रिपोर्टों में छिपे बायोमार्कर, स्टेजिंग जानकारी और उपचार विवरण निकालना, जहाँ सामान्य-उद्देश्य वाले एनएलपी उपकरण डोमेन-विशिष्ट शब्दावली और दस्तावेज़ संरचना के सामने लगातार विफल होते हैं।',
-    p3: 'अपनी पढ़ाई के साथ-साथ मैं Complétude के माध्यम से गणित, भौतिकी और कंप्यूटर विज्ञान पढ़ाता हूँ, और सोरबोन विश्वविद्यालय में बायोमेडिकल एआई में CIFRE औद्योगिक पीएचडी के लिए आवेदन तैयार कर रहा हूँ।',
+    p3: 'अपनी पढ़ाई के साथ-साथ मैं Complétude के माध्यम से गणित और भौतिकी-रसायन विज्ञान पढ़ाता हूँ, और सोरबोन विश्वविद्यालय में बायोमेडिकल एआई में CIFRE औद्योगिक पीएचडी के लिए आवेदन तैयार कर रहा हूँ।',
     visionLine:
       'दीर्घकालिक रूप से, यही अनुशासन — अव्यवस्थित, उच्च-जोखिम वाले टेक्स्ट से विश्वसनीय संरचना निकालना — मुझे एआई सुरक्षा अनुसंधान की ओर आकर्षित करता है: AMI Labs और Anthropic Fellows कार्यक्रम के माध्यम से world model बनाना और उनका मूल्यांकन करना। (यह एक मसौदा पंक्ति है — इसे अपने अंतिम शब्दों से बदलें।)',
     facts: [
@@ -1791,7 +2846,7 @@ const hi: Dictionary = {
       { current: true, date: '2026 — अब तक', title: 'संस्थापक और प्रोडक्ट लीड, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'एक ऐसा प्लेटफ़ॉर्म बना रहा हूँ जो मस्तिष्क-चोट वाले रोगियों और उनके ऑक्यूपेशनल थेरेपिस्ट को कॉग्निटिव कंपेंसेशन डिजिटल टूल्स की तुलना करने का एक संरचित तरीका देता है। इसकी शुरुआत सोरबोन विश्वविद्यालय के SN@SU हैकाथॉन में (UEROS L\'ADAPT इल-द-फ्रांस की ऑक्यूपेशनल थेरेपिस्ट Flor Sanchez-Luizard के साथ) एक Python/Streamlit प्रोटोटाइप के रूप में हुई; अब यह HDS/RGPD-अनुरूप होस्टिंग और क्लिनिकल मैचिंग के लिए एक सिमेंटिक सर्च इंजन के साथ एक प्रोडक्शन रीबिल्ड (FastAPI, PostgreSQL, Next.js) की योजना के चरण में है।' },
       { date: '2024 — 2027', title: 'इंजीनियरिंग छात्र — डेटा साइंस एवं एआई', org: 'ESIEE Paris', body: 'ESIEE Paris के पाँच-वर्षीय इंजीनियरिंग कार्यक्रम का चौथे वर्ष का छात्र, डेटा साइंस एवं एआई (DSIA) में विशेषज्ञता।' },
       { date: '2025', title: 'इंजीनियरिंग इंटर्न, GRADES डिवीज़न', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa के माध्यम से Debian/ROCm इंफ्रास्ट्रक्चर पर AMD GPU संगतता के लिए OpenCL में autopkgtest स्क्रिप्ट (pyopencl, nabu, ufo-filters, pyvkfft) विकसित कीं।' },
-      { date: '2022 — अब तक', title: 'STEM ट्यूटर', org: 'Complétude', body: 'अपनी इंजीनियरिंग पढ़ाई के साथ-साथ माध्यमिक और विश्वविद्यालय के छात्रों को गणित, भौतिकी और कंप्यूटर विज्ञान पढ़ाना।' },
+      { date: '2022 — अब तक', title: 'STEM ट्यूटर', org: 'Complétude', body: 'अपनी इंजीनियरिंग पढ़ाई के साथ-साथ लगभग दस छात्रों को, प्राथमिक से लेकर बारहवीं कक्षा तक, गणित और भौतिकी-रसायन विज्ञान पढ़ाना।' },
     ],
   },
   publications: {
@@ -1804,8 +2859,91 @@ const hi: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'DEMNE कैस्केड फ्रेमवर्क, पैराडाइम चयन के लिए उपयोग किए गए पाँच कॉर्पस-कैरेक्टराइज़ेशन मेट्रिक्स, और तीन फ्रेंच ऑन्कोलॉजी कॉर्पस में ग्रिड-सर्च कैलिब्रेशन परिणामों का विवरण देने वाली पांडुलिपि।',
   },
+  projects: {
+    label: '05 — चुनिंदा प्रोजेक्ट',
+    title: 'चुनिंदा प्रोजेक्ट',
+    subtitle: 'DEMNE के अलावा — एक हैकाथॉन और कोर्सवर्क के लिए शुरू से अंत तक बनाए गए टूल्स।',
+    items: [
+      {
+        date: 'जून 2026',
+        title: 'NeuroStep',
+        description:
+          'मस्तिष्क क्षति और ट्यूमर से पीड़ित लोगों के लिए कॉग्निटिव-कम्पेंसेशन टूल्स और ऐप्स का एक डिजिटल कैटलॉग — संचार सहायता, स्मृति और योजना बनाने में मदद। SN@SU हैकाथॉन के लिए बनाया गया, Streamlit इंटरफ़ेस और JSON-आधारित स्टोर के साथ।',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'दिसंबर 2025',
+        title: 'वायु गुणवत्ता डैशबोर्ड',
+        description:
+          'INERIS/Zenodo डेटा के आधार पर फ्रांस में 2000–2015 के 15 वर्षों के पृष्ठभूमि वायु प्रदूषण को पुनर्निर्मित करने वाला एक इंटरैक्टिव डैशबोर्ड — SQLite स्टोरेज, Plotly चार्ट्स और Leaflet हीटमैप। टीममेट William Zee के साथ बनाया गया।',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — तकनीकी स्टैक',
+    title: 'तकनीकी स्टैक',
+    subtitle: 'ऊपर के काम से प्रासंगिकता के अनुसार समूहीकृत टूल्स — कोई सामान्य सूची नहीं।',
+    categories: [
+      {
+        title: 'क्लिनिकल एनएलपी और बायोमेडिकल एआई',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'सिस्टम और इंफ्रास्ट्रक्चर',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'शोध उपकरण',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'भाषाएं',
+    languages: [
+      { flag: '🇫🇷', level: 'मातृभाषा' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'मध्यम' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'सीखने की प्रक्रिया में' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — फ़ोकस क्षेत्र',
+    title: 'फ़ोकस क्षेत्र',
+    items: [
+      {
+        title: 'क्लिनिकल नेम्ड एंटिटी रिकग्निशन',
+        body: 'असंरचित फ्रेंच ऑन्कोलॉजी टेक्स्ट से बायोमार्कर, स्टेजिंग और उपचार डेटा निकालना — वह बिंदु जहां सामान्य-प्रयोजन एनएलपी विफल होता है और डोमेन अनुकूलन शुरू होता है।',
+      },
+      {
+        title: 'किफायती और व्याख्या-योग्य एआई',
+        body: 'ऐसे सिस्टम डिज़ाइन करना जो प्रदर्शन सीमा को पूरा करने वाले सबसे कम अपारदर्शी स्तर की ओर रूट करते हैं। EU AI Act का अनुपालन एक डिज़ाइन बाधा के रूप में, न कि बाद में सोचे गए विचार के रूप में।',
+      },
+      {
+        title: 'मल्टीमॉडल बायोमेडिकल रीज़निंग',
+        body: 'दीर्घकालिक दिशा: क्लिनिकल टेक्स्ट, इमेजिंग और जीनोमिक्स को ऐसे मॉडलों में एकीकृत करना जो मोडैलिटी के पार तर्क करते हैं — चिकित्सा पर लागू वर्ल्ड-मॉडल्स दिशा।',
+      },
+      {
+        title: 'जटिल प्रणालियों की शिक्षाशास्त्र',
+        body: 'Complétude में लगभग दस छात्रों को गणित और भौतिकी-रसायन शास्त्र पढ़ाना, प्राथमिक से लेकर बारहवीं कक्षा तक (उच्च शिक्षा को छोड़कर)। सघन अवधारणाओं को सीखने योग्य बनाना एक शोध कौशल है, कोई साइड-गिग नहीं।',
+      },
+    ],
+  },
   writing: {
-    label: '05 — लेख',
+    label: '08 — लेख',
     title: 'अनुसंधान से नोट्स',
     subtitle: 'ऊपर दिए गए कार्य के पीछे की विधियों, गतिरोधों और निर्णयों पर लंबे लेख।',
     posts: [
@@ -1815,6 +2953,8 @@ const hi: Dictionary = {
   },
   contact: {
     title: 'आइए क्लिनिकल एनएलपी, बायोमेडिकल एआई, या पीएचडी सहयोग पर बात करें।',
+    directLabel: 'सीधा',
+    elsewhereLabel: 'अन्यत्र',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1845,11 +2985,11 @@ const tr: Dictionary = {
     menuToggleLabel: 'Menüyü aç',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Bir onkoloğun yaptığı gibi ',
-    h1Accent: 'klinik dili okuyan',
-    h1Post: ' NLP sistemleri geliştiriyorum.',
-    sub: 'Ben Clément Longeac, klinik NLP ile biyomedikal yapay zekanın kesişiminde çalışan bir mühendislik öğrencisiyim — şu anda Fransız onkoloji raporları için hibrit çıkarım hatları geliştiriyorum ve biyomedikal araştırmaya uygulanan yapay zeka alanında doktora hedefliyorum.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: "GPU'yu uyandırmadan ",
+    h1Accent: 'klinik metinden biyobelirteç çıkarıyorum',
+    h1Post: '.',
+    sub: "Ben Clément Longeac. DEMNE üzerinde çalışıyorum; her varlık türü için regex, CRF, transformer veya LLM'den hangisinin görev için dürüst araç olduğuna karar veren bir yönlendirme çerçevesi. İlk sonuç: klinik varlıkların %93,7'si GPU kullanılmadan çıkarıldı, 300 AP-HP notunda F1 = 0,941.",
     ctaResearch: 'Araştırmayı gör',
     ctaCV: 'Özgeçmişi indir',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, canlı şema',
@@ -1859,7 +2999,7 @@ const tr: Dictionary = {
     title: 'Matematik özel dersinden tümör belirteçlerini modellemeye',
     p1: 'ESIEE Paris\'te dördüncü sınıf öğrencisiyim, Veri Bilimi & Yapay Zeka uzmanlığındayım ve okulun Tremplin Recherche programına kayıtlıyım — bu program, standart bir sektör stajı yerine doktora araştırmasına yönelen öğrenciler için tasarlanmıştır.',
     p2: 'Çalışmalarım, yapılandırılmamış klinik metni araştırma için kullanılabilir hale getirmeye odaklanıyor: genel amaçlı NLP araçlarının bu alana özgü kelime dağarcığı ve belge yapısı karşısında sürekli başarısız olduğu Fransız onkoloji raporlarında gizli biyobelirteçleri, evreleme bilgilerini ve tedavi detaylarını çıkarmak.',
-    p3: 'Çalışmalarımın yanı sıra Complétude aracılığıyla matematik, fizik ve bilgisayar bilimi dersleri veriyor, Sorbonne Üniversitesi\'nde biyomedikal yapay zeka alanında bir CIFRE endüstriyel doktora başvurusu hazırlıyorum.',
+    p3: 'Çalışmalarımın yanı sıra Complétude aracılığıyla matematik ve fizik-kimya dersleri veriyor, Sorbonne Üniversitesi\'nde biyomedikal yapay zeka alanında bir CIFRE endüstriyel doktora başvurusu hazırlıyorum.',
     visionLine:
       'Uzun vadede, dağınık ve yüksek riskli metinden güvenilir yapı çıkarma disiplini, beni yapay zeka güvenliği araştırmalarına çekiyor: AMI Labs ve Anthropic Fellows Programı aracılığıyla world model inşa etmek ve değerlendirmek. (Bu taslak bir satır — kendi nihai ifadenle değiştir.)',
     facts: [
@@ -1914,7 +3054,7 @@ const tr: Dictionary = {
       { current: true, date: '2026 — Günümüz', title: 'Kurucu ve Ürün Lideri, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Beyin hasarı olan hastalara ve onların ergoterapistlerine bilişsel telafi dijital araçlarını karşılaştırmak için yapılandırılmış bir yol sunan bir platform inşa ediyorum. Sorbonne Üniversitesi\'ndeki SN@SU hackathonunda (UEROS L\'ADAPT Île-de-France\'ta ergoterapist olan Flor Sanchez-Luizard ile birlikte) bir Python/Streamlit prototipi olarak doğdu; şu anda HDS/RGPD uyumlu barındırma ve klinik eşleştirme için bir anlamsal arama motoruna sahip bir üretim yeniden yapılanmasının (FastAPI, PostgreSQL, Next.js) planlama aşamasında.' },
       { date: '2024 — 2027', title: 'Mühendislik Öğrencisi — Veri Bilimi & Yapay Zeka', org: 'ESIEE Paris', body: 'ESIEE Paris\'in beş yıllık mühendislik programının dördüncü sınıf öğrencisi, Veri Bilimi & Yapay Zeka (DSIA) uzmanlığı.' },
       { date: '2025', title: 'Mühendislik Stajyeri, GRADES Bölümü', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa üzerinden Debian/ROCm altyapısında AMD GPU uyumluluğu için OpenCL ile autopkgtest betikleri (pyopencl, nabu, ufo-filters, pyvkfft) geliştirdi.' },
-      { date: '2022 — Günümüz', title: 'Fen Bilimleri Özel Öğretmeni', org: 'Complétude', body: 'Mühendislik eğitimimle birlikte lise ve üniversite öğrencilerine matematik, fizik ve bilgisayar bilimi dersleri veriyorum.' },
+      { date: '2022 — Günümüz', title: 'Fen Bilimleri Özel Öğretmeni', org: 'Complétude', body: 'Mühendislik eğitimimle birlikte ilkokuldan lise son sınıfa kadar yaklaşık on öğrenciye matematik ve fizik-kimya dersleri veriyorum.' },
     ],
   },
   publications: {
@@ -1927,8 +3067,92 @@ const tr: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'DEMNE kademeli çerçevesini, paradigma seçimi için kullanılan beş derlem karakterizasyon metriğini ve üç Fransız onkoloji derlemi üzerindeki grid search kalibrasyon sonuçlarını detaylandıran makale.',
   },
+  projects: {
+    label: '05 — Seçilmiş Projeler',
+    title: 'Seçilmiş Projeler',
+    subtitle:
+      "DEMNE'nin ötesinde — bir hackathon ve ders projeleri için uçtan uca geliştirilmiş araçlar.",
+    items: [
+      {
+        date: 'Haziran 2026',
+        title: 'NeuroStep',
+        description:
+          'Beyin hasarı ve tümör hastaları için bilişsel telafi araçları ve uygulamalarının dijital kataloğu — iletişim desteği, hafıza ve planlama. SN@SU hackathonu için, Streamlit arayüzü ve JSON tabanlı depolama ile geliştirildi.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Ara. 2025',
+        title: 'Hava Kalitesi Panosu',
+        description:
+          "INERIS/Zenodo verilerine dayanarak Fransa'daki 15 yıllık (2000–2015) arka plan hava kirliliğini yeniden oluşturan interaktif bir pano — SQLite depolama, Plotly grafikleri ve Leaflet ısı haritası. Takım arkadaşım William Zee ile birlikte geliştirildi.",
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Teknik Altyapı',
+    title: 'Teknik Altyapı',
+    subtitle: 'Yukarıdaki çalışmayla ilgisine göre gruplandırılmış araçlar — genel bir liste değil.',
+    categories: [
+      {
+        title: 'Klinik NLP ve Biyomedikal Yapay Zeka',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Sistemler ve Altyapı',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Araştırma Araçları',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Diller',
+    languages: [
+      { flag: '🇫🇷', level: 'Anadil' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Orta düzey' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'Öğreniyorum' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Odak Alanları',
+    title: 'Odak Alanları',
+    items: [
+      {
+        title: 'Klinik Adlandırılmış Varlık Tanıma',
+        body: 'Yapılandırılmamış Fransızca onkoloji metinlerinden biyobelirteç, evreleme ve tedavi verilerini çıkarmak — genel amaçlı NLP\'nin çöktüğü ve alan uyarlamasının başladığı nokta.',
+      },
+      {
+        title: 'Tutumlu ve Yorumlanabilir Yapay Zeka',
+        body: 'Performans eşiklerini karşılayan en az opak katmana yönlendiren sistemler tasarlamak. AB Yapay Zeka Yasası\'na uyumu, sonradan akla gelen bir fikir değil, bir tasarım kısıtı olarak ele almak.',
+      },
+      {
+        title: 'Çok Modlu Biyomedikal Akıl Yürütme',
+        body: 'Uzun vadeli yön: klinik metni, görüntülemeyi ve genomiği, modaliteler arasında akıl yürüten modellerde birleştirmek. Dünya modelleri yaklaşımının tıbba uygulanması.',
+      },
+      {
+        title: 'Karmaşık Sistemlerin Pedagojisi',
+        body: "Complétude'de yaklaşık on öğrenciye ilkokuldan lise son sınıfa kadar (yükseköğrenim hariç) matematik ve fizik-kimya öğretmek. Yoğun kavramları öğrenilebilir kılmak bir araştırma becerisidir, yan iş değil.",
+      },
+    ],
+  },
   writing: {
-    label: '05 — Yazılar',
+    label: '08 — Yazılar',
     title: 'Araştırmadan notlar',
     subtitle: 'Yukarıdaki çalışmanın arkasındaki yöntemler, çıkmaz sokaklar ve kararlar hakkında daha uzun yazılar.',
     posts: [
@@ -1938,6 +3162,8 @@ const tr: Dictionary = {
   },
   contact: {
     title: 'Klinik NLP, biyomedikal yapay zeka veya bir doktora iş birliği hakkında konuşalım.',
+    directLabel: 'Doğrudan',
+    elsewhereLabel: 'Diğer Yerler',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -1968,11 +3194,11 @@ const pl: Dictionary = {
     menuToggleLabel: 'Otwórz menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Buduję systemy NLP, które ',
-    h1Accent: 'czytają język kliniczny',
-    h1Post: ' tak, jak robi to onkolog.',
-    sub: 'Jestem Clément Longeac, studentem inżynierii działającym na styku klinicznego NLP i biomedycznej AI — obecnie buduję hybrydowe pipeline\'y ekstrakcji dla francuskich raportów onkologicznych, w drodze do doktoratu z AI stosowanej w badaniach biomedycznych.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Wydobywam biomarkery z tekstu klinicznego ',
+    h1Accent: 'nie budząc GPU',
+    h1Post: '.',
+    sub: 'Jestem Clément Longeac. Pracuję nad DEMNE, frameworkiem routingu, który dla każdego typu jednostki decyduje, czy uczciwym narzędziem do zadania jest wyrażenie regularne, CRF, transformer czy LLM. Pierwszy wynik: 93,7% jednostek klinicznych wydobytych bez GPU, F1 = 0,941 na 300 notatkach AP-HP.',
     ctaResearch: 'Zobacz badania',
     ctaCV: 'Pobierz CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schemat na żywo',
@@ -1982,7 +3208,7 @@ const pl: Dictionary = {
     title: 'Od korepetycji z matematyki do modelowania markerów nowotworowych',
     p1: 'Jestem studentem czwartego roku w ESIEE Paris, specjalizacja Data Science & AI, zapisanym na ścieżkę Tremplin Recherche — program przeznaczony dla studentów zmierzających ku doktoratowi, a nie standardowemu stażowi w przemyśle.',
     p2: 'Moja praca koncentruje się na uczynieniu nieustrukturyzowanego tekstu klinicznego użytecznym dla badań: wydobywaniu biomarkerów, informacji o stopniu zaawansowania i szczegółów leczenia ukrytych we francuskich raportach onkologicznych, gdzie ogólne narzędzia NLP systematycznie zawodzą wobec słownictwa i struktury dokumentów specyficznych dla tej dziedziny.',
-    p3: 'Równolegle ze studiami udzielam korepetycji z matematyki, fizyki i informatyki poprzez Complétude, a także przygotowuję aplikacje na przemysłowy doktorat CIFRE w dziedzinie biomedycznej AI na Uniwersytecie Sorbony.',
+    p3: 'Równolegle ze studiami udzielam korepetycji z matematyki i fizyki-chemii poprzez Complétude, a także przygotowuję aplikacje na przemysłowy doktorat CIFRE w dziedzinie biomedycznej AI na Uniwersytecie Sorbony.',
     visionLine:
       'W dłuższej perspektywie ta sama dyscyplina — wydobywanie wiarygodnej struktury z chaotycznego, wysoce ryzykownego tekstu — przyciąga mnie do badań nad bezpieczeństwem AI: budowania i oceniania world models poprzez AMI Labs i program Anthropic Fellows. (To wersja robocza — zastąp ją własnym ostatecznym sformułowaniem.)',
     facts: [
@@ -2037,7 +3263,7 @@ const pl: Dictionary = {
       { current: true, date: '2026 — obecnie', title: 'Założyciel i Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Budowa platformy, która daje pacjentom po urazach mózgu i ich terapeutom zajęciowym ustrukturyzowany sposób porównywania cyfrowych narzędzi kompensacji poznawczej. Powstała jako prototyp Python/Streamlit na hackathonie SN@SU (Sorbona, wraz z Flor Sanchez-Luizard, terapeutką zajęciową w UEROS L\'ADAPT Île-de-France); obecnie na etapie planowania produkcyjnej przebudowy (FastAPI, PostgreSQL, Next.js) z hostingiem zgodnym z HDS/RGPD i semantyczną wyszukiwarką do dopasowywania narzędzi klinicznych.' },
       { date: '2024 — 2027', title: 'Student inżynierii — Data Science & AI', org: 'ESIEE Paris', body: 'Student czwartego roku pięcioletniego programu inżynierskiego ESIEE Paris, specjalizacja Data Science & AI (DSIA).' },
       { date: '2025', title: 'Stażysta inżynieryjny, dział GRADES', org: 'Synchrotron SOLEIL', body: 'Rozwój skryptów autopkgtest w OpenCL do testowania kompatybilności GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infrastrukturze Debian/ROCm za pośrednictwem GitLab Salsa.' },
-      { date: '2022 — obecnie', title: 'Korepetytor przedmiotów ścisłych', org: 'Complétude', body: 'Nauczanie matematyki, fizyki i informatyki uczniów szkół średnich i studentów równolegle ze studiami inżynierskimi.' },
+      { date: '2022 — obecnie', title: 'Korepetytor przedmiotów ścisłych', org: 'Complétude', body: 'Nauczanie matematyki i fizyki-chemii około dziesięciu uczniów, od szkoły podstawowej po ostatnią klasę liceum, równolegle ze studiami inżynierskimi.' },
     ],
   },
   publications: {
@@ -2050,8 +3276,91 @@ const pl: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manuskrypt szczegółowo opisujący kaskadowy framework DEMNE, pięć metryk charakteryzacji korpusu użytych do wyboru paradygmatu oraz wyniki kalibracji grid search na trzech francuskich korpusach onkologicznych.',
   },
+  projects: {
+    label: '05 — Wybrane projekty',
+    title: 'Wybrane projekty',
+    subtitle: 'Poza DEMNE — narzędzia zbudowane od podstaw na hackathon i projekty uczelniane.',
+    items: [
+      {
+        date: 'Czerwiec 2026',
+        title: 'NeuroStep',
+        description:
+          'Cyfrowy katalog narzędzi i aplikacji wspomagających funkcje poznawcze dla osób z urazami mózgu i nowotworami — wsparcie komunikacji, pamięci i planowania. Stworzony na hackathon SN@SU, z interfejsem Streamlit opartym na magazynie danych JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Gru. 2025',
+        title: 'Panel jakości powietrza',
+        description:
+          'Interaktywny panel rekonstruujący 15 lat tła zanieczyszczenia powietrza we Francji (2000–2015) na podstawie danych INERIS/Zenodo — przechowywanie danych w SQLite, wykresy Plotly i mapa cieplna Leaflet. Stworzony wspólnie z kolegą z zespołu Williamem Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Stos technologiczny',
+    title: 'Stos technologiczny',
+    subtitle: 'Narzędzia pogrupowane według znaczenia dla powyższej pracy — nie ogólna lista.',
+    categories: [
+      {
+        title: 'Kliniczne NLP i biomedyczna SI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Systemy i infrastruktura',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Narzędzia badawcze',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Języki',
+    languages: [
+      { flag: '🇫🇷', level: 'Ojczysty' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Średnio zaawansowany' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'W trakcie nauki' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Obszary zainteresowań',
+    title: 'Obszary zainteresowań',
+    items: [
+      {
+        title: 'Kliniczne rozpoznawanie jednostek nazwanych',
+        body: 'Wydobywanie biomarkerów, stopnia zaawansowania i danych o leczeniu z nieustrukturyzowanych francuskich tekstów onkologicznych — tam, gdzie ogólne NLP zawodzi, a zaczyna się adaptacja domenowa.',
+      },
+      {
+        title: 'Oszczędna i interpretowalna SI',
+        body: 'Projektowanie systemów kierujących zadanie do najmniej nieprzejrzystego poziomu spełniającego progi wydajności. Zgodność z unijnym AI Act jako ograniczenie projektowe, a nie refleksja po fakcie.',
+      },
+      {
+        title: 'Multimodalne rozumowanie biomedyczne',
+        body: 'Kierunek długoterminowy: łączenie tekstu klinicznego, obrazowania i genomiki w modelach rozumujących ponad modalnościami. Podejście world models zastosowane w medycynie.',
+      },
+      {
+        title: 'Dydaktyka systemów złożonych',
+        body: 'Nauczanie matematyki i fizyki-chemii około dziesięciu uczniów w Complétude, od szkoły podstawowej po ostatnią klasę liceum (bez szkolnictwa wyższego). Czynienie gęstych pojęć przyswajalnymi to umiejętność badawcza, a nie dorywcza praca.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Artykuły',
+    label: '08 — Artykuły',
     title: 'Notatki z badań',
     subtitle: 'Dłuższe teksty o metodach, ślepych zaułkach i decyzjach stojących za powyższą pracą.',
     posts: [
@@ -2061,6 +3370,8 @@ const pl: Dictionary = {
   },
   contact: {
     title: 'Porozmawiajmy o klinicznym NLP, biomedycznej AI lub współpracy doktoranckiej.',
+    directLabel: 'Bezpośrednio',
+    elsewhereLabel: 'Gdzie indziej',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -2091,11 +3402,11 @@ const vi: Dictionary = {
     menuToggleLabel: 'Mở menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Tôi xây dựng các hệ thống NLP có thể ',
-    h1Accent: 'đọc ngôn ngữ lâm sàng',
-    h1Post: ' theo cách mà một bác sĩ ung bướu làm.',
-    sub: 'Tôi là Clément Longeac, sinh viên kỹ thuật làm việc tại giao điểm giữa NLP lâm sàng và AI y sinh — hiện đang xây dựng các pipeline trích xuất lai cho các báo cáo ung bướu tiếng Pháp, hướng tới bằng tiến sĩ về AI ứng dụng trong nghiên cứu y sinh.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Trích xuất dấu ấn sinh học từ văn bản lâm sàng ',
+    h1Accent: 'mà không cần đánh thức GPU',
+    h1Post: '.',
+    sub: 'Tôi là Clément Longeac. Tôi đang phát triển DEMNE, một framework định tuyến quyết định — cho từng loại thực thể — liệu regex, CRF, transformer, hay LLM mới là công cụ trung thực cho công việc. Kết quả đầu tiên: 93,7% thực thể lâm sàng được trích xuất không cần GPU, F1 = 0,941 trên 300 ghi chú AP-HP.',
     ctaResearch: 'Xem nghiên cứu',
     ctaCV: 'Tải CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, sơ đồ trực tiếp',
@@ -2105,7 +3416,7 @@ const vi: Dictionary = {
     title: 'Từ dạy kèm toán đến mô hình hóa dấu ấn sinh học khối u',
     p1: 'Tôi là sinh viên năm thứ tư tại ESIEE Paris, chuyên ngành Khoa học Dữ liệu & AI, theo học chương trình Tremplin Recherche của trường — một chương trình dành cho sinh viên hướng tới nghiên cứu tiến sĩ thay vì thực tập doanh nghiệp thông thường.',
     p2: 'Công việc của tôi tập trung vào việc làm cho văn bản lâm sàng phi cấu trúc trở nên hữu ích cho nghiên cứu: trích xuất dấu ấn sinh học, thông tin phân giai đoạn và chi tiết điều trị ẩn trong các báo cáo ung bướu tiếng Pháp, nơi mà các công cụ NLP tổng quát liên tục thất bại trước từ vựng và cấu trúc tài liệu đặc thù của lĩnh vực này.',
-    p3: 'Bên cạnh việc học, tôi dạy kèm toán, vật lý và tin học thông qua Complétude, và đang chuẩn bị hồ sơ ứng tuyển chương trình tiến sĩ công nghiệp CIFRE về AI y sinh tại Đại học Sorbonne.',
+    p3: 'Bên cạnh việc học, tôi dạy kèm toán và lý-hóa thông qua Complétude, và đang chuẩn bị hồ sơ ứng tuyển chương trình tiến sĩ công nghiệp CIFRE về AI y sinh tại Đại học Sorbonne.',
     visionLine:
       'Về lâu dài, chính kỷ luật này — trích xuất cấu trúc đáng tin cậy từ văn bản hỗn độn, rủi ro cao — là điều thu hút tôi đến với nghiên cứu an toàn AI: xây dựng và đánh giá world model thông qua AMI Labs và chương trình Anthropic Fellows. (Đây là câu nháp — hãy thay bằng cách diễn đạt cuối cùng của bạn.)',
     facts: [
@@ -2160,7 +3471,7 @@ const vi: Dictionary = {
       { current: true, date: '2026 — Hiện tại', title: 'Nhà sáng lập kiêm Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Xây dựng một nền tảng mang lại cho bệnh nhân chấn thương não và các nhà trị liệu nghề nghiệp của họ một cách có cấu trúc để so sánh các công cụ số hỗ trợ bù đắp nhận thức. Ra đời như một bản mẫu Python/Streamlit tại hackathon SN@SU (Đại học Sorbonne, cùng với Flor Sanchez-Luizard, nhà trị liệu nghề nghiệp tại UEROS L\'ADAPT Île-de-France); hiện đang trong giai đoạn lên kế hoạch xây dựng lại phiên bản sản xuất (FastAPI, PostgreSQL, Next.js) với dịch vụ lưu trữ tuân thủ HDS/RGPD và một công cụ tìm kiếm ngữ nghĩa để ghép nối công cụ lâm sàng.' },
       { date: '2024 — 2027', title: 'Sinh viên kỹ thuật — Khoa học Dữ liệu & AI', org: 'ESIEE Paris', body: 'Sinh viên năm thứ tư của chương trình kỹ thuật năm năm tại ESIEE Paris, chuyên ngành Khoa học Dữ liệu & AI (DSIA).' },
       { date: '2025', title: 'Thực tập sinh kỹ thuật, bộ phận GRADES', org: 'Synchrotron SOLEIL', body: 'Phát triển các script autopkgtest bằng OpenCL để kiểm tra khả năng tương thích GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) trên hạ tầng Debian/ROCm thông qua GitLab Salsa.' },
-      { date: '2022 — Hiện tại', title: 'Gia sư khoa học tự nhiên', org: 'Complétude', body: 'Dạy toán, vật lý và tin học cho học sinh trung học và sinh viên đại học song song với việc học kỹ thuật của tôi.' },
+      { date: '2022 — Hiện tại', title: 'Gia sư khoa học tự nhiên', org: 'Complétude', body: 'Dạy toán và lý-hóa cho khoảng mười học sinh, từ tiểu học đến lớp cuối trung học phổ thông, song song với việc học kỹ thuật của tôi.' },
     ],
   },
   publications: {
@@ -2173,8 +3484,93 @@ const vi: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Bản thảo trình bày chi tiết khung tầng bậc DEMNE, năm chỉ số đặc trưng hóa kho ngữ liệu dùng để lựa chọn mô hình, và kết quả hiệu chỉnh tìm kiếm lưới trên ba kho ngữ liệu ung bướu tiếng Pháp.',
   },
+  projects: {
+    label: '05 — Dự án tiêu biểu',
+    title: 'Dự án tiêu biểu',
+    subtitle:
+      'Bên cạnh DEMNE — các công cụ được xây dựng trọn vẹn cho một cuộc thi hackathon và các dự án học tập.',
+    items: [
+      {
+        date: 'Tháng 6/2026',
+        title: 'NeuroStep',
+        description:
+          'Một danh mục kỹ thuật số gồm các công cụ và ứng dụng hỗ trợ nhận thức cho người bị tổn thương não và khối u — hỗ trợ giao tiếp, trí nhớ và lập kế hoạch. Được xây dựng cho cuộc thi hackathon SN@SU, với giao diện Streamlit trên nền lưu trữ JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Tháng 12/2025',
+        title: 'Bảng điều khiển chất lượng không khí',
+        description:
+          'Một bảng điều khiển tương tác tái hiện 15 năm ô nhiễm không khí nền tại Pháp (2000–2015) dựa trên dữ liệu INERIS/Zenodo — lưu trữ bằng SQLite, biểu đồ Plotly và bản đồ nhiệt Leaflet. Được thực hiện cùng đồng đội William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Công nghệ sử dụng',
+    title: 'Công nghệ sử dụng',
+    subtitle:
+      'Các công cụ được nhóm theo mức độ liên quan đến công việc ở trên — không phải một danh sách chung chung.',
+    categories: [
+      {
+        title: 'NLP lâm sàng & AI y sinh',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Hệ thống & Hạ tầng',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Công cụ nghiên cứu',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Ngôn ngữ',
+    languages: [
+      { flag: '🇫🇷', level: 'Tiếng mẹ đẻ' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Trung cấp' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'Đang học' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Trọng tâm nghiên cứu',
+    title: 'Trọng tâm nghiên cứu',
+    items: [
+      {
+        title: 'Nhận dạng thực thể có tên trong lâm sàng',
+        body: 'Trích xuất dấu ấn sinh học, giai đoạn bệnh và dữ liệu điều trị từ văn bản ung bướu tiếng Pháp phi cấu trúc — nơi NLP đa dụng thất bại và thích ứng theo lĩnh vực bắt đầu.',
+      },
+      {
+        title: 'AI tiết kiệm và có thể diễn giải',
+        body: 'Thiết kế các hệ thống định tuyến đến tầng ít mờ đục nhất vẫn đáp ứng ngưỡng hiệu năng. Tuân thủ Đạo luật AI của EU như một ràng buộc thiết kế, không phải một suy nghĩ muộn màng.',
+      },
+      {
+        title: 'Suy luận y sinh đa phương thức',
+        body: 'Định hướng dài hạn: hợp nhất văn bản lâm sàng, hình ảnh y khoa và bộ gen vào các mô hình suy luận xuyên phương thức — hướng tiếp cận world models áp dụng cho y học.',
+      },
+      {
+        title: 'Sư phạm của các hệ thống phức tạp',
+        body: 'Dạy toán và lý-hóa cho khoảng mười học sinh tại Complétude, từ tiểu học đến lớp cuối trung học phổ thông (không bao gồm bậc đại học). Biến các khái niệm dày đặc thành có thể học được là một kỹ năng nghiên cứu, không phải việc làm thêm.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Bài viết',
+    label: '08 — Bài viết',
     title: 'Ghi chú từ nghiên cứu',
     subtitle: 'Các bài viết dài hơn về phương pháp, ngõ cụt và quyết định đằng sau công việc nêu trên.',
     posts: [
@@ -2184,6 +3580,8 @@ const vi: Dictionary = {
   },
   contact: {
     title: 'Hãy cùng trao đổi về NLP lâm sàng, AI y sinh, hoặc hợp tác nghiên cứu tiến sĩ.',
+    directLabel: 'Trực tiếp',
+    elsewhereLabel: 'Nơi khác',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -2214,11 +3612,11 @@ const id: Dictionary = {
     menuToggleLabel: 'Buka menu',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Saya membangun sistem NLP yang ',
-    h1Accent: 'membaca bahasa klinis',
-    h1Post: ' selayaknya seorang onkolog.',
-    sub: 'Saya Clément Longeac, mahasiswa teknik yang bekerja di persimpangan NLP klinis dan AI biomedis — saat ini membangun pipeline ekstraksi hybrid untuk laporan onkologi berbahasa Prancis, menuju gelar PhD dalam AI yang diterapkan pada riset biomedis.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Mengekstrak biomarker dari teks klinis ',
+    h1Accent: 'tanpa membangunkan GPU',
+    h1Post: '.',
+    sub: 'Saya Clément Longeac. Saya sedang mengerjakan DEMNE, kerangka kerja routing yang memutuskan — untuk setiap jenis entitas — apakah regex, CRF, transformer, atau LLM adalah alat yang jujur untuk tugas tersebut. Hasil pertama: 93,7% entitas klinis diekstrak tanpa GPU, F1 = 0,941 pada 300 catatan AP-HP.',
     ctaResearch: 'Lihat riset',
     ctaCV: 'Unduh CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, skema langsung',
@@ -2228,7 +3626,7 @@ const id: Dictionary = {
     title: 'Dari mengajar les matematika hingga memodelkan penanda tumor',
     p1: 'Saya mahasiswa tahun keempat di ESIEE Paris, spesialisasi Data Science & AI, terdaftar dalam jalur Tremplin Recherche di sekolah — sebuah program yang dirancang untuk mahasiswa yang menuju riset doktoral, bukan magang industri standar.',
     p2: 'Pekerjaan saya berfokus pada membuat teks klinis tak terstruktur dapat digunakan untuk riset: mengekstrak penanda biologis, informasi stadium, dan detail perawatan yang terkubur dalam laporan onkologi berbahasa Prancis, di mana alat NLP umum secara konsisten gagal menghadapi kosakata dan struktur dokumen khas domain ini.',
-    p3: 'Selain kuliah, saya mengajar les matematika, fisika, dan ilmu komputer melalui Complétude, dan sedang mempersiapkan pendaftaran untuk program PhD industri CIFRE dalam AI biomedis di Universitas Sorbonne.',
+    p3: 'Selain kuliah, saya mengajar les matematika dan fisika-kimia melalui Complétude, dan sedang mempersiapkan pendaftaran untuk program PhD industri CIFRE dalam AI biomedis di Universitas Sorbonne.',
     visionLine:
       'Dalam jangka panjang, disiplin yang sama — menarik struktur yang andal dari teks yang berantakan dan berisiko tinggi — adalah yang menarik saya ke riset keamanan AI: membangun dan mengevaluasi world model melalui AMI Labs dan program Anthropic Fellows. (Ini kalimat draf — ganti dengan rumusan akhir Anda sendiri.)',
     facts: [
@@ -2283,7 +3681,7 @@ const id: Dictionary = {
       { current: true, date: '2026 — Sekarang', title: 'Pendiri & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Membangun platform yang memberi pasien cedera otak dan terapis okupasi mereka cara terstruktur untuk membandingkan alat digital kompensasi kognitif. Lahir sebagai prototipe Python/Streamlit di hackathon SN@SU (Universitas Sorbonne, bersama Flor Sanchez-Luizard, terapis okupasi di UEROS L\'ADAPT Île-de-France); kini dalam tahap perencanaan pembangunan ulang versi produksi (FastAPI, PostgreSQL, Next.js) dengan hosting yang sesuai HDS/RGPD dan mesin pencari semantik untuk pencocokan klinis.' },
       { date: '2024 — 2027', title: 'Mahasiswa Teknik — Data Science & AI', org: 'ESIEE Paris', body: 'Mahasiswa tahun keempat program teknik lima tahun ESIEE Paris, spesialisasi Data Science & AI (DSIA).' },
       { date: '2025', title: 'Magang Teknik, Divisi GRADES', org: 'Synchrotron SOLEIL', body: 'Mengembangkan skrip autopkgtest dalam OpenCL untuk kompatibilitas GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) pada infrastruktur Debian/ROCm melalui GitLab Salsa.' },
-      { date: '2022 — Sekarang', title: 'Guru Les Sains', org: 'Complétude', body: 'Mengajar matematika, fisika, dan ilmu komputer kepada siswa sekolah menengah dan universitas, sejalan dengan studi teknik saya.' },
+      { date: '2022 — Sekarang', title: 'Guru Les Sains', org: 'Complétude', body: 'Mengajar matematika dan fisika-kimia kepada sekitar sepuluh siswa, dari sekolah dasar hingga kelas terakhir SMA, sejalan dengan studi teknik saya.' },
     ],
   },
   publications: {
@@ -2296,8 +3694,91 @@ const id: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Naskah yang merinci kerangka kerja cascade DEMNE, lima metrik karakterisasi korpus yang digunakan untuk pemilihan paradigma, dan hasil kalibrasi grid search pada tiga korpus onkologi Prancis.',
   },
+  projects: {
+    label: '05 — Proyek Pilihan',
+    title: 'Proyek Pilihan',
+    subtitle: 'Selain DEMNE — alat yang dibangun dari awal hingga akhir untuk hackathon dan tugas kuliah.',
+    items: [
+      {
+        date: 'Juni 2026',
+        title: 'NeuroStep',
+        description:
+          'Katalog digital berisi alat dan aplikasi kompensasi kognitif untuk penyandang cedera otak dan tumor — bantuan komunikasi, memori, dan perencanaan. Dibuat untuk hackathon SN@SU, dengan antarmuka Streamlit di atas penyimpanan berbasis JSON.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Des. 2025',
+        title: 'Dasbor Kualitas Udara',
+        description:
+          'Dasbor interaktif yang merekonstruksi 15 tahun polusi udara latar belakang di Prancis (2000–2015) dari data INERIS/Zenodo — penyimpanan SQLite, grafik Plotly, dan peta panas Leaflet. Dibuat bersama rekan satu tim William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Tumpukan Teknologi',
+    title: 'Tumpukan Teknologi',
+    subtitle: 'Alat yang dikelompokkan berdasarkan relevansinya dengan pekerjaan di atas — bukan daftar umum.',
+    categories: [
+      {
+        title: 'NLP Klinis & AI Biomedis',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Sistem & Infrastruktur',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Alat Riset',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Bahasa',
+    languages: [
+      { flag: '🇫🇷', level: 'Bahasa ibu' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Menengah' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'Sedang dipelajari' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Area Fokus',
+    title: 'Area Fokus',
+    items: [
+      {
+        title: 'Pengenalan Entitas Bernama Klinis',
+        body: 'Mengekstrak biomarker, stadium, dan data pengobatan dari teks onkologi Prancis yang tidak terstruktur — titik di mana NLP tujuan umum gagal dan adaptasi domain dimulai.',
+      },
+      {
+        title: 'AI Hemat & Dapat Diinterpretasikan',
+        body: 'Merancang sistem yang mengarahkan ke lapisan paling tidak opak yang memenuhi ambang batas kinerja. Kepatuhan terhadap EU AI Act sebagai batasan desain, bukan pemikiran belakangan.',
+      },
+      {
+        title: 'Penalaran Biomedis Multimodal',
+        body: 'Arah jangka panjang: menyatukan teks klinis, pencitraan, dan genomik ke dalam model yang bernalar lintas modalitas — pendekatan world models yang diterapkan pada kedokteran.',
+      },
+      {
+        title: 'Pedagogi Sistem Kompleks',
+        body: 'Mengajar matematika dan fisika-kimia kepada sekitar sepuluh siswa di Complétude, dari sekolah dasar hingga kelas terakhir SMA (tidak termasuk pendidikan tinggi). Membuat konsep yang padat dapat dipelajari adalah keterampilan riset, bukan pekerjaan sampingan.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Tulisan',
+    label: '08 — Tulisan',
     title: 'Catatan dari riset',
     subtitle: 'Tulisan yang lebih panjang tentang metode, jalan buntu, dan keputusan di balik pekerjaan di atas.',
     posts: [
@@ -2307,6 +3788,8 @@ const id: Dictionary = {
   },
   contact: {
     title: 'Mari bicara tentang NLP klinis, AI biomedis, atau kolaborasi PhD.',
+    directLabel: 'Langsung',
+    elsewhereLabel: 'Di Tempat Lain',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -2337,11 +3820,11 @@ const sv: Dictionary = {
     menuToggleLabel: 'Öppna menyn',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Jag bygger NLP-system som ',
-    h1Accent: 'läser kliniskt språk',
-    h1Post: ' på samma sätt som en onkolog gör.',
-    sub: 'Jag är Clément Longeac, ingenjörsstudent i skärningspunkten mellan klinisk NLP och biomedicinsk AI — just nu bygger jag hybrida extraktionspipelines för franska onkologirapporter, på väg mot en doktorsexamen i AI tillämpad på biomedicinsk forskning.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Extraherar biomarkörer från klinisk text ',
+    h1Accent: 'utan att väcka GPU:n',
+    h1Post: '.',
+    sub: 'Jag är Clément Longeac. Jag arbetar med DEMNE, ett routningsramverk som för varje entitetstyp avgör om ett reguljärt uttryck, en CRF, en transformer eller en LLM är det ärliga verktyget för uppgiften. Första resultatet: 93,7 % av de kliniska entiteterna extraherade utan GPU, F1 = 0,941 på 300 AP-HP-anteckningar.',
     ctaResearch: 'Se forskningen',
     ctaCV: 'Ladda ner CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schema i realtid',
@@ -2351,7 +3834,7 @@ const sv: Dictionary = {
     title: 'Från mattestöttning till modellering av tumörmarkörer',
     p1: 'Jag är fjärdeårsstudent vid ESIEE Paris, inriktning Data Science & AI, inskriven på skolans Tremplin Recherche-spår — ett program byggt för studenter som siktar på doktorandforskning snarare än en vanlig industripraktik.',
     p2: 'Mitt arbete handlar om att göra ostrukturerad klinisk text användbar för forskning: att extrahera biomarkörer, stadieinformation och behandlingsdetaljer som gömts i franska onkologirapporter, där generella NLP-verktyg konsekvent misslyckas inför domänens vokabulär och dokumentstruktur.',
-    p3: 'Vid sidan av studierna undervisar jag i matematik, fysik och datavetenskap via Complétude, och förbereder ansökningar till en industriell CIFRE-doktorandtjänst inom biomedicinsk AI vid Sorbonneuniversitetet.',
+    p3: 'Vid sidan av studierna undervisar jag i matematik och fysik-kemi via Complétude, och förbereder ansökningar till en industriell CIFRE-doktorandtjänst inom biomedicinsk AI vid Sorbonneuniversitetet.',
     visionLine:
       'På längre sikt är det just den här disciplinen — att extrahera pålitlig struktur ur rörig, högriskbetonad text — som drar mig till AI-säkerhetsforskning: att bygga och utvärdera world models via AMI Labs och Anthropic Fellows-programmet. (Preliminär rad — ersätt med din egen slutgiltiga formulering.)',
     facts: [
@@ -2406,7 +3889,7 @@ const sv: Dictionary = {
       { current: true, date: '2026 — Nuvarande', title: 'Grundare & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bygger en plattform som ger hjärnskadade patienter och deras arbetsterapeuter ett strukturerat sätt att jämföra digitala verktyg för kognitiv kompensation. Föddes som en Python/Streamlit-prototyp på SN@SU-hackathonet (Sorbonneuniversitetet, tillsammans med Flor Sanchez-Luizard, arbetsterapeut vid UEROS L\'ADAPT Île-de-France); nu i planeringsfasen för en produktionsombyggnad (FastAPI, PostgreSQL, Next.js) med HDS/RGPD-kompatibel hosting och en semantisk sökmotor för klinisk matchning.' },
       { date: '2024 — 2027', title: 'Ingenjörsstudent — Data Science & AI', org: 'ESIEE Paris', body: 'Fjärdeårsstudent i ESIEE Paris femåriga ingenjörsprogram, inriktning Data Science & AI (DSIA).' },
       { date: '2025', title: 'Ingenjörspraktikant, GRADES-avdelningen', org: 'Synchrotron SOLEIL', body: 'Utveckling av autopkgtest-skript i OpenCL för AMD GPU-kompatibilitet (pyopencl, nabu, ufo-filters, pyvkfft) på Debian/ROCm-infrastruktur via GitLab Salsa.' },
-      { date: '2022 — Nuvarande', title: 'NO-lärare (privatundervisning)', org: 'Complétude', body: 'Undervisar i matematik, fysik och datavetenskap för gymnasie- och universitetsstudenter parallellt med mina ingenjörsstudier.' },
+      { date: '2022 — Nuvarande', title: 'NO-lärare (privatundervisning)', org: 'Complétude', body: 'Undervisar i matematik och fysik-kemi för ett tiotal elever, från lågstadiet till sista året på gymnasiet, parallellt med mina ingenjörsstudier.' },
     ],
   },
   publications: {
@@ -2419,8 +3902,91 @@ const sv: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Manuskript som beskriver DEMNE:s kaskadramverk, de fem korpuskarakteriseringsmåtten som används för paradigmval, och kalibreringsresultaten från grid search över tre franska onkologikorpusar.',
   },
+  projects: {
+    label: '05 — Utvalda projekt',
+    title: 'Utvalda projekt',
+    subtitle: 'Utöver DEMNE — verktyg byggda från grunden för en hackathon och kursprojekt.',
+    items: [
+      {
+        date: 'Juni 2026',
+        title: 'NeuroStep',
+        description:
+          'En digital katalog över kognitiva hjälpmedel och appar för personer med hjärnskador och tumörer — stöd för kommunikation, minne och planering. Byggd för SN@SU-hackathonet, med ett Streamlit-gränssnitt ovanpå en JSON-baserad lagring.',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Dec. 2025',
+        title: 'Luftkvalitetspanel',
+        description:
+          'En interaktiv instrumentpanel som rekonstruerar 15 års bakgrundsluftförorening i Frankrike (2000–2015) utifrån INERIS/Zenodo-data — SQLite-lagring, Plotly-diagram och en Leaflet-värmekarta. Byggd tillsammans med lagkamraten William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Teknisk stack',
+    title: 'Teknisk stack',
+    subtitle: 'Verktyg grupperade efter relevans för arbetet ovan — ingen generisk lista.',
+    categories: [
+      {
+        title: 'Klinisk NLP & biomedicinsk AI',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'System & infrastruktur',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Forskningsverktyg',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Språk',
+    languages: [
+      { flag: '🇫🇷', level: 'Modersmål' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Medel' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'Under inlärning' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Fokusområden',
+    title: 'Fokusområden',
+    items: [
+      {
+        title: 'Klinisk namngiven entitetsigenkänning',
+        body: 'Extrahera biomarkörer, stadieindelning och behandlingsdata från ostrukturerad fransk onkologitext — där generell NLP kollapsar och domänanpassning tar vid.',
+      },
+      {
+        title: 'Frugal & tolkbar AI',
+        body: 'Design av system som dirigerar till den minst opaka nivån som uppfyller prestandakraven. Efterlevnad av EU:s AI-förordning som en designbegränsning, inte en eftertanke.',
+      },
+      {
+        title: 'Multimodalt biomedicinskt resonemang',
+        body: 'Långsiktig riktning: att förena klinisk text, bilddiagnostik och genomik i modeller som resonerar över modaliteter — inriktningen mot world models tillämpad på medicin.',
+      },
+      {
+        title: 'Pedagogik för komplexa system',
+        body: 'Undervisar i matematik och fysik-kemi för ett tiotal elever på Complétude, från lågstadiet till sista året på gymnasiet (inte högre utbildning). Att göra täta koncept inlärbara är en forskningsfärdighet, inte ett sidojobb.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Artiklar',
+    label: '08 — Artiklar',
     title: 'Anteckningar från forskningen',
     subtitle: 'Längre texter om metoder, återvändsgränder och beslut bakom arbetet ovan.',
     posts: [
@@ -2430,6 +3996,8 @@ const sv: Dictionary = {
   },
   contact: {
     title: 'Låt oss prata om klinisk NLP, biomedicinsk AI, eller ett doktorandsamarbete.',
+    directLabel: 'Direkt',
+    elsewhereLabel: 'Andra kanaler',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -2460,11 +4028,11 @@ const uk: Dictionary = {
     menuToggleLabel: 'Відкрити меню',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'Я створюю системи NLP, які ',
-    h1Accent: 'читають клінічну мову',
-    h1Post: ' так само, як онколог.',
-    sub: 'Я Clément Longeac, студент-інженер на перетині клінічного NLP та біомедичного ШІ — зараз розробляю гібридні конвеєри вилучення для французьких онкологічних звітів, на шляху до докторського ступеня зі ШІ, застосованого в біомедичних дослідженнях.',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'Видобуваю біомаркери з клінічного тексту ',
+    h1Accent: 'не пробуджуючи GPU',
+    h1Post: '.',
+    sub: 'Я Clément Longeac. Я працюю над DEMNE — фреймворком маршрутизації, який для кожного типу сутності вирішує, чи є чесним інструментом для завдання регулярний вираз, CRF, трансформер або LLM. Перший результат: 93,7% клінічних сутностей видобуто без GPU, F1 = 0,941 на 300 нотатках AP-HP.',
     ctaResearch: 'Переглянути дослідження',
     ctaCV: 'Завантажити резюме',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, схема в реальному часі',
@@ -2474,7 +4042,7 @@ const uk: Dictionary = {
     title: 'Від репетиторства з математики до моделювання пухлинних маркерів',
     p1: 'Я студент четвертого курсу ESIEE Paris, спеціалізація Data Science & AI, навчаюся за програмою Tremplin Recherche школи — програмою для студентів, орієнтованих на докторантуру, а не на стандартне стажування в індустрії.',
     p2: 'Моя робота зосереджена на тому, щоб зробити неструктурований клінічний текст придатним для досліджень: вилучення біомаркерів, інформації про стадіювання та деталей лікування, прихованих у французьких онкологічних звітах, де універсальні інструменти NLP систематично зазнають невдачі через специфічну лексику та структуру документів.',
-    p3: 'Паралельно з навчанням я викладаю математику, фізику та інформатику через Complétude, а також готую заявки на промислову докторантуру CIFRE з біомедичного ШІ в Сорбонському університеті.',
+    p3: 'Паралельно з навчанням я викладаю математику та фізику-хімію через Complétude, а також готую заявки на промислову докторантуру CIFRE з біомедичного ШІ в Сорбонському університеті.',
     visionLine:
       'У довгостроковій перспективі саме ця дисципліна — здобування надійної структури з хаотичного, високоризикового тексту — приваблює мене до досліджень безпеки ШІ: побудови та оцінки world model через AMI Labs та програму Anthropic Fellows. (Це чорновий рядок — замініть на власне остаточне формулювання.)',
     facts: [
@@ -2529,7 +4097,7 @@ const uk: Dictionary = {
       { current: true, date: '2026 — дотепер', title: 'Засновник і Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Створення платформи, яка дає пацієнтам із черепно-мозковими травмами та їхнім ерготерапевтам структурований спосіб порівнювати цифрові інструменти когнітивної компенсації. Народився як прототип на Python/Streamlit на хакатоні SN@SU (Сорбонський університет, разом із Flor Sanchez-Luizard, ерготерапевткою в UEROS L\'ADAPT Іль-де-Франс); зараз на етапі планування виробничої перебудови (FastAPI, PostgreSQL, Next.js) з хостингом, що відповідає HDS/RGPD, і семантичним пошуковим механізмом для клінічного зіставлення.' },
       { date: '2024 — 2027', title: 'Студент-інженер — Data Science & AI', org: 'ESIEE Paris', body: 'Студент четвертого курсу п\'ятирічної інженерної програми ESIEE Paris, спеціалізація Data Science & AI (DSIA).' },
       { date: '2025', title: 'Інженер-стажист, відділ GRADES', org: 'Synchrotron SOLEIL', body: 'Розробка скриптів autopkgtest на OpenCL для перевірки сумісності з GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) на інфраструктурі Debian/ROCm через GitLab Salsa.' },
-      { date: '2022 — дотепер', title: 'Репетитор з точних наук', org: 'Complétude', body: 'Викладання математики, фізики та інформатики учням старшої школи та студентам паралельно з інженерним навчанням.' },
+      { date: '2022 — дотепер', title: 'Репетитор з точних наук', org: 'Complétude', body: 'Викладання математики та фізики-хімії приблизно десятьом учням, від початкової школи до випускного класу ліцею, паралельно з інженерним навчанням.' },
     ],
   },
   publications: {
@@ -2542,8 +4110,92 @@ const uk: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'Рукопис, що детально описує каскадну структуру DEMNE, п\'ять метрик характеризації корпусу, використаних для вибору парадигми, та результати калібрування ґратчастого пошуку на трьох французьких онкологічних корпусах.',
   },
+  projects: {
+    label: '05 — Вибрані проєкти',
+    title: 'Вибрані проєкти',
+    subtitle:
+      'Окрім DEMNE — інструменти, створені від початку до кінця для хакатону та навчальних проєктів.',
+    items: [
+      {
+        date: 'Червень 2026',
+        title: 'NeuroStep',
+        description:
+          "Цифровий каталог інструментів і застосунків когнітивної компенсації для людей із черепно-мозковими травмами та пухлинами — підтримка спілкування, пам'яті та планування. Створено для хакатону SN@SU, з інтерфейсом на Streamlit поверх сховища на основі JSON.",
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'Груд. 2025',
+        title: 'Панель якості повітря',
+        description:
+          'Інтерактивна панель, що реконструює 15 років фонового забруднення повітря у Франції (2000–2015) на основі даних INERIS/Zenodo — зберігання в SQLite, графіки Plotly та теплова карта Leaflet. Створена разом з напарником William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — Технічний стек',
+    title: 'Технічний стек',
+    subtitle: 'Інструменти, згруповані за значущістю для роботи вище — не загальний перелік.',
+    categories: [
+      {
+        title: 'Клінічний NLP і біомедичний ШІ',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'Системи та інфраструктура',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'Інструменти для досліджень',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'Мови',
+    languages: [
+      { flag: '🇫🇷', level: 'Рідна' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'Середній рівень' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'У процесі вивчення' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — Напрями роботи',
+    title: 'Напрями роботи',
+    items: [
+      {
+        title: 'Клінічне розпізнавання іменованих сутностей',
+        body: 'Видобування біомаркерів, стадії та даних лікування з неструктурованих французьких онкологічних текстів — там, де загальний NLP дає збій і починається адаптація до домену.',
+      },
+      {
+        title: 'Ощадливий та інтерпретовний ШІ',
+        body: 'Проєктування систем, що спрямовують завдання до найменш непрозорого рівня, який відповідає порогам продуктивності. Відповідність Закону ЄС про ШІ як обмеження проєктування, а не запізніла думка.',
+      },
+      {
+        title: 'Мультимодальне біомедичне міркування',
+        body: 'Довгострокова мета: об\'єднати клінічний текст, зображення та геноміку в моделях, що міркують між модальностями — підхід world models, застосований до медицини.',
+      },
+      {
+        title: 'Педагогіка складних систем',
+        body: 'Викладання математики та фізики-хімії приблизно десятьом учням у Complétude — від початкової школи до випускного класу ліцею (без вищої освіти). Зробити щільні концепції доступними для розуміння — це дослідницька навичка, а не підробіток.',
+      },
+    ],
+  },
   writing: {
-    label: '05 — Статті',
+    label: '08 — Статті',
     title: 'Нотатки з дослідження',
     subtitle: 'Розлогіші матеріали про методи, глухі кути та рішення, що стоять за роботою вище.',
     posts: [
@@ -2553,6 +4205,8 @@ const uk: Dictionary = {
   },
   contact: {
     title: 'Поговорімо про клінічний NLP, біомедичний ШІ або співпрацю в межах докторантури.',
+    directLabel: 'Напряму',
+    elsewhereLabel: 'Деінде',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
@@ -2583,11 +4237,11 @@ const th: Dictionary = {
     menuToggleLabel: 'เปิดเมนู',
   },
   hero: {
-    kicker: 'Tremplin Recherche · ESIEE Paris',
-    h1Pre: 'ผมสร้างระบบ NLP ที่ ',
-    h1Accent: 'อ่านภาษาทางคลินิก',
-    h1Post: ' แบบเดียวกับที่แพทย์ผู้เชี่ยวชาญด้านมะเร็งวิทยาทำ',
-    sub: 'ผมชื่อ Clément Longeac นักศึกษาวิศวกรรมที่ทำงานอยู่บนจุดตัดระหว่าง NLP ทางคลินิกกับ AI ชีวการแพทย์ — ขณะนี้กำลังสร้างไปป์ไลน์การสกัดข้อมูลแบบไฮบริดสำหรับรายงานมะเร็งวิทยาภาษาฝรั่งเศส มุ่งสู่ปริญญาเอกด้าน AI ที่ประยุกต์ใช้กับงานวิจัยชีวการแพทย์',
+    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    h1Pre: 'สกัดไบโอมาร์กเกอร์จากข้อความทางคลินิก ',
+    h1Accent: 'โดยไม่ต้องปลุก GPU',
+    h1Post: '',
+    sub: 'ผมชื่อ Clément Longeac ผมกำลังพัฒนา DEMNE ซึ่งเป็นเฟรมเวิร์กสำหรับจัดเส้นทางที่ตัดสินใจ — สำหรับเอนทิตีแต่ละประเภท — ว่า regex, CRF, transformer หรือ LLM คือเครื่องมือที่ซื่อตรงที่สุดสำหรับงานนั้น ผลลัพธ์แรก: สกัดเอนทิตีทางคลินิกได้ 93.7% โดยไม่ใช้ GPU ด้วยค่า F1 = 0.941 จากบันทึก AP-HP จำนวน 300 รายการ',
     ctaResearch: 'ดูงานวิจัย',
     ctaCV: 'ดาวน์โหลดเรซูเม่',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM แผนผังแบบสด',
@@ -2597,7 +4251,7 @@ const th: Dictionary = {
     title: 'จากติวเตอร์คณิตศาสตร์สู่การสร้างแบบจำลองตัวบ่งชี้มะเร็ง',
     p1: 'ผมเป็นนักศึกษาชั้นปีที่ 4 ที่ ESIEE Paris สาขา Data Science & AI และอยู่ในหลักสูตร Tremplin Recherche ของโรงเรียน — โปรแกรมที่ออกแบบมาสำหรับนักศึกษาที่มุ่งสู่งานวิจัยระดับปริญญาเอกแทนที่จะเป็นการฝึกงานในอุตสาหกรรมทั่วไป',
     p2: 'งานของผมเน้นการทำให้ข้อความทางคลินิกที่ไม่มีโครงสร้างสามารถนำไปใช้ในงานวิจัยได้: การสกัดตัวบ่งชี้ทางชีวภาพ ข้อมูลระยะของโรค และรายละเอียดการรักษาที่ฝังอยู่ในรายงานมะเร็งวิทยาภาษาฝรั่งเศส ซึ่งเครื่องมือ NLP ทั่วไปมักล้มเหลวอย่างต่อเนื่องเมื่อเจอคำศัพท์เฉพาะทางและโครงสร้างเอกสารของสาขานี้',
-    p3: 'นอกจากการเรียน ผมยังสอนพิเศษวิชาคณิตศาสตร์ ฟิสิกส์ และวิทยาการคอมพิวเตอร์ผ่าน Complétude และกำลังเตรียมสมัครทุนปริญญาเอกภาคอุตสาหกรรม CIFRE ด้าน AI ชีวการแพทย์ที่มหาวิทยาลัยซอร์บอนน์',
+    p3: 'นอกจากการเรียน ผมยังสอนพิเศษวิชาคณิตศาสตร์และฟิสิกส์-เคมีผ่าน Complétude และกำลังเตรียมสมัครทุนปริญญาเอกภาคอุตสาหกรรม CIFRE ด้าน AI ชีวการแพทย์ที่มหาวิทยาลัยซอร์บอนน์',
     visionLine:
       'ในระยะยาว วินัยแบบเดียวกันนี้ — การดึงโครงสร้างที่เชื่อถือได้ออกจากข้อความที่ยุ่งเหยิงและมีความเสี่ยงสูง — คือสิ่งที่ดึงดูดผมเข้าสู่งานวิจัยด้านความปลอดภัยของ AI: การสร้างและประเมิน world model ผ่าน AMI Labs และโปรแกรม Anthropic Fellows (นี่คือข้อความร่าง — โปรดแทนที่ด้วยถ้อยคำฉบับสมบูรณ์ของคุณเอง)',
     facts: [
@@ -2652,7 +4306,7 @@ const th: Dictionary = {
       { current: true, date: '2026 — ปัจจุบัน', title: 'ผู้ก่อตั้งและ Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'สร้างแพลตฟอร์มที่ช่วยให้ผู้ป่วยสมองบาดเจ็บและนักกิจกรรมบำบัดของพวกเขามีวิธีที่เป็นระบบในการเปรียบเทียบเครื่องมือดิจิทัลเพื่อชดเชยความบกพร่องทางปัญญา เริ่มต้นจากต้นแบบ Python/Streamlit ในงานแฮกกาธอน SN@SU (มหาวิทยาลัยซอร์บอนน์ ร่วมกับ Flor Sanchez-Luizard นักกิจกรรมบำบัดที่ UEROS L\'ADAPT อีล-เดอ-ฟร็องส์) ปัจจุบันอยู่ในขั้นตอนวางแผนการสร้างใหม่ในเวอร์ชันโปรดักชัน (FastAPI, PostgreSQL, Next.js) พร้อมโฮสติ้งที่สอดคล้องกับ HDS/RGPD และเอนจินค้นหาเชิงความหมายสำหรับการจับคู่เครื่องมือทางคลินิก' },
       { date: '2024 — 2027', title: 'นักศึกษาวิศวกรรม — Data Science & AI', org: 'ESIEE Paris', body: 'นักศึกษาชั้นปีที่ 4 ในหลักสูตรวิศวกรรมห้าปีของ ESIEE Paris สาขา Data Science & AI (DSIA)' },
       { date: '2025', title: 'นักศึกษาฝึกงานด้านวิศวกรรม, ฝ่าย GRADES', org: 'Synchrotron SOLEIL', body: 'พัฒนาสคริปต์ autopkgtest ด้วย OpenCL เพื่อทดสอบความเข้ากันได้ของ GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) บนโครงสร้างพื้นฐาน Debian/ROCm ผ่าน GitLab Salsa' },
-      { date: '2022 — ปัจจุบัน', title: 'ติวเตอร์วิชาวิทยาศาสตร์', org: 'Complétude', body: 'สอนคณิตศาสตร์ ฟิสิกส์ และวิทยาการคอมพิวเตอร์ให้กับนักเรียนมัธยมและนักศึกษามหาวิทยาลัย ควบคู่ไปกับการเรียนวิศวกรรมของผม' },
+      { date: '2022 — ปัจจุบัน', title: 'ติวเตอร์วิชาวิทยาศาสตร์', org: 'Complétude', body: 'สอนคณิตศาสตร์และฟิสิกส์-เคมีให้กับนักเรียนประมาณสิบคน ตั้งแต่ระดับประถมศึกษาจนถึงมัธยมปลายปีสุดท้าย ควบคู่ไปกับการเรียนวิศวกรรมของผม' },
     ],
   },
   publications: {
@@ -2665,8 +4319,91 @@ const th: Dictionary = {
     journal: 'AIM — Artificial Intelligence in Medicine',
     description: 'ต้นฉบับที่อธิบายรายละเอียดของกรอบการทำงานแบบแคสเคด DEMNE ตัวชี้วัดการกำหนดลักษณะคลังข้อมูลห้าตัวที่ใช้ในการเลือกกระบวนทัศน์ และผลการปรับเทียบจากการค้นหาแบบกริดบนคลังข้อมูลมะเร็งวิทยาภาษาฝรั่งเศสสามชุด',
   },
+  projects: {
+    label: '05 — ผลงานเด่น',
+    title: 'ผลงานเด่น',
+    subtitle: 'นอกเหนือจาก DEMNE — เครื่องมือที่สร้างขึ้นตั้งแต่ต้นจนจบสำหรับแฮกกาธอนและงานในรายวิชา',
+    items: [
+      {
+        date: 'มิถุนายน 2026',
+        title: 'NeuroStep',
+        description:
+          'แคตตาล็อกดิจิทัลของเครื่องมือและแอปช่วยเสริมการรับรู้สำหรับผู้ที่มีภาวะสมองบาดเจ็บและเนื้องอก — รองรับด้านการสื่อสาร ความจำ และการวางแผน สร้างขึ้นสำหรับแฮกกาธอน SN@SU ด้วยอินเทอร์เฟซ Streamlit บนที่เก็บข้อมูลแบบ JSON',
+        tags: ['Python', 'Streamlit', 'JSON'],
+        url: 'https://github.com/longeacc/NeuroStep',
+      },
+      {
+        date: 'ธ.ค. 2025',
+        title: 'แดชบอร์ดคุณภาพอากาศ',
+        description:
+          'แดชบอร์ดเชิงโต้ตอบที่จำลองมลพิษทางอากาศพื้นหลังในฝรั่งเศสย้อนหลัง 15 ปี (2000–2015) จากข้อมูล INERIS/Zenodo — จัดเก็บด้วย SQLite กราฟด้วย Plotly และแผนที่ความร้อนด้วย Leaflet จัดทำร่วมกับเพื่อนร่วมทีม William Zee',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+        url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+      },
+    ],
+  },
+  techStack: {
+    label: '06 — เทคโนโลยีที่ใช้',
+    title: 'เทคโนโลยีที่ใช้',
+    subtitle: 'เครื่องมือที่จัดกลุ่มตามความเกี่ยวข้องกับงานข้างต้น — ไม่ใช่รายการทั่วไป',
+    categories: [
+      {
+        title: 'NLP ทางคลินิกและ AI ชีวการแพทย์',
+        lines: [
+          ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
+          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Clinical text preprocessing', 'Domain adaptation'],
+        ],
+      },
+      {
+        title: 'ระบบและโครงสร้างพื้นฐาน',
+        lines: [
+          ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'Kubernetes'],
+          ['Linux', 'Debian', 'GitLab CI', 'GitHub Actions'],
+          ['OpenCL', 'pyopencl', 'ROCm', 'CUDA (basic)'],
+        ],
+      },
+      {
+        title: 'เครื่องมือวิจัย',
+        lines: [
+          ['PyTorch', 'LaTeX/Overleaf', 'TikZ', 'Zotero'],
+          ['Jupyter', 'pandas', 'NumPy', 'matplotlib'],
+        ],
+      },
+    ],
+    languagesTitle: 'ภาษา',
+    languages: [
+      { flag: '🇫🇷', level: 'ภาษาแม่' },
+      { flag: '🇬🇧', level: 'C1' },
+      { flag: '🇯🇵', level: 'ระดับกลาง' },
+      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇮🇹', level: 'กำลังเรียนรู้' },
+    ],
+  },
+  areasOfFocus: {
+    label: '07 — จุดเน้นการวิจัย',
+    title: 'จุดเน้นการวิจัย',
+    items: [
+      {
+        title: 'การรู้จำเอนทิตีที่มีชื่อทางคลินิก',
+        body: 'การสกัดไบโอมาร์กเกอร์ ระยะของโรค และข้อมูลการรักษาจากข้อความมะเร็งวิทยาภาษาฝรั่งเศสที่ไม่มีโครงสร้าง — จุดที่ NLP ทั่วไปล้มเหลวและการปรับตัวเฉพาะโดเมนเริ่มต้นขึ้น',
+      },
+      {
+        title: 'AI แบบประหยัดและตีความได้',
+        body: 'ออกแบบระบบที่นำทางไปยังระดับที่โปร่งใสน้อยที่สุดเท่าที่ยังตรงตามเกณฑ์ประสิทธิภาพ การปฏิบัติตาม EU AI Act ในฐานะข้อจำกัดด้านการออกแบบ ไม่ใช่ความคิดภายหลัง',
+      },
+      {
+        title: 'การให้เหตุผลทางชีวการแพทย์แบบหลายรูปแบบ',
+        body: 'ทิศทางระยะยาว: การรวมข้อความทางคลินิก ภาพถ่ายทางการแพทย์ และจีโนมิกส์เข้าด้วยกันในโมเดลที่ให้เหตุผลข้ามรูปแบบข้อมูล — แนวทาง world models ที่ประยุกต์ใช้กับการแพทย์',
+      },
+      {
+        title: 'การสอนระบบที่ซับซ้อน',
+        body: 'สอนคณิตศาสตร์และฟิสิกส์-เคมีให้นักเรียนประมาณสิบคนที่ Complétude ตั้งแต่ระดับประถมศึกษาจนถึงมัธยมปลายปีสุดท้าย (ไม่รวมระดับอุดมศึกษา) การทำให้แนวคิดที่ซับซ้อนเรียนรู้ได้คือทักษะการวิจัย ไม่ใช่งานเสริม',
+      },
+    ],
+  },
   writing: {
-    label: '05 — บทความ',
+    label: '08 — บทความ',
     title: 'บันทึกจากงานวิจัย',
     subtitle: 'บทความเชิงลึกเกี่ยวกับวิธีการ ทางตัน และการตัดสินใจเบื้องหลังงานข้างต้น',
     posts: [
@@ -2676,6 +4413,8 @@ const th: Dictionary = {
   },
   contact: {
     title: 'มาคุยกันเรื่อง NLP ทางคลินิก, AI ชีวการแพทย์ หรือความร่วมมือด้านปริญญาเอกกันเถอะ',
+    directLabel: 'ติดต่อโดยตรง',
+    elsewhereLabel: 'ที่อื่น',
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',

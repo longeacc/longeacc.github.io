@@ -21,11 +21,14 @@ export default function PipelineCanvas() {
     let subNodes: SubNode[] = [];
     let t = 0;
     let rafId = 0;
+    let startTimeoutId = 0;
 
     const stageLabels = ['RULES', 'CRF', 'TRANSFORMER', 'LLM'];
     const cyan = '#5EEAD4';
     const lineColor = 'rgba(139, 147, 173, 0.25)';
     const speed = 0.008;
+    // synced with the hero-visual reveal in Hero.tsx (fade + scale starts at t = 1.70s)
+    const pulseStartDelay = 1700;
 
     function resize() {
       if (!canvas) return;
@@ -132,13 +135,16 @@ export default function PipelineCanvas() {
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!prefersReduced) {
-      rafId = requestAnimationFrame(draw);
+      startTimeoutId = window.setTimeout(() => {
+        rafId = requestAnimationFrame(draw);
+      }, pulseStartDelay);
     } else {
       draw();
     }
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.clearTimeout(startTimeoutId);
       cancelAnimationFrame(rafId);
     };
   }, []);

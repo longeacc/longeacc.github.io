@@ -7,6 +7,9 @@ import About from './About';
 import Research from './Research';
 import Experience from './Experience';
 import Publications from './Publications';
+import Projects from './Projects';
+import TechStack from './TechStack';
+import AreasOfFocus from './AreasOfFocus';
 import Writing from './Writing';
 import Contact from './Contact';
 import Footer from './Footer';
@@ -29,6 +32,9 @@ export default function PageContent({ lang }: { lang: Lang }) {
       <Research dict={dict} />
       <Experience dict={dict} />
       <Publications dict={dict} />
+      <Projects dict={dict} />
+      <TechStack dict={dict} />
+      <AreasOfFocus dict={dict} />
       <Writing dict={dict} lang={lang} />
       <Contact dict={dict} />
       <Footer dict={dict} />

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
 import LangSwitcher from './LangSwitcher';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -11,7 +12,11 @@ export default function Nav({ dict, lang }: { dict: Dictionary; lang: Lang }) {
   const home = pathForLang(lang);
 
   return (
-    <nav>
+    <motion.nav
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className="wrap">
         <div className="logo">
           CL<span>.</span>
@@ -68,6 +73,6 @@ export default function Nav({ dict, lang }: { dict: Dictionary; lang: Lang }) {
           </button>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
