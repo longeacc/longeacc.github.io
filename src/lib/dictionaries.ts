@@ -13,9 +13,18 @@ export type Metric = {
   color?: 'cyan' | 'violet' | 'text';
   label: string;
 };
-export type TimelineItem = { date: string; title: string; org: string; body: string; current?: boolean };
+export type TimelineItem = { date: string; title: string; org: string; body: string; current?: boolean; skills?: string[] };
 export type WritingPost = { status: string; title: string; body: string };
-export type Project = { date: string; title: string; description: string; tags: string[]; url: string };
+export type Project = {
+  date: string;
+  title: string;
+  description: string;
+  longBody?: string;
+  tags: string[];
+  url: string;
+  image?: string;
+  demo?: string;
+};
 export type StackCategory = { title: string; lines: string[][] };
 export type LanguageSkill = { flag: string; level: string };
 export type FocusArea = { title: string; body: string };
@@ -100,6 +109,7 @@ export type Dictionary = {
     label: string;
     title: string;
     subtitle: string;
+    more?: string;
     items: Project[];
   };
   techStack: {
@@ -159,7 +169,7 @@ const en: Dictionary = {
     h1Pre: 'Extracting biomarkers from clinical text ',
     h1Accent: 'without waking the GPU',
     h1Post: '.',
-    sub: "I'm Clément Longeac. I'm working on DEMNE, a routing framework that decides — per entity type — whether a regex, a CRF, a transformer, or an LLM is the honest tool for the job. First result: 93.7% of clinical entities extracted without a GPU, F1 = 0.941 on 300 AP-HP notes.",
+    sub: "I'm Clément Longeac. I build DEMNE, a routing framework that picks, per entity type, the lightest method that stays reliable — rules, a transformer, or an LLM. On an unseen AP-HP cohort it routes 99.5% of mentions to auditable rules at F1 0.941, where a fine-tuned transformer reaches 0.358.",
     ctaResearch: 'See the research',
     ctaCV: 'Download CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, live schematic',
@@ -188,7 +198,7 @@ const en: Dictionary = {
     tagline: 'Clinical NER · French oncology corpora',
     p1: "Off-the-shelf NER models struggle badly on French clinical text: dense abbreviations, inconsistent formatting across hospital systems, and biomarker terminology that barely appears in general training data. DEMNE tackles this with a staged pipeline rather than a single model — each stage handles what it's actually good at, and only escalates to a heavier model when it has to.",
     p2: 'The system is fine-tuned on DrBERT-7GB across three distinct French oncology corpora, and targets seven priority biomarker entity types used in treatment-relevant reporting.',
-    tags: ['Clinical NLP', 'CRF', 'Transformers', 'DrBERT-7GB', 'French oncology'],
+    tags: ['Clinical NLP', 'Transformers', 'DrBERT-7GB', 'French oncology'],
     viewRepo: 'View repository',
     readMethodology: 'Read the methodology',
     pipeline: [
@@ -199,16 +209,11 @@ const en: Dictionary = {
       },
       {
         num: '02',
-        title: 'CRF layer',
-        body: 'A conditional random field models sequential structure the rules miss, using local context to resolve ambiguous spans.',
-      },
-      {
-        num: '03',
         title: 'Transformer extraction',
         body: 'DrBERT-7BG, fine-tuned across three oncology corpora, handles the entities that need real semantic and domain understanding.',
       },
       {
-        num: '04',
+        num: '03',
         title: 'LLM arbitration',
         body: 'Remaining conflicts and edge cases are routed to an LLM pass for final disambiguation before output.',
       },
@@ -234,9 +239,9 @@ const en: Dictionary = {
     label: 'Results',
     title: 'What the staged approach buys',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Mean F1 — external validation' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-free extraction' },
-      { value: 300, suffix: '', color: 'text', label: 'AP-HP clinical notes validated' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules on an unseen AP-HP cohort (411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT, same entities' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -245,34 +250,46 @@ const en: Dictionary = {
     currentLabel: 'Ongoing',
     items: [
       {
-        current: true, date: '2025 — Present',
-        title: 'Research Assistant, Tremplin Recherche',
-        org: 'ESIEE Paris',
-        body: 'Developing DEMNE, a hybrid clinical NER pipeline for French oncology text, as the core project of the Tremplin Recherche track ahead of PhD applications.',
+        date: 'May — Jul 2026',
+        title: 'Research Intern, Clinical Data Warehouse',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Applied and validated the DEMNE routing approach on hospital data: extracting oncology biomarkers (ER, PR, HER2, Ki67, FISH) from French clinical reports, and defining an auditable, deployment-realistic clinical path.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Oct 2025 — May 2026',
+        title: 'Student Researcher, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Designed DEMNE, a hybrid clinical NER pipeline (rules / transformer / LLM) for French oncology text, driven by five formalized corpus metrics — the core project of the Tremplin Recherche track ahead of PhD applications.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
       },
       {
         current: true, date: '2026 — Present',
-        title: 'Founder & Product Lead, NeuroStep',
+        title: 'Product Lead & Developer, NeuroStep',
         org: 'Junior Entreprise ESIEE Paris',
         body: 'Building a platform that gives brain-injury patients and occupational therapists a structured way to compare cognitive-compensation tools. Started as a Python/Streamlit prototype at the SN@SU hackathon (Sorbonne Université, with Flor Sanchez-Luizard, occupational therapist at UEROS L\'ADAPT Île-de-France); now scoping a production rebuild (FastAPI, PostgreSQL, Next.js) with HDS/RGPD-compliant hosting and a semantic search engine for clinical tool matching.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
       },
       {
         date: '2024 — 2027',
         title: 'Engineering Student — Data Science & AI',
         org: 'ESIEE Paris',
-        body: "Fourth-year student in ESIEE Paris's five-year engineering program, specializing in Data Science & AI (DSIA).",
+        body: "Fifth-year student in ESIEE Paris's five-year engineering program, specializing in Data Science & AI (DSIA).",
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
       },
       {
         date: '2025',
         title: 'Engineering Intern, GRADES Division',
         org: 'Synchrotron SOLEIL',
         body: 'Developed autopkgtests using OpenCL for AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across Debian/ROCm infrastructure on GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
       },
       {
         date: '2022 — Present',
         title: 'STEM Tutor',
         org: 'Complétude',
         body: 'Teaching mathematics and physics-chemistry to about ten students, from primary school through terminale, alongside my engineering studies.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
       },
     ],
   },
@@ -290,23 +307,74 @@ const en: Dictionary = {
   projects: {
     label: '05 — Selected Projects',
     title: 'Selected Projects',
-    subtitle: 'Beyond DEMNE — tools built end to end for a hackathon and coursework.',
+    subtitle: 'Beyond DEMNE — tools built end to end, from a hackathon to data and infrastructure work. Click a project for details.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'June 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'A digital catalog of cognitive-compensation tools and apps for people with brain injuries and tumors — communication aids, memory, and planning support. Built for the SN@SU hackathon, with a Streamlit interface over a JSON-based store.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025',
+        date: 'Dec. 2025 · Team project',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015) from INERIS/Zenodo data — SQLite storage, Plotly charts, and a Leaflet heatmap. Built with teammate William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -425,7 +493,7 @@ const fr: Dictionary = {
     h1Pre: 'Extraire des biomarqueurs depuis du texte clinique ',
     h1Accent: 'sans réveiller le GPU',
     h1Post: '.',
-    sub: "Je suis Clément Longeac. Je travaille sur DEMNE, un framework de routage qui décide — pour chaque type d'entité — si une regex, un CRF, un transformer ou un LLM est l'outil honnête pour la tâche. Premier résultat : 93,7 % des entités cliniques extraites sans GPU, F1 = 0,941 sur 300 notes AP-HP.",
+    sub: "Je suis Clément Longeac. Je conçois DEMNE, un cadre de routage qui choisit, pour chaque type d'entité, la méthode la plus légère qui reste fiable : règles, transformer ou LLM. Sur une cohorte AP-HP jamais vue, il route 99,5 % des mentions vers des règles auditables à F1 0,941, là où un transformer affiné atteint 0,358.",
     ctaResearch: 'Voir la recherche',
     ctaCV: 'Télécharger le CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schéma en direct',
@@ -454,7 +522,7 @@ const fr: Dictionary = {
     tagline: 'NER clinique · corpus d\'oncologie français',
     p1: "Les modèles NER génériques échouent nettement sur le texte clinique français : abréviations denses, mise en forme incohérente selon les établissements, et terminologie de biomarqueurs quasi absente des corpus d'entraînement généraux. DEMNE répond à ça par un pipeline en étages plutôt qu'un modèle unique — chaque étage traite ce qu'il fait le mieux, et n'escalade vers un modèle plus lourd que si nécessaire.",
     p2: "Le système est affiné sur DrBERT-7GB à travers trois corpus d'oncologie français distincts, et cible sept types d'entités biomarqueurs prioritaires utilisés dans les comptes rendus à visée thérapeutique.",
-    tags: ['NLP clinique', 'CRF', 'Transformers', 'DrBERT-7GB', 'Oncologie française'],
+    tags: ['NLP clinique', 'Transformers', 'DrBERT-7GB', 'Oncologie française'],
     viewRepo: 'Voir le dépôt',
     readMethodology: 'Lire la méthodologie',
     pipeline: [
@@ -465,16 +533,11 @@ const fr: Dictionary = {
       },
       {
         num: '02',
-        title: 'Couche CRF',
-        body: "Un champ aléatoire conditionnel modélise la structure séquentielle que les règles manquent, en utilisant le contexte local pour résoudre les segments ambigus.",
-      },
-      {
-        num: '03',
         title: 'Extraction par transformer',
         body: "DrBERT-7GB, affiné sur trois corpus d'oncologie, traite les entités qui exigent une réelle compréhension sémantique et de domaine.",
       },
       {
-        num: '04',
+        num: '03',
         title: 'Arbitrage par LLM',
         body: "Les conflits résiduels et cas limites sont routés vers une passe LLM pour la désambiguïsation finale avant la sortie.",
       },
@@ -500,9 +563,9 @@ const fr: Dictionary = {
     label: 'Résultats',
     title: "Ce qu'apporte l'approche en étages",
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 moyen — validation externe' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Extraction sans GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Notes cliniques AP-HP validées' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'des mentions routées vers les règles (cohorte AP-HP jamais vue, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'F1 des règles contre 0,358 pour un DrBERT affiné, mêmes entités' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'concordance de routage en leave-one-corpus-out' },
     ],
   },
   experience: {
@@ -511,34 +574,46 @@ const fr: Dictionary = {
     currentLabel: 'En cours',
     items: [
       {
-        current: true, date: '2025 — Présent',
-        title: 'Assistant de recherche, Tremplin Recherche',
-        org: 'ESIEE Paris',
-        body: "Développement de DEMNE, un pipeline hybride de NER clinique pour le texte d'oncologie français, projet central du parcours Tremplin Recherche en vue des candidatures de thèse.",
+        date: 'Mai — Juil. 2026',
+        title: 'Stagiaire recherche, Entrepôt de Données de Santé',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: "Application et validation de l'approche de routage DEMNE sur données hospitalières : extraction de biomarqueurs oncologiques (ER, PR, HER2, Ki67, FISH) à partir de comptes rendus cliniques français, et définition d'un parcours de déploiement clinique auditable et réaliste.",
+        skills: ['NLP clinique', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Oct. 2025 — Mai 2026',
+        title: 'Chercheur étudiant, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: "Conception de DEMNE, un pipeline hybride de NER clinique (règles / transformer / LLM) pour le texte d'oncologie français, piloté par cinq métriques de corpus formalisées — projet central du parcours Tremplin Recherche en vue des candidatures de thèse.",
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
       },
       {
         current: true, date: '2026 — Présent',
-        title: 'Fondateur & Product Lead, NeuroStep',
+        title: 'Product Lead & développeur, NeuroStep',
         org: 'Junior Entreprise ESIEE Paris',
-        body: "Construction d'une plateforme donnant aux patients cérébrolésés et à leurs ergothérapeutes un moyen structuré de comparer les outils numériques de compensation cognitive. Né en prototype Python/Streamlit au hackathon SN@SU (Sorbonne Université, avec Flor Sanchez-Luizard, ergothérapeute à l'UEROS L'ADAPT Île-de-France) ; en cadrage vers une refonte de production (FastAPI, PostgreSQL, Next.js) avec hébergement conforme HDS/RGPD et moteur de recherche sémantique pour l'appariement clinique.",
+        body: "Construction d'une plateforme donnant aux patients cérébrolésés et à leurs ergothérapeutes un moyen structuré de comparer les outils numériques de compensation cognitive. Née en prototype Python/Streamlit au hackathon SN@SU (Sorbonne Université, avec des ergothérapeutes partenaires) ; en cadrage vers une refonte de production (FastAPI, PostgreSQL, Next.js) avec hébergement conforme HDS/RGPD et recherche sémantique pour l'appariement clinique.",
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
       },
       {
         date: '2024 — 2027',
         title: 'Étudiant ingénieur — Data Science & IA',
         org: 'ESIEE Paris',
-        body: "Étudiant en quatrième année du cursus ingénieur en cinq ans d'ESIEE Paris, spécialisation Data Science & IA (DSIA).",
+        body: "Étudiant en cinquième année du cursus ingénieur en cinq ans d'ESIEE Paris, spécialisation Data Science & IA (DSIA).",
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
       },
       {
         date: '2025',
         title: 'Stagiaire ingénieur, division GRADES',
         org: 'Synchrotron SOLEIL',
         body: "Développement d'autopkgtests en OpenCL pour la compatibilité GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sur l'infrastructure Debian/ROCm via GitLab Salsa.",
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
       },
       {
         date: '2022 — Présent',
         title: 'Tuteur scientifique',
         org: 'Complétude',
         body: "Cours de mathématiques et de physique-chimie à une dizaine d'élèves, du primaire jusqu'à la terminale, en parallèle de mes études d'ingénieur.",
+        skills: ['Mathématiques', 'Physique', 'Pédagogie'],
       },
     ],
   },
@@ -557,23 +632,74 @@ const fr: Dictionary = {
     label: '05 — Projets sélectionnés',
     title: 'Projets sélectionnés',
     subtitle:
-      "Au-delà de DEMNE — des outils construits de bout en bout pour un hackathon et des projets de cours.",
+      "Au-delà de DEMNE — des outils construits de bout en bout, du hackathon aux projets de données et d'infrastructure. Clique sur un projet pour le détail.",
+    more: 'En savoir plus →',
     items: [
       {
-        date: 'Juin 2026',
+        date: 'Juin 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          "Un catalogue numérique d'outils et d'applications de compensation cognitive pour les personnes cérébrolésées ou atteintes de tumeurs — aide à la communication, mémoire, planification. Réalisé pour le hackathon SN@SU, avec une interface Streamlit reposant sur un stockage JSON.",
-        tags: ['Python', 'Streamlit', 'JSON'],
+          "Un catalogue d'outils numériques de compensation cognitive pour les personnes cérébrolésées et leurs ergothérapeutes.",
+        longBody:
+          "NeuroStep est né au hackathon SN@SU (Sorbonne Université). Ergothérapeutes et patients trouvent des applications d'aide à la communication, à la mémoire et à la planification sans parcourir les magasins d'applications un par un : chaque outil est listé, classé par trouble et par thème, et cherchable.\nLe MVP est une application Streamlit reposant sur un stockage JSON, en cadrage vers une refonte de production (FastAPI, PostgreSQL, Next.js).",
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Déc. 2025',
+        date: 'Déc. 2025 · En équipe',
         title: "Tableau de bord qualité de l'air",
         description:
-          "Un tableau de bord interactif reconstituant 15 ans de pollution atmosphérique de fond en France (2000–2015) à partir des données INERIS/Zenodo — stockage SQLite, graphiques Plotly et carte de chaleur Leaflet. Réalisé avec mon coéquipier William Zee.",
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          "Un tableau de bord interactif reconstituant 15 ans de pollution atmosphérique de fond en France (2000–2015).",
+        longBody:
+          "Un pipeline de données et un tableau de bord interactif sur les indicateurs communaux de l'INERIS (Zenodo). Des scripts téléchargent, nettoient et stockent les données dans SQLite ; le tableau de bord affiche une carte de chaleur Leaflet avec un curseur d'année et des filtres par polluant, aux côtés de graphiques Plotly.\nRéalisé avec mon coéquipier William Zee.",
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Projet de cours',
+        title: 'Reconnaissance faciale par deep learning',
+        description:
+          "Reconnaissance de visages par CNN, d'abord sur images fixes puis en vidéo, avec augmentation de données et alignement des visages.",
+        longBody:
+          "Un projet de cours sur la reconnaissance faciale moderne. Un premier modèle entraîné sur seulement 218 images surapprenait fortement ; l'augmentation de données (rotation, zoom) et une étape d'alignement des visages qui normalise la position des yeux et des lèvres, combinées à un réseau pré-entraîné, ont amélioré la généralisation. L'objectif était de détecter des visages en vidéo à partir du jeu de données du projet.",
+        tags: ['Python', 'TensorFlow', 'CNN', 'Augmentation de données'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Projet en binôme',
+        title: "TBA — jeu d'aventure textuel",
+        description:
+          "Un jeu d'aventure textuel en Python joué au terminal, à la conception orientée objet.",
+        longBody:
+          "Un jeu d'aventure joué au terminal : le joueur se déplace entre huit lieux en tapant des commandes. Le code est découpé en petites classes à responsabilité unique (jeu, lieu, joueur, commande, action, personnage, objet), si bien qu'ajouter un lieu ou un objet reste une modification locale.\nRéalisé avec Anne-Colombe André à l'ESIEE Paris.",
+        tags: ['Python', 'POO'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Fév. 2025 · En équipe',
+        title: 'Marmiton Data Intelligence',
+        description:
+          "Une plateforme d'analyse de données culinaires : scraping, ETL et tableau de bord.",
+        longBody:
+          "Un projet de data engineering en équipe qui scrape les données de recettes de Marmiton, applique un pipeline ETL et expose les résultats dans un tableau de bord analytique. Réalisé en Python, avec des notebooks Jupyter pour l'exploration.",
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          "Scripts autopkgtest validant des logiciels scientifiques sur GPU AMD, sur l'infrastructure CI de Debian.",
+        longBody:
+          "Dans le cadre du stage au Synchrotron SOLEIL : des autopkgtests écrits en OpenCL pour vérifier la compatibilité GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sur l'infrastructure d'intégration continue Debian/ROCm, via GitLab Salsa. Les scripts installent et désinstallent les paquets sur des machines virtuelles propres et rapportent la compatibilité selon les GPU.",
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -693,7 +819,7 @@ const es: Dictionary = {
     h1Pre: 'Extrayendo biomarcadores de texto clínico ',
     h1Accent: 'sin despertar la GPU',
     h1Post: '.',
-    sub: 'Soy Clément Longeac. Estoy trabajando en DEMNE, un framework de enrutamiento que decide — para cada tipo de entidad — si una expresión regular, un CRF, un transformer o un LLM es la herramienta honesta para la tarea. Primer resultado: 93,7 % de las entidades clínicas extraídas sin GPU, F1 = 0,941 sobre 300 notas de AP-HP.',
+    sub: 'Soy Clément Longeac. Estoy trabajando en DEMNE, un framework de enrutamiento que decide — para cada tipo de entidad — si una expresión regular, un CRF, un transformer o un LLM es la herramienta honesta para la tarea. Primer resultado: 99,5 % de las entidades clínicas extraídas sin GPU, F1 = 0,941 sobre 300 notas de AP-HP.',
     ctaResearch: 'Ver la investigación',
     ctaCV: 'Descargar el CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, esquema en vivo',
@@ -722,14 +848,13 @@ const es: Dictionary = {
     tagline: 'NER clínico · corpus de oncología en francés',
     p1: 'Los modelos NER genéricos fallan claramente en el texto clínico francés: abreviaturas densas, formato incoherente entre hospitales y terminología de biomarcadores casi ausente de los datos de entrenamiento generales. DEMNE aborda esto con un pipeline por etapas en lugar de un modelo único — cada etapa hace lo que mejor sabe hacer, y solo escala a un modelo más pesado cuando es necesario.',
     p2: 'El sistema está afinado sobre DrBERT-7GB en tres corpus de oncología franceses distintos, y se centra en siete tipos de entidades biomarcadoras prioritarias usadas en informes relevantes para el tratamiento.',
-    tags: ['PLN clínico', 'CRF', 'Transformers', 'DrBERT-7GB', 'Oncología francesa'],
+    tags: ['PLN clínico', 'Transformers', 'DrBERT-7GB', 'Oncología francesa'],
     viewRepo: 'Ver el repositorio',
     readMethodology: 'Leer la metodología',
     pipeline: [
       { num: '01', title: 'Paso basado en reglas', body: 'El emparejamiento de patrones (regex, léxicos) capta a bajo coste las entidades de alta confianza y baja ambigüedad — fechas, dosis, abreviaturas estándar de biomarcadores.' },
-      { num: '02', title: 'Capa CRF', body: 'Un campo aleatorio condicional modela la estructura secuencial que las reglas pasan por alto, usando el contexto local para resolver segmentos ambiguos.' },
-      { num: '03', title: 'Extracción por transformer', body: 'DrBERT-7GB, afinado en tres corpus de oncología, se encarga de las entidades que requieren una comprensión semántica y de dominio real.' },
-      { num: '04', title: 'Arbitraje por LLM', body: 'Los conflictos restantes y los casos límite se enrutan a una pasada de LLM para la desambiguación final antes de la salida.' },
+      { num: '02', title: 'Extracción por transformer', body: 'DrBERT-7GB, afinado en tres corpus de oncología, se encarga de las entidades que requieren una comprensión semántica y de dominio real.' },
+      { num: '03', title: 'Arbitraje por LLM', body: 'Los conflictos restantes y los casos límite se enrutan a una pasada de LLM para la desambiguación final antes de la salida.' },
     ],
     aiAct: {
       title: 'Alineación regulatoria — EU AI Act',
@@ -744,9 +869,9 @@ const es: Dictionary = {
     label: 'Resultados',
     title: 'Lo que aporta el enfoque por etapas',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 medio — validación externa' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Extracción sin GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Notas clínicas de AP-HP validadas' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'de las menciones enrutadas a reglas (cohorte AP-HP no vista, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'F1 de las reglas frente a 0,358 de un DrBERT ajustado' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'concordancia de enrutamiento leave-one-corpus-out' },
     ],
   },
   experience: {
@@ -776,22 +901,73 @@ const es: Dictionary = {
     title: 'Proyectos seleccionados',
     subtitle:
       'Más allá de DEMNE — herramientas construidas de principio a fin para un hackathon y trabajos de curso.',
+    more: 'Saber más →',
     items: [
       {
-        date: 'Junio 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Un catálogo digital de herramientas y aplicaciones de compensación cognitiva para personas con daño cerebral o tumores — ayuda a la comunicación, memoria y planificación. Creado para el hackathon SN@SU, con una interfaz Streamlit sobre un almacenamiento en JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dic. 2025',
-        title: 'Panel de calidad del aire',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Un panel interactivo que reconstruye 15 años de contaminación atmosférica de fondo en Francia (2000–2015) a partir de datos de INERIS/Zenodo — almacenamiento en SQLite, gráficos con Plotly y mapa de calor con Leaflet. Creado con mi compañero William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -903,7 +1079,7 @@ const de: Dictionary = {
     h1Pre: 'Biomarker aus klinischem Text extrahieren ',
     h1Accent: 'ohne die GPU zu wecken',
     h1Post: '.',
-    sub: 'Ich bin Clément Longeac. Ich arbeite an DEMNE, einem Routing-Framework, das für jeden Entitätstyp entscheidet, ob eine Regex, ein CRF, ein Transformer oder ein LLM das ehrliche Werkzeug für die Aufgabe ist. Erstes Ergebnis: 93,7 % der klinischen Entitäten ohne GPU extrahiert, F1 = 0,941 bei 300 AP-HP-Notizen.',
+    sub: 'Ich bin Clément Longeac. Ich arbeite an DEMNE, einem Routing-Framework, das für jeden Entitätstyp entscheidet, ob eine Regex, ein CRF, ein Transformer oder ein LLM das ehrliche Werkzeug für die Aufgabe ist. Erstes Ergebnis: 99,5 % der klinischen Entitäten ohne GPU extrahiert, F1 = 0,941 bei 300 AP-HP-Notizen.',
     ctaResearch: 'Zur Forschung',
     ctaCV: 'Lebenslauf herunterladen',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, Live-Schema',
@@ -932,14 +1108,13 @@ const de: Dictionary = {
     tagline: 'Klinisches NER · französische Onkologie-Korpora',
     p1: 'Standard-NER-Modelle scheitern deutlich an französischem klinischem Text: dichte Abkürzungen, uneinheitliche Formatierung zwischen Krankenhaussystemen und Biomarker-Terminologie, die in allgemeinen Trainingsdaten kaum vorkommt. DEMNE begegnet dem mit einer gestuften Pipeline statt einem einzelnen Modell — jede Stufe übernimmt, was sie am besten kann, und eskaliert nur bei Bedarf zu einem schwereren Modell.',
     p2: 'Das System ist auf DrBERT-7GB über drei verschiedene französische Onkologie-Korpora feinabgestimmt und zielt auf sieben prioritäre Biomarker-Entitätstypen ab, die in behandlungsrelevanten Berichten verwendet werden.',
-    tags: ['Klinisches NLP', 'CRF', 'Transformers', 'DrBERT-7GB', 'Französische Onkologie'],
+    tags: ['Klinisches NLP', 'Transformers', 'DrBERT-7GB', 'Französische Onkologie'],
     viewRepo: 'Repository ansehen',
     readMethodology: 'Methodik lesen',
     pipeline: [
       { num: '01', title: 'Regelbasierter Durchlauf', body: 'Regex- und Lexikon-Abgleich erfasst kostengünstig hochsichere, eindeutige Entitäten — Daten, Dosierungen, Standard-Biomarker-Abkürzungen.' },
-      { num: '02', title: 'CRF-Schicht', body: 'Ein Conditional Random Field modelliert die sequenzielle Struktur, die die Regeln übersehen, und nutzt lokalen Kontext zur Auflösung mehrdeutiger Abschnitte.' },
-      { num: '03', title: 'Transformer-Extraktion', body: 'DrBERT-7GB, feinabgestimmt über drei Onkologie-Korpora, übernimmt die Entitäten, die echtes semantisches und Domänenverständnis erfordern.' },
-      { num: '04', title: 'LLM-Arbitrierung', body: 'Verbleibende Konflikte und Grenzfälle werden vor der Ausgabe zur endgültigen Disambiguierung an einen LLM-Durchlauf weitergeleitet.' },
+      { num: '02', title: 'Transformer-Extraktion', body: 'DrBERT-7GB, feinabgestimmt über drei Onkologie-Korpora, übernimmt die Entitäten, die echtes semantisches und Domänenverständnis erfordern.' },
+      { num: '03', title: 'LLM-Arbitrierung', body: 'Verbleibende Konflikte und Grenzfälle werden vor der Ausgabe zur endgültigen Disambiguierung an einen LLM-Durchlauf weitergeleitet.' },
     ],
     aiAct: {
       title: 'Regulatorische Ausrichtung — EU AI Act',
@@ -954,9 +1129,9 @@ const de: Dictionary = {
     label: 'Ergebnisse',
     title: 'Was der gestufte Ansatz bringt',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Mittlerer F1 — externe Validierung' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-freie Extraktion' },
-      { value: 300, suffix: '', color: 'text', label: 'Validierte AP-HP-Klinikberichte' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'der Erwähnungen an Regeln geroutet (ungesehene AP-HP-Kohorte, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'Regel-F1 vs. 0,358 für ein feinabgestimmtes DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'Routing-Konkordanz (leave-one-corpus-out)' },
     ],
   },
   experience: {
@@ -986,22 +1161,73 @@ const de: Dictionary = {
     title: 'Ausgewählte Projekte',
     subtitle:
       'Jenseits von DEMNE — Tools, die für einen Hackathon und Studienprojekte von Grund auf entwickelt wurden.',
+    more: 'Mehr erfahren →',
     items: [
       {
-        date: 'Juni 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Ein digitaler Katalog kognitiver Hilfsmittel und Apps für Menschen mit Hirnverletzungen und Tumoren — Kommunikationshilfen, Gedächtnis- und Planungsunterstützung. Entwickelt für den SN@SU-Hackathon, mit einer Streamlit-Oberfläche über einem JSON-basierten Speicher.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dez. 2025',
-        title: 'Luftqualitäts-Dashboard',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Ein interaktives Dashboard, das 15 Jahre Hintergrund-Luftverschmutzung in Frankreich (2000–2015) anhand von INERIS-/Zenodo-Daten rekonstruiert — SQLite-Speicherung, Plotly-Diagramme und eine Leaflet-Heatmap. Entwickelt mit meinem Teamkollegen William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -1112,7 +1338,7 @@ const it: Dictionary = {
     h1Pre: 'Estraggo biomarcatori da testo clinico ',
     h1Accent: 'senza svegliare la GPU',
     h1Post: '.',
-    sub: 'Sono Clément Longeac. Sto lavorando a DEMNE, un framework di routing che decide — per ogni tipo di entità — se una regex, un CRF, un transformer o un LLM sia lo strumento onesto per il compito. Primo risultato: 93,7% delle entità cliniche estratte senza GPU, F1 = 0,941 su 300 note AP-HP.',
+    sub: 'Sono Clément Longeac. Sto lavorando a DEMNE, un framework di routing che decide — per ogni tipo di entità — se una regex, un CRF, un transformer o un LLM sia lo strumento onesto per il compito. Primo risultato: 99,5% delle entità cliniche estratte senza GPU, F1 = 0,941 su 300 note AP-HP.',
     ctaResearch: 'Vedi la ricerca',
     ctaCV: 'Scarica il CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schema dal vivo',
@@ -1141,14 +1367,13 @@ const it: Dictionary = {
     tagline: 'NER clinico · corpus di oncologia francesi',
     p1: 'I modelli NER generici falliscono nettamente sul testo clinico francese: abbreviazioni dense, formattazione incoerente tra i sistemi ospedalieri e una terminologia di biomarcatori quasi assente dai dati di addestramento generali. DEMNE affronta il problema con una pipeline a stadi anziché un modello unico — ogni stadio gestisce ciò che sa fare meglio, ed escalation verso un modello più pesante solo quando necessario.',
     p2: 'Il sistema è affinato su DrBERT-7GB attraverso tre distinti corpus di oncologia francesi, e si concentra su sette tipi di entità biomarcatrici prioritarie usate nei referti rilevanti per il trattamento.',
-    tags: ['NLP clinico', 'CRF', 'Transformers', 'DrBERT-7GB', 'Oncologia francese'],
+    tags: ['NLP clinico', 'Transformers', 'DrBERT-7GB', 'Oncologia francese'],
     viewRepo: 'Vedi il repository',
     readMethodology: 'Leggi la metodologia',
     pipeline: [
       { num: '01', title: 'Passaggio basato su regole', body: 'Il pattern matching (regex, lessici) cattura a basso costo le entità ad alta confidenza e bassa ambiguità — date, dosaggi, abbreviazioni standard di biomarcatori.' },
-      { num: '02', title: 'Livello CRF', body: 'Un campo casuale condizionale modella la struttura sequenziale che le regole non colgono, usando il contesto locale per risolvere i segmenti ambigui.' },
-      { num: '03', title: 'Estrazione tramite transformer', body: 'DrBERT-7GB, affinato su tre corpus di oncologia, gestisce le entità che richiedono una reale comprensione semantica e di dominio.' },
-      { num: '04', title: 'Arbitraggio tramite LLM', body: 'I conflitti residui e i casi limite vengono instradati a un passaggio LLM per la disambiguazione finale prima dell\'output.' },
+      { num: '02', title: 'Estrazione tramite transformer', body: 'DrBERT-7GB, affinato su tre corpus di oncologia, gestisce le entità che richiedono una reale comprensione semantica e di dominio.' },
+      { num: '03', title: 'Arbitraggio tramite LLM', body: 'I conflitti residui e i casi limite vengono instradati a un passaggio LLM per la disambiguazione finale prima dell\'output.' },
     ],
     aiAct: {
       title: 'Allineamento normativo — EU AI Act',
@@ -1163,9 +1388,9 @@ const it: Dictionary = {
     label: 'Risultati',
     title: 'Cosa porta l\'approccio a stadi',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 medio — validazione esterna' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Estrazione senza GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Note cliniche AP-HP validate' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'delle menzioni instradate alle regole (coorte AP-HP mai vista, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'F1 delle regole contro 0,358 di un DrBERT affinato' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'concordanza di instradamento leave-one-corpus-out' },
     ],
   },
   experience: {
@@ -1195,22 +1420,73 @@ const it: Dictionary = {
     title: 'Progetti selezionati',
     subtitle:
       'Oltre DEMNE — strumenti realizzati end-to-end per un hackathon e progetti universitari.',
+    more: 'Scopri di più →',
     items: [
       {
-        date: 'Giugno 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          "Un catalogo digitale di strumenti e app di compensazione cognitiva per persone con lesioni cerebrali e tumori — supporto alla comunicazione, memoria e pianificazione. Realizzato per l'hackathon SN@SU, con un'interfaccia Streamlit su un archivio basato su JSON.",
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dic. 2025',
-        title: "Dashboard sulla qualità dell'aria",
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          "Una dashboard interattiva che ricostruisce 15 anni di inquinamento atmosferico di fondo in Francia (2000–2015) a partire dai dati INERIS/Zenodo — archiviazione SQLite, grafici Plotly e mappa di calore Leaflet. Realizzata con il mio compagno di squadra William Zee.",
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -1322,7 +1598,7 @@ const pt: Dictionary = {
     h1Pre: 'Extraindo biomarcadores de texto clínico ',
     h1Accent: 'sem acordar a GPU',
     h1Post: '.',
-    sub: 'Sou Clément Longeac. Estou trabalhando no DEMNE, um framework de roteamento que decide — para cada tipo de entidade — se uma regex, um CRF, um transformer ou um LLM é a ferramenta honesta para a tarefa. Primeiro resultado: 93,7% das entidades clínicas extraídas sem GPU, F1 = 0,941 em 300 notas AP-HP.',
+    sub: 'Sou Clément Longeac. Estou trabalhando no DEMNE, um framework de roteamento que decide — para cada tipo de entidade — se uma regex, um CRF, um transformer ou um LLM é a ferramenta honesta para a tarefa. Primeiro resultado: 99,5% das entidades clínicas extraídas sem GPU, F1 = 0,941 em 300 notas AP-HP.',
     ctaResearch: 'Ver a pesquisa',
     ctaCV: 'Baixar o currículo',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, esquema ao vivo',
@@ -1351,14 +1627,13 @@ const pt: Dictionary = {
     tagline: 'NER clínico · corpus de oncologia franceses',
     p1: 'Modelos NER genéricos falham muito no texto clínico francês: abreviações densas, formatação inconsistente entre sistemas hospitalares e terminologia de biomarcadores quase ausente dos dados de treinamento gerais. O DEMNE resolve isso com um pipeline em estágios em vez de um único modelo — cada estágio lida com o que faz melhor, e só escala para um modelo mais pesado quando necessário.',
     p2: 'O sistema é ajustado sobre o DrBERT-7GB em três corpus de oncologia franceses distintos, e visa sete tipos de entidades biomarcadoras prioritárias usadas em laudos relevantes para o tratamento.',
-    tags: ['PLN clínico', 'CRF', 'Transformers', 'DrBERT-7GB', 'Oncologia francesa'],
+    tags: ['PLN clínico', 'Transformers', 'DrBERT-7GB', 'Oncologia francesa'],
     viewRepo: 'Ver repositório',
     readMethodology: 'Ler a metodologia',
     pipeline: [
       { num: '01', title: 'Etapa baseada em regras', body: 'Correspondência de padrões (regex, léxicos) captura a baixo custo entidades de alta confiança e baixa ambiguidade — datas, dosagens, abreviações padrão de biomarcadores.' },
-      { num: '02', title: 'Camada CRF', body: 'Um campo aleatório condicional modela a estrutura sequencial que as regras não capturam, usando o contexto local para resolver trechos ambíguos.' },
-      { num: '03', title: 'Extração por transformer', body: 'O DrBERT-7GB, ajustado em três corpus de oncologia, trata as entidades que exigem compreensão semântica e de domínio real.' },
-      { num: '04', title: 'Arbitragem por LLM', body: 'Conflitos remanescentes e casos-limite são roteados para uma passagem de LLM para desambiguação final antes da saída.' },
+      { num: '02', title: 'Extração por transformer', body: 'O DrBERT-7GB, ajustado em três corpus de oncologia, trata as entidades que exigem compreensão semântica e de domínio real.' },
+      { num: '03', title: 'Arbitragem por LLM', body: 'Conflitos remanescentes e casos-limite são roteados para uma passagem de LLM para desambiguação final antes da saída.' },
     ],
     aiAct: {
       title: 'Alinhamento regulatório — EU AI Act',
@@ -1373,9 +1648,9 @@ const pt: Dictionary = {
     label: 'Resultados',
     title: 'O que a abordagem em estágios traz',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 médio — validação externa' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Extração sem GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Notas clínicas da AP-HP validadas' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'das menções roteadas para regras (coorte AP-HP não vista, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'F1 das regras vs 0,358 de um DrBERT ajustado' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'concordância de roteamento leave-one-corpus-out' },
     ],
   },
   experience: {
@@ -1405,22 +1680,73 @@ const pt: Dictionary = {
     title: 'Projetos selecionados',
     subtitle:
       'Além do DEMNE — ferramentas construídas de ponta a ponta para um hackathon e trabalhos acadêmicos.',
+    more: 'Saiba mais →',
     items: [
       {
-        date: 'Junho de 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Um catálogo digital de ferramentas e aplicativos de compensação cognitiva para pessoas com lesões cerebrais e tumores — apoio à comunicação, memória e planejamento. Criado para o hackathon SN@SU, com uma interface Streamlit sobre um armazenamento em JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dez. 2025',
-        title: 'Painel de qualidade do ar',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Um painel interativo que reconstrói 15 anos de poluição atmosférica de fundo na França (2000–2015) a partir de dados do INERIS/Zenodo — armazenamento em SQLite, gráficos em Plotly e mapa de calor em Leaflet. Criado com meu colega de equipe William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -1531,7 +1857,7 @@ const nl: Dictionary = {
     h1Pre: 'Biomarkers uit klinische tekst halen ',
     h1Accent: 'zonder de GPU wakker te maken',
     h1Post: '.',
-    sub: 'Ik ben Clément Longeac. Ik werk aan DEMNE, een routeringsframework dat per entiteitstype beslist of een regex, een CRF, een transformer of een LLM het eerlijke gereedschap voor de taak is. Eerste resultaat: 93,7% van de klinische entiteiten geëxtraheerd zonder GPU, F1 = 0,941 op 300 AP-HP-notities.',
+    sub: 'Ik ben Clément Longeac. Ik werk aan DEMNE, een routeringsframework dat per entiteitstype beslist of een regex, een CRF, een transformer of een LLM het eerlijke gereedschap voor de taak is. Eerste resultaat: 99,5% van de klinische entiteiten geëxtraheerd zonder GPU, F1 = 0,941 op 300 AP-HP-notities.',
     ctaResearch: 'Bekijk het onderzoek',
     ctaCV: 'Download CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, live schema',
@@ -1560,14 +1886,13 @@ const nl: Dictionary = {
     tagline: 'Klinische NER · Franse oncologiecorpora',
     p1: 'Standaard NER-modellen falen flink op Franse klinische tekst: dichte afkortingen, inconsistente opmaak tussen ziekenhuissystemen, en biomarkerterminologie die nauwelijks voorkomt in algemene trainingsdata. DEMNE pakt dit aan met een gefaseerde pipeline in plaats van één model — elke fase doet waar hij goed in is, en schaalt alleen op naar een zwaarder model wanneer nodig.',
     p2: 'Het systeem is fijn afgesteld op DrBERT-7GB over drie verschillende Franse oncologiecorpora, en richt zich op zeven prioritaire biomarker-entiteitstypen die worden gebruikt in behandelingsrelevante rapportage.',
-    tags: ['Klinische NLP', 'CRF', 'Transformers', 'DrBERT-7GB', 'Franse oncologie'],
+    tags: ['Klinische NLP', 'Transformers', 'DrBERT-7GB', 'Franse oncologie'],
     viewRepo: 'Bekijk de repository',
     readMethodology: 'Lees de methodologie',
     pipeline: [
       { num: '01', title: 'Regelgebaseerde stap', body: 'Regex- en lexiconmatching vangt tegen lage kosten hoogzekere, laag-ambigue entiteiten — datums, doseringen, standaard biomarkerafkortingen.' },
-      { num: '02', title: 'CRF-laag', body: 'Een conditional random field modelleert de sequentiële structuur die de regels missen, met lokale context om ambigue delen op te lossen.' },
-      { num: '03', title: 'Transformer-extractie', body: 'DrBERT-7GB, fijn afgesteld over drie oncologiecorpora, behandelt de entiteiten die echt semantisch en domeinbegrip vereisen.' },
-      { num: '04', title: 'LLM-arbitrage', body: 'Resterende conflicten en randgevallen worden voor de uiteindelijke disambiguatie doorgestuurd naar een LLM-stap.' },
+      { num: '02', title: 'Transformer-extractie', body: 'DrBERT-7GB, fijn afgesteld over drie oncologiecorpora, behandelt de entiteiten die echt semantisch en domeinbegrip vereisen.' },
+      { num: '03', title: 'LLM-arbitrage', body: 'Resterende conflicten en randgevallen worden voor de uiteindelijke disambiguatie doorgestuurd naar een LLM-stap.' },
     ],
     aiAct: {
       title: 'Regelgevende afstemming — EU AI Act',
@@ -1582,9 +1907,9 @@ const nl: Dictionary = {
     label: 'Resultaten',
     title: 'Wat de gefaseerde aanpak oplevert',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Gemiddelde F1 — externe validatie' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-vrije extractie' },
-      { value: 300, suffix: '', color: 'text', label: 'Gevalideerde AP-HP klinische notities' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'van de vermeldingen naar regels gerouteerd (ongeziene AP-HP-cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'regel-F1 vs 0,358 voor een fijnafgestemde DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'routeringsconcordantie (leave-one-corpus-out)' },
     ],
   },
   experience: {
@@ -1614,22 +1939,73 @@ const nl: Dictionary = {
     title: 'Uitgelichte projecten',
     subtitle:
       'Naast DEMNE — tools die volledig van begin tot eind zijn gebouwd voor een hackathon en studieprojecten.',
+    more: 'Meer weten →',
     items: [
       {
-        date: 'Juni 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Een digitale catalogus van cognitieve hulpmiddelen en apps voor mensen met hersenletsel en tumoren — hulp bij communicatie, geheugen en planning. Gebouwd voor de SN@SU-hackathon, met een Streamlit-interface bovenop een op JSON gebaseerde opslag.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025',
-        title: 'Luchtkwaliteitsdashboard',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Een interactief dashboard dat 15 jaar achtergrondluchtvervuiling in Frankrijk (2000–2015) reconstrueert op basis van INERIS/Zenodo-data — SQLite-opslag, Plotly-grafieken en een Leaflet-heatmap. Gebouwd samen met teamgenoot William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -1740,7 +2116,7 @@ const zh: Dictionary = {
     h1Pre: '从临床文本中提取生物标志物，',
     h1Accent: '却不必唤醒GPU',
     h1Post: '。',
-    sub: '我是Clément Longeac。我正在研发DEMNE，一个路由框架——针对每种实体类型，决定正则表达式、CRF、Transformer还是LLM才是诚实可靠的工具。首个成果：93.7%的临床实体在无需GPU的情况下被提取，在300份AP-HP病历上F1值达到0.941。',
+    sub: '我是Clément Longeac。我正在研发DEMNE，一个路由框架——针对每种实体类型，决定正则表达式、CRF、Transformer还是LLM才是诚实可靠的工具。首个成果：99.5%的临床实体在无需GPU的情况下被提取，在300份AP-HP病历上F1值达到0.941。',
     ctaResearch: '查看研究',
     ctaCV: '下载简历',
     caption: 'DEMNE — 规则 → CRF → Transformer → LLM，实时示意图',
@@ -1769,14 +2145,13 @@ const zh: Dictionary = {
     tagline: '临床命名实体识别 · 法语肿瘤学语料库',
     p1: '现成的命名实体识别模型在法语临床文本上表现很差：密集的缩写、各医院系统间不一致的格式，以及在通用训练数据中几乎不出现的生物标志物术语。DEMNE通过分阶段流水线而非单一模型来应对这一问题——每个阶段处理自己最擅长的部分，只有在必要时才升级到更重的模型。',
     p2: '该系统在三个不同的法语肿瘤学语料库上对DrBERT-7GB进行了微调，目标是治疗相关报告中使用的七种优先生物标志物实体类型。',
-    tags: ['临床自然语言处理', 'CRF', 'Transformer', 'DrBERT-7GB', '法语肿瘤学'],
+    tags: ['临床自然语言处理', 'Transformer', 'DrBERT-7GB', '法语肿瘤学'],
     viewRepo: '查看代码仓库',
     readMethodology: '阅读方法论',
     pipeline: [
       { num: '01', title: '基于规则的处理', body: '正则表达式与词典匹配以低成本捕获高置信度、低歧义的实体——日期、剂量、标准生物标志物缩写。' },
-      { num: '02', title: 'CRF层', body: '条件随机场对规则遗漏的序列结构进行建模，利用局部上下文解决歧义片段。' },
-      { num: '03', title: 'Transformer抽取', body: '在三个肿瘤学语料库上微调的DrBERT-7GB，负责处理需要真正语义和领域理解的实体。' },
-      { num: '04', title: 'LLM仲裁', body: '剩余的冲突和边缘情况在输出前会被路由到LLM阶段进行最终消歧。' },
+      { num: '02', title: 'Transformer抽取', body: '在三个肿瘤学语料库上微调的DrBERT-7GB，负责处理需要真正语义和领域理解的实体。' },
+      { num: '03', title: 'LLM仲裁', body: '剩余的冲突和边缘情况在输出前会被路由到LLM阶段进行最终消歧。' },
     ],
     aiAct: {
       title: '监管合规 — 欧盟人工智能法案',
@@ -1791,9 +2166,9 @@ const zh: Dictionary = {
     label: '成果',
     title: '分阶段方法带来的价值',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: '平均F1值——外部验证' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: '无需GPU的抽取' },
-      { value: 300, suffix: '', color: 'text', label: '已验证的AP-HP临床记录' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -1822,22 +2197,73 @@ const zh: Dictionary = {
     label: '05 — 精选项目',
     title: '精选项目',
     subtitle: '除 DEMNE 之外，还有为黑客松和课程项目从零到一构建的工具。',
+    more: 'Learn more →',
     items: [
       {
-        date: '2026年6月',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          '一个面向脑损伤和肿瘤患者的认知辅助工具与应用数字目录——涵盖沟通辅助、记忆和日程规划。为 SN@SU 黑客松开发，使用 Streamlit 界面，数据存储于 JSON。',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: '2025年12月',
-        title: '空气质量仪表盘',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          '一个交互式仪表盘，基于 INERIS/Zenodo 数据重建了法国 2000 至 2015 年间 15 年的背景空气污染情况——使用 SQLite 存储、Plotly 图表和 Leaflet 热力图。与队友 William Zee 共同完成。',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -1948,7 +2374,7 @@ const ja: Dictionary = {
     h1Pre: 'GPUを起こさずに、',
     h1Accent: '臨床テキストからバイオマーカーを抽出する',
     h1Post: '。',
-    sub: '私はClément Longeacです。現在、DEMNEというルーティングフレームワークに取り組んでいます——エンティティの種類ごとに、正規表現、CRF、トランスフォーマー、LLMのどれが誠実な選択かを判断します。最初の成果：GPUを使わずに臨床エンティティの93.7%を抽出し、300件のAP-HPノートでF1値0.941を達成しました。',
+    sub: '私はClément Longeacです。現在、DEMNEというルーティングフレームワークに取り組んでいます——エンティティの種類ごとに、正規表現、CRF、トランスフォーマー、LLMのどれが誠実な選択かを判断します。最初の成果：GPUを使わずに臨床エンティティの99.5%を抽出し、300件のAP-HPノートでF1値0.941を達成しました。',
     ctaResearch: '研究を見る',
     ctaCV: '履歴書をダウンロード',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM、ライブ図解',
@@ -1977,14 +2403,13 @@ const ja: Dictionary = {
     tagline: '臨床NER · フランス語腫瘍学コーパス',
     p1: '既製のNERモデルはフランス語の臨床テキストで大きくつまずきます：密度の高い略語、病院システムごとに一貫しないフォーマット、一般的な学習データにはほとんど現れない生体マーカーの専門用語などです。DEMNEは単一モデルではなく段階的なパイプラインでこれに対処します——各段階は得意な処理を担い、必要な場合のみより重いモデルへエスカレーションします。',
     p2: 'システムはDrBERT-7GBを3つの異なるフランス語腫瘍学コーパスでファインチューニングし、治療関連レポートで使用される7種類の優先的な生体マーカー実体タイプを対象としています。',
-    tags: ['臨床NLP', 'CRF', 'Transformer', 'DrBERT-7GB', 'フランス語腫瘍学'],
+    tags: ['臨床NLP', 'Transformer', 'DrBERT-7GB', 'フランス語腫瘍学'],
     viewRepo: 'リポジトリを見る',
     readMethodology: '手法を読む',
     pipeline: [
       { num: '01', title: 'ルールベース処理', body: '正規表現と辞書によるマッチングで、日付・投与量・標準的な生体マーカー略語など、信頼度が高く曖昧性の低い実体を低コストで捕捉します。' },
-      { num: '02', title: 'CRF層', body: '条件付き確率場がルールでは捉えきれない系列構造をモデル化し、局所文脈を用いて曖昧な部分を解決します。' },
-      { num: '03', title: 'Transformerによる抽出', body: '3つの腫瘍学コーパスでファインチューニングされたDrBERT-7GBが、真の意味理解とドメイン理解を要する実体を処理します。' },
-      { num: '04', title: 'LLMによる裁定', body: '残った競合やエッジケースは、出力前の最終的な曖昧性解消のためLLM処理へ回されます。' },
+      { num: '02', title: 'Transformerによる抽出', body: '3つの腫瘍学コーパスでファインチューニングされたDrBERT-7GBが、真の意味理解とドメイン理解を要する実体を処理します。' },
+      { num: '03', title: 'LLMによる裁定', body: '残った競合やエッジケースは、出力前の最終的な曖昧性解消のためLLM処理へ回されます。' },
     ],
     aiAct: {
       title: '規制対応 — EU AI Act',
@@ -1999,9 +2424,9 @@ const ja: Dictionary = {
     label: '成果',
     title: '段階的アプローチがもたらすもの',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: '平均F1値 — 外部検証' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU不要の抽出' },
-      { value: 300, suffix: '', color: 'text', label: '検証済みAP-HP臨床記録' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -2030,22 +2455,73 @@ const ja: Dictionary = {
     label: '05 — 主な制作物',
     title: '主な制作物',
     subtitle: 'DEMNEのほかに、ハッカソンや授業課題のために一から作り上げたツール。',
+    more: 'Learn more →',
     items: [
       {
-        date: '2026年6月',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          '脳損傷や腫瘍を持つ人向けの認知補助ツール・アプリのデジタルカタログ——コミュニケーション支援、記憶、計画立案を対象とする。SN@SUハッカソン向けに開発し、Streamlitのインターフェースと JSON ベースのデータストアを使用。',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: '2025年12月',
-        title: '大気質ダッシュボード',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'INERIS/Zenodoのデータをもとに、フランスにおける2000年から2015年までの15年間の大気汚染の背景値を再構築したインタラクティブなダッシュボード——SQLiteでのデータ保存、Plotlyによるグラフ、Leafletによるヒートマップを使用。チームメイトのWilliam Zeeと共同制作。',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -2156,7 +2632,7 @@ const ko: Dictionary = {
     h1Pre: 'GPU를 깨우지 않고 ',
     h1Accent: '임상 텍스트에서 바이오마커를 추출합니다',
     h1Post: '.',
-    sub: '저는 Clément Longeac입니다. 저는 DEMNE라는 라우팅 프레임워크를 개발하고 있습니다 — 엔티티 유형마다 정규식, CRF, 트랜스포머, LLM 중 어느 것이 그 작업에 정직한 도구인지 결정합니다. 첫 결과: GPU 없이 임상 엔티티의 93.7%를 추출했으며, 300건의 AP-HP 노트에서 F1 = 0.941을 달성했습니다.',
+    sub: '저는 Clément Longeac입니다. 저는 DEMNE라는 라우팅 프레임워크를 개발하고 있습니다 — 엔티티 유형마다 정규식, CRF, 트랜스포머, LLM 중 어느 것이 그 작업에 정직한 도구인지 결정합니다. 첫 결과: GPU 없이 임상 엔티티의 99.5%를 추출했으며, 300건의 AP-HP 노트에서 F1 = 0.941을 달성했습니다.',
     ctaResearch: '연구 보기',
     ctaCV: '이력서 다운로드',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, 실시간 도식',
@@ -2185,14 +2661,13 @@ const ko: Dictionary = {
     tagline: '임상 NER · 프랑스어 종양학 코퍼스',
     p1: '기성 NER 모델은 프랑스어 임상 텍스트에서 크게 실패합니다: 밀도 높은 약어, 병원 시스템마다 일관되지 않은 형식, 일반 학습 데이터에는 거의 등장하지 않는 생체표지자 용어 때문입니다. DEMNE는 단일 모델이 아닌 단계별 파이프라인으로 이 문제에 대응합니다 — 각 단계는 자신이 가장 잘하는 일을 처리하고, 필요할 때만 더 무거운 모델로 확대합니다.',
     p2: '이 시스템은 세 개의 서로 다른 프랑스어 종양학 코퍼스에서 DrBERT-7GB를 미세조정했으며, 치료 관련 보고서에 사용되는 7가지 우선순위 생체표지자 개체 유형을 대상으로 합니다.',
-    tags: ['임상 NLP', 'CRF', 'Transformer', 'DrBERT-7GB', '프랑스어 종양학'],
+    tags: ['임상 NLP', 'Transformer', 'DrBERT-7GB', '프랑스어 종양학'],
     viewRepo: '저장소 보기',
     readMethodology: '방법론 읽기',
     pipeline: [
       { num: '01', title: '규칙 기반 처리', body: '정규식 및 어휘 매칭이 낮은 비용으로 신뢰도가 높고 모호성이 낮은 개체(날짜, 투여량, 표준 생체표지자 약어)를 포착합니다.' },
-      { num: '02', title: 'CRF 계층', body: '조건부 무작위장(CRF)이 규칙이 놓치는 순차적 구조를 모델링하며, 지역 문맥을 활용해 모호한 구간을 해결합니다.' },
-      { num: '03', title: 'Transformer 추출', body: '세 개의 종양학 코퍼스에서 미세조정된 DrBERT-7GB가 실제 의미론적, 도메인 이해가 필요한 개체를 처리합니다.' },
-      { num: '04', title: 'LLM 중재', body: '남은 충돌과 경계 사례는 출력 전 최종 명확화를 위해 LLM 단계로 전달됩니다.' },
+      { num: '02', title: 'Transformer 추출', body: '세 개의 종양학 코퍼스에서 미세조정된 DrBERT-7GB가 실제 의미론적, 도메인 이해가 필요한 개체를 처리합니다.' },
+      { num: '03', title: 'LLM 중재', body: '남은 충돌과 경계 사례는 출력 전 최종 명확화를 위해 LLM 단계로 전달됩니다.' },
     ],
     aiAct: {
       title: '규제 정합성 — EU AI Act',
@@ -2207,9 +2682,9 @@ const ko: Dictionary = {
     label: '결과',
     title: '단계별 접근 방식이 가져오는 것',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: '평균 F1 — 외부 검증' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU 없는 추출' },
-      { value: 300, suffix: '', color: 'text', label: '검증된 AP-HP 임상 기록' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -2238,22 +2713,73 @@ const ko: Dictionary = {
     label: '05 — 주요 프로젝트',
     title: '주요 프로젝트',
     subtitle: 'DEMNE 외에도 해커톤과 학업 과제를 위해 처음부터 끝까지 만든 도구들.',
+    more: 'Learn more →',
     items: [
       {
-        date: '2026년 6월',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          '뇌손상 및 종양을 가진 사람들을 위한 인지 보완 도구와 앱의 디지털 카탈로그 — 의사소통 지원, 기억, 일정 계획을 다룹니다. SN@SU 해커톤을 위해 제작했으며, Streamlit 인터페이스와 JSON 기반 저장소를 사용합니다.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: '2025년 12월',
-        title: '대기질 대시보드',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'INERIS/Zenodo 데이터를 기반으로 프랑스의 2000~2015년 15년간 배경 대기오염을 재구성한 인터랙티브 대시보드 — SQLite 저장소, Plotly 차트, Leaflet 히트맵을 사용합니다. 팀원 William Zee와 함께 제작했습니다.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -2364,7 +2890,7 @@ const ru: Dictionary = {
     h1Pre: 'Извлекаю биомаркеры из клинического текста ',
     h1Accent: 'не пробуждая GPU',
     h1Post: '.',
-    sub: 'Я Clément Longeac. Я работаю над DEMNE — фреймворком маршрутизации, который для каждого типа сущности решает, что является честным инструментом для задачи: регулярное выражение, CRF, трансформер или LLM. Первый результат: 93,7% клинических сущностей извлечено без GPU, F1 = 0,941 на 300 заметках AP-HP.',
+    sub: 'Я Clément Longeac. Я работаю над DEMNE — фреймворком маршрутизации, который для каждого типа сущности решает, что является честным инструментом для задачи: регулярное выражение, CRF, трансформер или LLM. Первый результат: 99,5% клинических сущностей извлечено без GPU, F1 = 0,941 на 300 заметках AP-HP.',
     ctaResearch: 'Смотреть исследование',
     ctaCV: 'Скачать резюме',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, живая схема',
@@ -2393,14 +2919,13 @@ const ru: Dictionary = {
     tagline: 'Клинический NER · французские онкологические корпуса',
     p1: 'Стандартные модели NER сильно проигрывают на французском клиническом тексте: плотные сокращения, несогласованное форматирование между больничными системами и терминология биомаркеров, почти не встречающаяся в общих обучающих данных. DEMNE решает эту проблему с помощью поэтапного конвейера вместо единой модели — каждый этап делает то, что умеет лучше всего, и переходит к более тяжёлой модели только при необходимости.',
     p2: 'Система дообучена на DrBERT-7GB на трёх различных французских онкологических корпусах и ориентирована на семь приоритетных типов сущностей-биомаркеров, используемых в отчётах, значимых для лечения.',
-    tags: ['Клинический NLP', 'CRF', 'Transformers', 'DrBERT-7GB', 'Французская онкология'],
+    tags: ['Клинический NLP', 'Transformers', 'DrBERT-7GB', 'Французская онкология'],
     viewRepo: 'Смотреть репозиторий',
     readMethodology: 'Читать методологию',
     pipeline: [
       { num: '01', title: 'Этап на основе правил', body: 'Сопоставление по регулярным выражениям и словарям недорого улавливает сущности с высокой достоверностью и низкой неоднозначностью — даты, дозировки, стандартные сокращения биомаркеров.' },
-      { num: '02', title: 'Слой CRF', body: 'Условное случайное поле моделирует последовательную структуру, которую упускают правила, используя локальный контекст для разрешения неоднозначных участков.' },
-      { num: '03', title: 'Извлечение с помощью трансформера', body: 'DrBERT-7GB, дообученная на трёх онкологических корпусах, обрабатывает сущности, требующие настоящего семантического и предметного понимания.' },
-      { num: '04', title: 'Арбитраж с помощью LLM', body: 'Оставшиеся конфликты и пограничные случаи направляются на этап LLM для окончательного устранения неоднозначности перед выводом.' },
+      { num: '02', title: 'Извлечение с помощью трансформера', body: 'DrBERT-7GB, дообученная на трёх онкологических корпусах, обрабатывает сущности, требующие настоящего семантического и предметного понимания.' },
+      { num: '03', title: 'Арбитраж с помощью LLM', body: 'Оставшиеся конфликты и пограничные случаи направляются на этап LLM для окончательного устранения неоднозначности перед выводом.' },
     ],
     aiAct: {
       title: 'Соответствие регулированию — EU AI Act',
@@ -2415,9 +2940,9 @@ const ru: Dictionary = {
     label: 'Результаты',
     title: 'Что даёт поэтапный подход',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Средний F1 — внешняя валидация' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Извлечение без GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Проверенные клинические записи AP-HP' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -2447,22 +2972,73 @@ const ru: Dictionary = {
     title: 'Избранные проекты',
     subtitle:
       'Помимо DEMNE — инструменты, созданные от начала до конца для хакатона и учебных проектов.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'Июнь 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Цифровой каталог инструментов и приложений когнитивной компенсации для людей с черепно-мозговыми травмами и опухолями — помощь в общении, памяти и планировании. Создан для хакатона SN@SU, с интерфейсом на Streamlit поверх хранилища на основе JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Дек. 2025',
-        title: 'Панель качества воздуха',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Интерактивная панель, реконструирующая 15 лет фонового загрязнения воздуха во Франции (2000–2015) на основе данных INERIS/Zenodo — хранение в SQLite, графики Plotly и тепловая карта Leaflet. Создана вместе с напарником по команде William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -2573,7 +3149,7 @@ const ar: Dictionary = {
     h1Pre: 'أستخرج المؤشرات الحيوية من النص السريري ',
     h1Accent: 'دون إيقاظ وحدة معالجة الرسومات',
     h1Post: '.',
-    sub: 'أنا كليمون لونجياك. أعمل على DEMNE، إطار عمل للتوجيه يقرر — لكل نوع من الكيانات — ما إذا كانت الأداة الصادقة للمهمة هي تعبير نمطي (regex)، أو CRF، أو محول (transformer)، أو نموذج لغوي كبير (LLM). النتيجة الأولى: استخراج 93.7% من الكيانات السريرية دون استخدام وحدة معالجة الرسومات، بدقة F1 = 0.941 على 300 ملاحظة من AP-HP.',
+    sub: 'أنا كليمون لونجياك. أعمل على DEMNE، إطار عمل للتوجيه يقرر — لكل نوع من الكيانات — ما إذا كانت الأداة الصادقة للمهمة هي تعبير نمطي (regex)، أو CRF، أو محول (transformer)، أو نموذج لغوي كبير (LLM). النتيجة الأولى: استخراج 99.5% من الكيانات السريرية دون استخدام وحدة معالجة الرسومات، بدقة F1 = 0.941 على 300 ملاحظة من AP-HP.',
     ctaResearch: 'استعرض الأبحاث',
     ctaCV: 'تحميل السيرة الذاتية',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM، مخطط حي',
@@ -2602,14 +3178,13 @@ const ar: Dictionary = {
     tagline: 'التعرف على الكيانات السريرية · مجموعات نصوص الأورام الفرنسية',
     p1: 'تفشل نماذج التعرف على الكيانات الجاهزة بشكل كبير في النص السريري الفرنسي: اختصارات كثيفة، تنسيق غير متسق بين أنظمة المستشفيات، ومصطلحات علامات حيوية نادرة الظهور في بيانات التدريب العامة. يعالج DEMNE هذا عبر خط أنابيب متدرج بدلًا من نموذج واحد — كل مرحلة تتولى ما تُجيده فعلًا، ولا تصعّد إلى نموذج أثقل إلا عند الضرورة.',
     p2: 'تم ضبط النظام على DrBERT-7GB عبر ثلاث مجموعات نصوص أورام فرنسية مختلفة، ويستهدف سبعة أنواع كيانات علامات حيوية ذات أولوية تُستخدم في التقارير ذات الصلة بالعلاج.',
-    tags: ['معالجة اللغة السريرية', 'CRF', 'المحولات', 'DrBERT-7GB', 'أورام فرنسية'],
+    tags: ['معالجة اللغة السريرية', 'المحولات', 'DrBERT-7GB', 'أورام فرنسية'],
     viewRepo: 'عرض المستودع',
     readMethodology: 'قراءة المنهجية',
     pipeline: [
       { num: '01', title: 'مرحلة قائمة على القواعد', body: 'تطابق التعبيرات النمطية والمعاجم يلتقط بتكلفة منخفضة الكيانات عالية الثقة ومنخفضة الغموض — التواريخ، الجرعات، اختصارات العلامات الحيوية القياسية.' },
-      { num: '02', title: 'طبقة CRF', body: 'يُنمذج حقل عشوائي شرطي البنية التسلسلية التي تفوتها القواعد، مستخدمًا السياق المحلي لحل المقاطع الغامضة.' },
-      { num: '03', title: 'الاستخراج عبر المحولات', body: 'يتولى DrBERT-7GB، المضبوط عبر ثلاث مجموعات نصوص أورام، الكيانات التي تتطلب فهمًا دلاليًا ومجاليًا حقيقيًا.' },
-      { num: '04', title: 'التحكيم عبر النموذج اللغوي الكبير', body: 'تُوجَّه التعارضات المتبقية والحالات الحدية إلى مرحلة نموذج لغوي كبير لإزالة الغموض النهائي قبل الإخراج.' },
+      { num: '02', title: 'الاستخراج عبر المحولات', body: 'يتولى DrBERT-7GB، المضبوط عبر ثلاث مجموعات نصوص أورام، الكيانات التي تتطلب فهمًا دلاليًا ومجاليًا حقيقيًا.' },
+      { num: '03', title: 'التحكيم عبر النموذج اللغوي الكبير', body: 'تُوجَّه التعارضات المتبقية والحالات الحدية إلى مرحلة نموذج لغوي كبير لإزالة الغموض النهائي قبل الإخراج.' },
     ],
     aiAct: {
       title: 'التوافق التنظيمي — قانون الذكاء الاصطناعي الأوروبي',
@@ -2624,9 +3199,9 @@ const ar: Dictionary = {
     label: 'النتائج',
     title: 'ما يقدّمه النهج المتدرج',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'متوسط F1 — تحقق خارجي' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'استخراج بدون GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'سجلات AP-HP السريرية الموثقة' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -2655,22 +3230,73 @@ const ar: Dictionary = {
     label: '05 — مشاريع مختارة',
     title: 'مشاريع مختارة',
     subtitle: 'إلى جانب DEMNE — أدوات مبنية من الألف إلى الياء من أجل هاكاثون ومشاريع دراسية.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'يونيو 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'كتالوج رقمي لأدوات وتطبيقات التعويض المعرفي لذوي الإصابات الدماغية والأورام — دعم التواصل والذاكرة والتخطيط. صُمم من أجل هاكاثون SN@SU، بواجهة Streamlit فوق تخزين بصيغة JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'ديسمبر 2025',
-        title: 'لوحة جودة الهواء',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'لوحة تحكم تفاعلية تعيد بناء 15 عامًا من التلوث الجوي الخلفي في فرنسا (2000–2015) اعتمادًا على بيانات INERIS/Zenodo — تخزين بواسطة SQLite، رسوم بيانية بواسطة Plotly، وخريطة حرارية بواسطة Leaflet. أُنجزت مع زميل الفريق William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -2781,7 +3407,7 @@ const hi: Dictionary = {
     h1Pre: 'क्लिनिकल टेक्स्ट से बायोमार्कर निकालना, ',
     h1Accent: 'बिना GPU जगाए',
     h1Post: '।',
-    sub: 'मैं क्लेमों लोंज्याक हूँ। मैं DEMNE पर काम कर रहा हूँ, एक रूटिंग फ्रेमवर्क जो हर एंटिटी टाइप के लिए तय करता है — कि क्या रेगेक्स, CRF, ट्रांसफॉर्मर, या LLM उस काम के लिए ईमानदार टूल है। पहला परिणाम: बिना GPU के 93.7% क्लिनिकल एंटिटी निकाली गईं, 300 AP-HP नोट्स पर F1 = 0.941।',
+    sub: 'मैं क्लेमों लोंज्याक हूँ। मैं DEMNE पर काम कर रहा हूँ, एक रूटिंग फ्रेमवर्क जो हर एंटिटी टाइप के लिए तय करता है — कि क्या रेगेक्स, CRF, ट्रांसफॉर्मर, या LLM उस काम के लिए ईमानदार टूल है। पहला परिणाम: बिना GPU के 99.5% क्लिनिकल एंटिटी निकाली गईं, 300 AP-HP नोट्स पर F1 = 0.941।',
     ctaResearch: 'अनुसंधान देखें',
     ctaCV: 'सीवी डाउनलोड करें',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, लाइव योजनाबद्ध चित्र',
@@ -2815,9 +3441,8 @@ const hi: Dictionary = {
     readMethodology: 'मेथडोलॉजी पढ़ें',
     pipeline: [
       { num: '01', title: 'नियम-आधारित चरण', body: 'रेगेक्स और लेक्सिकॉन मिलान कम लागत पर उच्च-विश्वास, कम-अस्पष्टता वाली एंटिटीज़ को पकड़ता है — तारीखें, खुराकें, मानक बायोमार्कर संक्षिप्ताक्षर।' },
-      { num: '02', title: 'सीआरएफ परत', body: 'एक कंडीशनल रैंडम फील्ड उस अनुक्रमिक संरचना को मॉडल करता है जिसे नियम छोड़ देते हैं, अस्पष्ट खंडों को हल करने के लिए स्थानीय संदर्भ का उपयोग करते हुए।' },
-      { num: '03', title: 'ट्रांसफॉर्मर एक्सट्रैक्शन', body: 'तीन ऑन्कोलॉजी कॉर्पस पर फाइन-ट्यून किया गया DrBERT-7GB उन एंटिटीज़ को संभालता है जिन्हें वास्तविक अर्थगत और डोमेन समझ की आवश्यकता होती है।' },
-      { num: '04', title: 'एलएलएम मध्यस्थता', body: 'शेष टकरावों और सीमांत मामलों को आउटपुट से पहले अंतिम अस्पष्टता निवारण के लिए एलएलएम चरण में भेजा जाता है।' },
+      { num: '02', title: 'ट्रांसफॉर्मर एक्सट्रैक्शन', body: 'तीन ऑन्कोलॉजी कॉर्पस पर फाइन-ट्यून किया गया DrBERT-7GB उन एंटिटीज़ को संभालता है जिन्हें वास्तविक अर्थगत और डोमेन समझ की आवश्यकता होती है।' },
+      { num: '03', title: 'एलएलएम मध्यस्थता', body: 'शेष टकरावों और सीमांत मामलों को आउटपुट से पहले अंतिम अस्पष्टता निवारण के लिए एलएलएम चरण में भेजा जाता है।' },
     ],
     aiAct: {
       title: 'नियामक अनुपालन — EU AI Act',
@@ -2832,9 +3457,9 @@ const hi: Dictionary = {
     label: 'परिणाम',
     title: 'चरणबद्ध दृष्टिकोण से क्या मिलता है',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'औसत F1 — बाह्य सत्यापन' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-मुक्त निष्कर्षण' },
-      { value: 300, suffix: '', color: 'text', label: 'सत्यापित AP-HP क्लिनिकल नोट्स' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -2863,22 +3488,73 @@ const hi: Dictionary = {
     label: '05 — चुनिंदा प्रोजेक्ट',
     title: 'चुनिंदा प्रोजेक्ट',
     subtitle: 'DEMNE के अलावा — एक हैकाथॉन और कोर्सवर्क के लिए शुरू से अंत तक बनाए गए टूल्स।',
+    more: 'Learn more →',
     items: [
       {
-        date: 'जून 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'मस्तिष्क क्षति और ट्यूमर से पीड़ित लोगों के लिए कॉग्निटिव-कम्पेंसेशन टूल्स और ऐप्स का एक डिजिटल कैटलॉग — संचार सहायता, स्मृति और योजना बनाने में मदद। SN@SU हैकाथॉन के लिए बनाया गया, Streamlit इंटरफ़ेस और JSON-आधारित स्टोर के साथ।',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'दिसंबर 2025',
-        title: 'वायु गुणवत्ता डैशबोर्ड',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'INERIS/Zenodo डेटा के आधार पर फ्रांस में 2000–2015 के 15 वर्षों के पृष्ठभूमि वायु प्रदूषण को पुनर्निर्मित करने वाला एक इंटरैक्टिव डैशबोर्ड — SQLite स्टोरेज, Plotly चार्ट्स और Leaflet हीटमैप। टीममेट William Zee के साथ बनाया गया।',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -2989,7 +3665,7 @@ const tr: Dictionary = {
     h1Pre: "GPU'yu uyandırmadan ",
     h1Accent: 'klinik metinden biyobelirteç çıkarıyorum',
     h1Post: '.',
-    sub: "Ben Clément Longeac. DEMNE üzerinde çalışıyorum; her varlık türü için regex, CRF, transformer veya LLM'den hangisinin görev için dürüst araç olduğuna karar veren bir yönlendirme çerçevesi. İlk sonuç: klinik varlıkların %93,7'si GPU kullanılmadan çıkarıldı, 300 AP-HP notunda F1 = 0,941.",
+    sub: "Ben Clément Longeac. DEMNE üzerinde çalışıyorum; her varlık türü için regex, CRF, transformer veya LLM'den hangisinin görev için dürüst araç olduğuna karar veren bir yönlendirme çerçevesi. İlk sonuç: klinik varlıkların %99,5'si GPU kullanılmadan çıkarıldı, 300 AP-HP notunda F1 = 0,941.",
     ctaResearch: 'Araştırmayı gör',
     ctaCV: 'Özgeçmişi indir',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, canlı şema',
@@ -3018,14 +3694,13 @@ const tr: Dictionary = {
     tagline: 'Klinik NER · Fransızca onkoloji derlemleri',
     p1: 'Hazır NER modelleri Fransızca klinik metinde ciddi şekilde başarısız olur: yoğun kısaltmalar, hastane sistemleri arasında tutarsız biçimlendirme ve genel eğitim verilerinde neredeyse hiç görünmeyen biyobelirteç terminolojisi. DEMNE bunu tek bir model yerine aşamalı bir hat ile ele alır — her aşama en iyi yaptığı işi üstlenir ve yalnızca gerektiğinde daha ağır bir modele geçer.',
     p2: 'Sistem, üç farklı Fransızca onkoloji derlemi üzerinde DrBERT-7GB üzerinde ince ayar yapılmıştır ve tedaviyle ilgili raporlamada kullanılan yedi öncelikli biyobelirteç varlık türünü hedefler.',
-    tags: ['Klinik NLP', 'CRF', 'Transformer', 'DrBERT-7GB', 'Fransız onkolojisi'],
+    tags: ['Klinik NLP', 'Transformer', 'DrBERT-7GB', 'Fransız onkolojisi'],
     viewRepo: 'Depoyu görüntüle',
     readMethodology: 'Metodolojiyi oku',
     pipeline: [
       { num: '01', title: 'Kural tabanlı aşama', body: 'Regex ve sözlük eşleştirmesi; tarihler, dozajlar, standart biyobelirteç kısaltmaları gibi yüksek güvenilirlikli, düşük belirsizlikli varlıkları düşük maliyetle yakalar.' },
-      { num: '02', title: 'CRF katmanı', body: 'Koşullu rastgele alan, kuralların kaçırdığı sıralı yapıyı modeller ve belirsiz bölümleri çözmek için yerel bağlamı kullanır.' },
-      { num: '03', title: 'Transformer ile çıkarım', body: 'Üç onkoloji derlemi üzerinde ince ayar yapılmış DrBERT-7GB, gerçek anlamsal ve alan anlayışı gerektiren varlıkları işler.' },
-      { num: '04', title: 'LLM ile hakemlik', body: 'Kalan çatışmalar ve sınır durumlar, çıktıdan önce nihai belirsizlik giderme için bir LLM aşamasına yönlendirilir.' },
+      { num: '02', title: 'Transformer ile çıkarım', body: 'Üç onkoloji derlemi üzerinde ince ayar yapılmış DrBERT-7GB, gerçek anlamsal ve alan anlayışı gerektiren varlıkları işler.' },
+      { num: '03', title: 'LLM ile hakemlik', body: 'Kalan çatışmalar ve sınır durumlar, çıktıdan önce nihai belirsizlik giderme için bir LLM aşamasına yönlendirilir.' },
     ],
     aiAct: {
       title: 'Düzenleyici uyum — AB Yapay Zeka Yasası',
@@ -3040,9 +3715,9 @@ const tr: Dictionary = {
     label: 'Sonuçlar',
     title: 'Aşamalı yaklaşımın kazandırdıkları',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Ortalama F1 — dış doğrulama' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU\'suz çıkarım' },
-      { value: 300, suffix: '', color: 'text', label: 'Doğrulanmış AP-HP klinik notları' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -3072,22 +3747,73 @@ const tr: Dictionary = {
     title: 'Seçilmiş Projeler',
     subtitle:
       "DEMNE'nin ötesinde — bir hackathon ve ders projeleri için uçtan uca geliştirilmiş araçlar.",
+    more: 'Learn more →',
     items: [
       {
-        date: 'Haziran 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Beyin hasarı ve tümör hastaları için bilişsel telafi araçları ve uygulamalarının dijital kataloğu — iletişim desteği, hafıza ve planlama. SN@SU hackathonu için, Streamlit arayüzü ve JSON tabanlı depolama ile geliştirildi.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Ara. 2025',
-        title: 'Hava Kalitesi Panosu',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          "INERIS/Zenodo verilerine dayanarak Fransa'daki 15 yıllık (2000–2015) arka plan hava kirliliğini yeniden oluşturan interaktif bir pano — SQLite depolama, Plotly grafikleri ve Leaflet ısı haritası. Takım arkadaşım William Zee ile birlikte geliştirildi.",
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -3198,7 +3924,7 @@ const pl: Dictionary = {
     h1Pre: 'Wydobywam biomarkery z tekstu klinicznego ',
     h1Accent: 'nie budząc GPU',
     h1Post: '.',
-    sub: 'Jestem Clément Longeac. Pracuję nad DEMNE, frameworkiem routingu, który dla każdego typu jednostki decyduje, czy uczciwym narzędziem do zadania jest wyrażenie regularne, CRF, transformer czy LLM. Pierwszy wynik: 93,7% jednostek klinicznych wydobytych bez GPU, F1 = 0,941 na 300 notatkach AP-HP.',
+    sub: 'Jestem Clément Longeac. Pracuję nad DEMNE, frameworkiem routingu, który dla każdego typu jednostki decyduje, czy uczciwym narzędziem do zadania jest wyrażenie regularne, CRF, transformer czy LLM. Pierwszy wynik: 99,5% jednostek klinicznych wydobytych bez GPU, F1 = 0,941 na 300 notatkach AP-HP.',
     ctaResearch: 'Zobacz badania',
     ctaCV: 'Pobierz CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schemat na żywo',
@@ -3227,14 +3953,13 @@ const pl: Dictionary = {
     tagline: 'Kliniczny NER · francuskie korpusy onkologiczne',
     p1: 'Gotowe modele NER zawodzą wyraźnie na francuskim tekście klinicznym: gęste skróty, niespójne formatowanie między systemami szpitalnymi oraz terminologia biomarkerów niemal nieobecna w ogólnych danych treningowych. DEMNE rozwiązuje to za pomocą etapowego pipeline\'u zamiast pojedynczego modelu — każdy etap zajmuje się tym, w czym jest naprawdę dobry, i eskaluje do cięższego modelu tylko wtedy, gdy to konieczne.',
     p2: 'System jest dostrojony na DrBERT-7GB na trzech różnych francuskich korpusach onkologicznych i celuje w siedem priorytetowych typów encji biomarkerowych używanych w raportach istotnych dla leczenia.',
-    tags: ['Kliniczne NLP', 'CRF', 'Transformery', 'DrBERT-7GB', 'Francuska onkologia'],
+    tags: ['Kliniczne NLP', 'Transformery', 'DrBERT-7GB', 'Francuska onkologia'],
     viewRepo: 'Zobacz repozytorium',
     readMethodology: 'Przeczytaj metodologię',
     pipeline: [
       { num: '01', title: 'Etap oparty na regułach', body: 'Dopasowywanie wyrażeń regularnych i leksykonów tanio wychwytuje encje o wysokiej pewności i niskiej niejednoznaczności — daty, dawki, standardowe skróty biomarkerów.' },
-      { num: '02', title: 'Warstwa CRF', body: 'Warunkowe pole losowe modeluje strukturę sekwencyjną pomijaną przez reguły, wykorzystując lokalny kontekst do rozwiązywania niejednoznacznych fragmentów.' },
-      { num: '03', title: 'Ekstrakcja przez transformer', body: 'DrBERT-7GB, dostrojony na trzech korpusach onkologicznych, obsługuje encje wymagające rzeczywistego rozumienia semantycznego i dziedzinowego.' },
-      { num: '04', title: 'Arbitraż przez LLM', body: 'Pozostałe konflikty i przypadki graniczne są kierowane do etapu LLM w celu ostatecznego rozstrzygnięcia niejednoznaczności przed wyjściem.' },
+      { num: '02', title: 'Ekstrakcja przez transformer', body: 'DrBERT-7GB, dostrojony na trzech korpusach onkologicznych, obsługuje encje wymagające rzeczywistego rozumienia semantycznego i dziedzinowego.' },
+      { num: '03', title: 'Arbitraż przez LLM', body: 'Pozostałe konflikty i przypadki graniczne są kierowane do etapu LLM w celu ostatecznego rozstrzygnięcia niejednoznaczności przed wyjściem.' },
     ],
     aiAct: {
       title: 'Zgodność regulacyjna — EU AI Act',
@@ -3249,9 +3974,9 @@ const pl: Dictionary = {
     label: 'Wyniki',
     title: 'Co daje podejście etapowe',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Średnie F1 — walidacja zewnętrzna' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Ekstrakcja bez GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Zwalidowane notatki kliniczne AP-HP' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -3280,22 +4005,73 @@ const pl: Dictionary = {
     label: '05 — Wybrane projekty',
     title: 'Wybrane projekty',
     subtitle: 'Poza DEMNE — narzędzia zbudowane od podstaw na hackathon i projekty uczelniane.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'Czerwiec 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Cyfrowy katalog narzędzi i aplikacji wspomagających funkcje poznawcze dla osób z urazami mózgu i nowotworami — wsparcie komunikacji, pamięci i planowania. Stworzony na hackathon SN@SU, z interfejsem Streamlit opartym na magazynie danych JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Gru. 2025',
-        title: 'Panel jakości powietrza',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Interaktywny panel rekonstruujący 15 lat tła zanieczyszczenia powietrza we Francji (2000–2015) na podstawie danych INERIS/Zenodo — przechowywanie danych w SQLite, wykresy Plotly i mapa cieplna Leaflet. Stworzony wspólnie z kolegą z zespołu Williamem Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -3406,7 +4182,7 @@ const vi: Dictionary = {
     h1Pre: 'Trích xuất dấu ấn sinh học từ văn bản lâm sàng ',
     h1Accent: 'mà không cần đánh thức GPU',
     h1Post: '.',
-    sub: 'Tôi là Clément Longeac. Tôi đang phát triển DEMNE, một framework định tuyến quyết định — cho từng loại thực thể — liệu regex, CRF, transformer, hay LLM mới là công cụ trung thực cho công việc. Kết quả đầu tiên: 93,7% thực thể lâm sàng được trích xuất không cần GPU, F1 = 0,941 trên 300 ghi chú AP-HP.',
+    sub: 'Tôi là Clément Longeac. Tôi đang phát triển DEMNE, một framework định tuyến quyết định — cho từng loại thực thể — liệu regex, CRF, transformer, hay LLM mới là công cụ trung thực cho công việc. Kết quả đầu tiên: 99,5% thực thể lâm sàng được trích xuất không cần GPU, F1 = 0,941 trên 300 ghi chú AP-HP.',
     ctaResearch: 'Xem nghiên cứu',
     ctaCV: 'Tải CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, sơ đồ trực tiếp',
@@ -3435,14 +4211,13 @@ const vi: Dictionary = {
     tagline: 'NER lâm sàng · kho ngữ liệu ung bướu tiếng Pháp',
     p1: 'Các mô hình NER có sẵn thất bại nặng nề trên văn bản lâm sàng tiếng Pháp: từ viết tắt dày đặc, định dạng không nhất quán giữa các hệ thống bệnh viện, và thuật ngữ dấu ấn sinh học hầu như không xuất hiện trong dữ liệu huấn luyện tổng quát. DEMNE giải quyết vấn đề này bằng một pipeline theo giai đoạn thay vì một mô hình duy nhất — mỗi giai đoạn xử lý phần việc mà nó làm tốt nhất, và chỉ chuyển sang mô hình nặng hơn khi cần thiết.',
     p2: 'Hệ thống được tinh chỉnh trên DrBERT-7GB qua ba kho ngữ liệu ung bướu tiếng Pháp khác nhau, và nhắm đến bảy loại thực thể dấu ấn sinh học ưu tiên được sử dụng trong báo cáo liên quan đến điều trị.',
-    tags: ['NLP lâm sàng', 'CRF', 'Transformer', 'DrBERT-7GB', 'Ung bướu tiếng Pháp'],
+    tags: ['NLP lâm sàng', 'Transformer', 'DrBERT-7GB', 'Ung bướu tiếng Pháp'],
     viewRepo: 'Xem kho mã nguồn',
     readMethodology: 'Đọc phương pháp luận',
     pipeline: [
       { num: '01', title: 'Giai đoạn dựa trên quy tắc', body: 'Khớp mẫu bằng regex và từ điển bắt được với chi phí thấp các thực thể có độ tin cậy cao, ít mơ hồ — ngày tháng, liều lượng, các từ viết tắt dấu ấn sinh học chuẩn.' },
-      { num: '02', title: 'Lớp CRF', body: 'Một trường ngẫu nhiên có điều kiện mô hình hóa cấu trúc tuần tự mà quy tắc bỏ sót, sử dụng ngữ cảnh cục bộ để giải quyết các đoạn mơ hồ.' },
-      { num: '03', title: 'Trích xuất bằng transformer', body: 'DrBERT-7GB, được tinh chỉnh trên ba kho ngữ liệu ung bướu, xử lý các thực thể đòi hỏi hiểu biết ngữ nghĩa và chuyên môn thực sự.' },
-      { num: '04', title: 'Phân xử bằng LLM', body: 'Các xung đột còn lại và trường hợp biên được chuyển đến giai đoạn LLM để giải quyết mơ hồ lần cuối trước khi xuất kết quả.' },
+      { num: '02', title: 'Trích xuất bằng transformer', body: 'DrBERT-7GB, được tinh chỉnh trên ba kho ngữ liệu ung bướu, xử lý các thực thể đòi hỏi hiểu biết ngữ nghĩa và chuyên môn thực sự.' },
+      { num: '03', title: 'Phân xử bằng LLM', body: 'Các xung đột còn lại và trường hợp biên được chuyển đến giai đoạn LLM để giải quyết mơ hồ lần cuối trước khi xuất kết quả.' },
     ],
     aiAct: {
       title: 'Tuân thủ quy định — EU AI Act',
@@ -3457,9 +4232,9 @@ const vi: Dictionary = {
     label: 'Kết quả',
     title: 'Những gì phương pháp theo giai đoạn mang lại',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 trung bình — xác thực bên ngoài' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Trích xuất không cần GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Ghi chú lâm sàng AP-HP đã xác thực' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -3489,22 +4264,73 @@ const vi: Dictionary = {
     title: 'Dự án tiêu biểu',
     subtitle:
       'Bên cạnh DEMNE — các công cụ được xây dựng trọn vẹn cho một cuộc thi hackathon và các dự án học tập.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'Tháng 6/2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Một danh mục kỹ thuật số gồm các công cụ và ứng dụng hỗ trợ nhận thức cho người bị tổn thương não và khối u — hỗ trợ giao tiếp, trí nhớ và lập kế hoạch. Được xây dựng cho cuộc thi hackathon SN@SU, với giao diện Streamlit trên nền lưu trữ JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Tháng 12/2025',
-        title: 'Bảng điều khiển chất lượng không khí',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Một bảng điều khiển tương tác tái hiện 15 năm ô nhiễm không khí nền tại Pháp (2000–2015) dựa trên dữ liệu INERIS/Zenodo — lưu trữ bằng SQLite, biểu đồ Plotly và bản đồ nhiệt Leaflet. Được thực hiện cùng đồng đội William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -3616,7 +4442,7 @@ const id: Dictionary = {
     h1Pre: 'Mengekstrak biomarker dari teks klinis ',
     h1Accent: 'tanpa membangunkan GPU',
     h1Post: '.',
-    sub: 'Saya Clément Longeac. Saya sedang mengerjakan DEMNE, kerangka kerja routing yang memutuskan — untuk setiap jenis entitas — apakah regex, CRF, transformer, atau LLM adalah alat yang jujur untuk tugas tersebut. Hasil pertama: 93,7% entitas klinis diekstrak tanpa GPU, F1 = 0,941 pada 300 catatan AP-HP.',
+    sub: 'Saya Clément Longeac. Saya sedang mengerjakan DEMNE, kerangka kerja routing yang memutuskan — untuk setiap jenis entitas — apakah regex, CRF, transformer, atau LLM adalah alat yang jujur untuk tugas tersebut. Hasil pertama: 99,5% entitas klinis diekstrak tanpa GPU, F1 = 0,941 pada 300 catatan AP-HP.',
     ctaResearch: 'Lihat riset',
     ctaCV: 'Unduh CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, skema langsung',
@@ -3645,14 +4471,13 @@ const id: Dictionary = {
     tagline: 'NER klinis · korpus onkologi Prancis',
     p1: 'Model NER siap pakai gagal parah pada teks klinis Prancis: singkatan yang padat, format yang tidak konsisten antar sistem rumah sakit, serta terminologi penanda biologis yang hampir tidak muncul dalam data pelatihan umum. DEMNE mengatasi ini dengan pipeline bertahap alih-alih satu model — setiap tahap menangani apa yang paling dikuasainya, dan hanya meningkat ke model yang lebih berat bila perlu.',
     p2: 'Sistem ini di-fine-tune pada DrBERT-7GB di tiga korpus onkologi Prancis yang berbeda, dan menargetkan tujuh jenis entitas penanda biologis prioritas yang digunakan dalam pelaporan yang relevan dengan perawatan.',
-    tags: ['NLP klinis', 'CRF', 'Transformer', 'DrBERT-7GB', 'Onkologi Prancis'],
+    tags: ['NLP klinis', 'Transformer', 'DrBERT-7GB', 'Onkologi Prancis'],
     viewRepo: 'Lihat repositori',
     readMethodology: 'Baca metodologi',
     pipeline: [
       { num: '01', title: 'Tahap berbasis aturan', body: 'Pencocokan regex dan leksikon menangkap dengan biaya rendah entitas dengan keyakinan tinggi dan ambiguitas rendah — tanggal, dosis, singkatan penanda biologis standar.' },
-      { num: '02', title: 'Lapisan CRF', body: 'Conditional random field memodelkan struktur berurutan yang terlewat oleh aturan, menggunakan konteks lokal untuk menyelesaikan bagian yang ambigu.' },
-      { num: '03', title: 'Ekstraksi transformer', body: 'DrBERT-7GB, yang di-fine-tune pada tiga korpus onkologi, menangani entitas yang membutuhkan pemahaman semantik dan domain yang sesungguhnya.' },
-      { num: '04', title: 'Arbitrase LLM', body: 'Konflik yang tersisa dan kasus tepi dialihkan ke tahap LLM untuk disambiguasi akhir sebelum output.' },
+      { num: '02', title: 'Ekstraksi transformer', body: 'DrBERT-7GB, yang di-fine-tune pada tiga korpus onkologi, menangani entitas yang membutuhkan pemahaman semantik dan domain yang sesungguhnya.' },
+      { num: '03', title: 'Arbitrase LLM', body: 'Konflik yang tersisa dan kasus tepi dialihkan ke tahap LLM untuk disambiguasi akhir sebelum output.' },
     ],
     aiAct: {
       title: 'Keselarasan regulasi — EU AI Act',
@@ -3667,9 +4492,9 @@ const id: Dictionary = {
     label: 'Hasil',
     title: 'Apa yang diberikan pendekatan bertahap',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 rata-rata — validasi eksternal' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Ekstraksi tanpa GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Catatan klinis AP-HP tervalidasi' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -3698,22 +4523,73 @@ const id: Dictionary = {
     label: '05 — Proyek Pilihan',
     title: 'Proyek Pilihan',
     subtitle: 'Selain DEMNE — alat yang dibangun dari awal hingga akhir untuk hackathon dan tugas kuliah.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'Juni 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'Katalog digital berisi alat dan aplikasi kompensasi kognitif untuk penyandang cedera otak dan tumor — bantuan komunikasi, memori, dan perencanaan. Dibuat untuk hackathon SN@SU, dengan antarmuka Streamlit di atas penyimpanan berbasis JSON.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Des. 2025',
-        title: 'Dasbor Kualitas Udara',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Dasbor interaktif yang merekonstruksi 15 tahun polusi udara latar belakang di Prancis (2000–2015) dari data INERIS/Zenodo — penyimpanan SQLite, grafik Plotly, dan peta panas Leaflet. Dibuat bersama rekan satu tim William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -3824,7 +4700,7 @@ const sv: Dictionary = {
     h1Pre: 'Extraherar biomarkörer från klinisk text ',
     h1Accent: 'utan att väcka GPU:n',
     h1Post: '.',
-    sub: 'Jag är Clément Longeac. Jag arbetar med DEMNE, ett routningsramverk som för varje entitetstyp avgör om ett reguljärt uttryck, en CRF, en transformer eller en LLM är det ärliga verktyget för uppgiften. Första resultatet: 93,7 % av de kliniska entiteterna extraherade utan GPU, F1 = 0,941 på 300 AP-HP-anteckningar.',
+    sub: 'Jag är Clément Longeac. Jag arbetar med DEMNE, ett routningsramverk som för varje entitetstyp avgör om ett reguljärt uttryck, en CRF, en transformer eller en LLM är det ärliga verktyget för uppgiften. Första resultatet: 99,5 % av de kliniska entiteterna extraherade utan GPU, F1 = 0,941 på 300 AP-HP-anteckningar.',
     ctaResearch: 'Se forskningen',
     ctaCV: 'Ladda ner CV',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, schema i realtid',
@@ -3853,14 +4729,13 @@ const sv: Dictionary = {
     tagline: 'Klinisk NER · franska onkologikorpusar',
     p1: 'Färdiga NER-modeller misslyckas rejält med fransk klinisk text: täta förkortningar, inkonsekvent formatering mellan sjukhussystem, och biomarkörterminologi som knappt förekommer i allmänna träningsdata. DEMNE hanterar detta med en stegvis pipeline istället för en enda modell — varje steg gör det den faktiskt är bra på, och eskalerar bara till en tyngre modell vid behov.',
     p2: 'Systemet är finjusterat på DrBERT-7GB över tre olika franska onkologikorpusar, och riktar in sig på sju prioriterade biomarkör-entitetstyper som används i behandlingsrelevant rapportering.',
-    tags: ['Klinisk NLP', 'CRF', 'Transformers', 'DrBERT-7GB', 'Fransk onkologi'],
+    tags: ['Klinisk NLP', 'Transformers', 'DrBERT-7GB', 'Fransk onkologi'],
     viewRepo: 'Visa repositoriet',
     readMethodology: 'Läs metodiken',
     pipeline: [
       { num: '01', title: 'Regelbaserat steg', body: 'Matchning med reguljära uttryck och lexikon fångar billigt entiteter med hög säkerhet och låg tvetydighet — datum, doser, standardförkortningar för biomarkörer.' },
-      { num: '02', title: 'CRF-lager', body: 'Ett villkorligt slumpfält modellerar den sekventiella struktur som reglerna missar, med lokal kontext för att lösa tvetydiga avsnitt.' },
-      { num: '03', title: 'Extraktion via transformer', body: 'DrBERT-7GB, finjusterad över tre onkologikorpusar, hanterar de entiteter som kräver verklig semantisk och domänförståelse.' },
-      { num: '04', title: 'LLM-skiljedom', body: 'Kvarvarande konflikter och gränsfall dirigeras till ett LLM-steg för slutlig disambiguering före utdata.' },
+      { num: '02', title: 'Extraktion via transformer', body: 'DrBERT-7GB, finjusterad över tre onkologikorpusar, hanterar de entiteter som kräver verklig semantisk och domänförståelse.' },
+      { num: '03', title: 'LLM-skiljedom', body: 'Kvarvarande konflikter och gränsfall dirigeras till ett LLM-steg för slutlig disambiguering före utdata.' },
     ],
     aiAct: {
       title: 'Regelefterlevnad — EU AI Act',
@@ -3875,9 +4750,9 @@ const sv: Dictionary = {
     label: 'Resultat',
     title: 'Vad det stegvisa tillvägagångssättet ger',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Genomsnittlig F1 — extern validering' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'GPU-fri extraktion' },
-      { value: 300, suffix: '', color: 'text', label: 'Validerade AP-HP-journalanteckningar' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -3906,22 +4781,73 @@ const sv: Dictionary = {
     label: '05 — Utvalda projekt',
     title: 'Utvalda projekt',
     subtitle: 'Utöver DEMNE — verktyg byggda från grunden för en hackathon och kursprojekt.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'Juni 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'En digital katalog över kognitiva hjälpmedel och appar för personer med hjärnskador och tumörer — stöd för kommunikation, minne och planering. Byggd för SN@SU-hackathonet, med ett Streamlit-gränssnitt ovanpå en JSON-baserad lagring.',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025',
-        title: 'Luftkvalitetspanel',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'En interaktiv instrumentpanel som rekonstruerar 15 års bakgrundsluftförorening i Frankrike (2000–2015) utifrån INERIS/Zenodo-data — SQLite-lagring, Plotly-diagram och en Leaflet-värmekarta. Byggd tillsammans med lagkamraten William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -4032,7 +4958,7 @@ const uk: Dictionary = {
     h1Pre: 'Видобуваю біомаркери з клінічного тексту ',
     h1Accent: 'не пробуджуючи GPU',
     h1Post: '.',
-    sub: 'Я Clément Longeac. Я працюю над DEMNE — фреймворком маршрутизації, який для кожного типу сутності вирішує, чи є чесним інструментом для завдання регулярний вираз, CRF, трансформер або LLM. Перший результат: 93,7% клінічних сутностей видобуто без GPU, F1 = 0,941 на 300 нотатках AP-HP.',
+    sub: 'Я Clément Longeac. Я працюю над DEMNE — фреймворком маршрутизації, який для кожного типу сутності вирішує, чи є чесним інструментом для завдання регулярний вираз, CRF, трансформер або LLM. Перший результат: 99,5% клінічних сутностей видобуто без GPU, F1 = 0,941 на 300 нотатках AP-HP.',
     ctaResearch: 'Переглянути дослідження',
     ctaCV: 'Завантажити резюме',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM, схема в реальному часі',
@@ -4061,14 +4987,13 @@ const uk: Dictionary = {
     tagline: 'Клінічний NER · французькі онкологічні корпуси',
     p1: 'Готові моделі NER суттєво програють на французькому клінічному тексті: щільні скорочення, неузгоджене форматування між лікарняними системами та термінологія біомаркерів, яка майже не трапляється в загальних навчальних даних. DEMNE вирішує це за допомогою поетапного конвеєра замість єдиної моделі — кожен етап робить те, що вміє найкраще, і переходить до важчої моделі лише за потреби.',
     p2: 'Систему донавчено на DrBERT-7GB на трьох різних французьких онкологічних корпусах, і вона орієнтована на сім пріоритетних типів сутностей-біомаркерів, які використовуються у звітності, релевантній для лікування.',
-    tags: ['Клінічний NLP', 'CRF', 'Трансформери', 'DrBERT-7GB', 'Французька онкологія'],
+    tags: ['Клінічний NLP', 'Трансформери', 'DrBERT-7GB', 'Французька онкологія'],
     viewRepo: 'Переглянути репозиторій',
     readMethodology: 'Читати методологію',
     pipeline: [
       { num: '01', title: 'Етап на основі правил', body: 'Зіставлення за регулярними виразами та словниками недорого вловлює сутності з високою впевненістю та низькою неоднозначністю — дати, дозування, стандартні скорочення біомаркерів.' },
-      { num: '02', title: 'Шар CRF', body: 'Умовне випадкове поле моделює послідовну структуру, яку пропускають правила, використовуючи локальний контекст для розв\'язання неоднозначних фрагментів.' },
-      { num: '03', title: 'Вилучення за допомогою трансформера', body: 'DrBERT-7GB, донавчений на трьох онкологічних корпусах, обробляє сутності, що потребують справжнього семантичного та предметного розуміння.' },
-      { num: '04', title: 'Арбітраж LLM', body: 'Залишкові конфлікти та граничні випадки направляються на етап LLM для остаточного усунення неоднозначності перед виводом.' },
+      { num: '02', title: 'Вилучення за допомогою трансформера', body: 'DrBERT-7GB, донавчений на трьох онкологічних корпусах, обробляє сутності, що потребують справжнього семантичного та предметного розуміння.' },
+      { num: '03', title: 'Арбітраж LLM', body: 'Залишкові конфлікти та граничні випадки направляються на етап LLM для остаточного усунення неоднозначності перед виводом.' },
     ],
     aiAct: {
       title: 'Регуляторна відповідність — EU AI Act',
@@ -4083,9 +5008,9 @@ const uk: Dictionary = {
     label: 'Результати',
     title: 'Що дає поетапний підхід',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'Середній F1 — зовнішня валідація' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'Видобування без GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'Перевірені клінічні записи AP-HP' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -4115,22 +5040,73 @@ const uk: Dictionary = {
     title: 'Вибрані проєкти',
     subtitle:
       'Окрім DEMNE — інструменти, створені від початку до кінця для хакатону та навчальних проєктів.',
+    more: 'Learn more →',
     items: [
       {
-        date: 'Червень 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          "Цифровий каталог інструментів і застосунків когнітивної компенсації для людей із черепно-мозковими травмами та пухлинами — підтримка спілкування, пам'яті та планування. Створено для хакатону SN@SU, з інтерфейсом на Streamlit поверх сховища на основі JSON.",
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Груд. 2025',
-        title: 'Панель якості повітря',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'Інтерактивна панель, що реконструює 15 років фонового забруднення повітря у Франції (2000–2015) на основі даних INERIS/Zenodo — зберігання в SQLite, графіки Plotly та теплова карта Leaflet. Створена разом з напарником William Zee.',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },
@@ -4241,7 +5217,7 @@ const th: Dictionary = {
     h1Pre: 'สกัดไบโอมาร์กเกอร์จากข้อความทางคลินิก ',
     h1Accent: 'โดยไม่ต้องปลุก GPU',
     h1Post: '',
-    sub: 'ผมชื่อ Clément Longeac ผมกำลังพัฒนา DEMNE ซึ่งเป็นเฟรมเวิร์กสำหรับจัดเส้นทางที่ตัดสินใจ — สำหรับเอนทิตีแต่ละประเภท — ว่า regex, CRF, transformer หรือ LLM คือเครื่องมือที่ซื่อตรงที่สุดสำหรับงานนั้น ผลลัพธ์แรก: สกัดเอนทิตีทางคลินิกได้ 93.7% โดยไม่ใช้ GPU ด้วยค่า F1 = 0.941 จากบันทึก AP-HP จำนวน 300 รายการ',
+    sub: 'ผมชื่อ Clément Longeac ผมกำลังพัฒนา DEMNE ซึ่งเป็นเฟรมเวิร์กสำหรับจัดเส้นทางที่ตัดสินใจ — สำหรับเอนทิตีแต่ละประเภท — ว่า regex, CRF, transformer หรือ LLM คือเครื่องมือที่ซื่อตรงที่สุดสำหรับงานนั้น ผลลัพธ์แรก: สกัดเอนทิตีทางคลินิกได้ 99.5% โดยไม่ใช้ GPU ด้วยค่า F1 = 0.941 จากบันทึก AP-HP จำนวน 300 รายการ',
     ctaResearch: 'ดูงานวิจัย',
     ctaCV: 'ดาวน์โหลดเรซูเม่',
     caption: 'DEMNE — Rules → CRF → Transformer → LLM แผนผังแบบสด',
@@ -4270,14 +5246,13 @@ const th: Dictionary = {
     tagline: 'NER ทางคลินิก · คลังข้อมูลมะเร็งวิทยาภาษาฝรั่งเศส',
     p1: 'โมเดล NER สำเร็จรูปมักล้มเหลวอย่างหนักกับข้อความทางคลินิกภาษาฝรั่งเศส: คำย่อที่หนาแน่น รูปแบบที่ไม่สอดคล้องกันระหว่างระบบโรงพยาบาล และคำศัพท์ตัวบ่งชี้ทางชีวภาพที่แทบไม่ปรากฏในข้อมูลฝึกฝนทั่วไป DEMNE แก้ปัญหานี้ด้วยไปป์ไลน์แบบขั้นตอนแทนที่จะใช้โมเดลเดียว — แต่ละขั้นตอนจัดการสิ่งที่มันทำได้ดีที่สุด และจะยกระดับไปยังโมเดลที่หนักกว่าเมื่อจำเป็นเท่านั้น',
     p2: 'ระบบนี้ปรับแต่ง DrBERT-7GB บนคลังข้อมูลมะเร็งวิทยาภาษาฝรั่งเศสสามชุดที่แตกต่างกัน และมุ่งเป้าไปที่เอนทิตีตัวบ่งชี้ทางชีวภาพเจ็ดประเภทสำคัญที่ใช้ในรายงานที่เกี่ยวข้องกับการรักษา',
-    tags: ['NLP ทางคลินิก', 'CRF', 'Transformer', 'DrBERT-7GB', 'มะเร็งวิทยาฝรั่งเศส'],
+    tags: ['NLP ทางคลินิก', 'Transformer', 'DrBERT-7GB', 'มะเร็งวิทยาฝรั่งเศส'],
     viewRepo: 'ดูรีพอสิทอรี',
     readMethodology: 'อ่านวิธีการ',
     pipeline: [
       { num: '01', title: 'ขั้นตอนที่ใช้กฎเกณฑ์', body: 'การจับคู่ด้วย regex และพจนานุกรมช่วยดักจับเอนทิตีที่มีความเชื่อมั่นสูงและความกำกวมต่ำด้วยต้นทุนต่ำ เช่น วันที่ ขนาดยา คำย่อมาตรฐานของตัวบ่งชี้ทางชีวภาพ' },
-      { num: '02', title: 'ชั้น CRF', body: 'Conditional random field จำลองโครงสร้างเชิงลำดับที่กฎเกณฑ์พลาดไป โดยใช้บริบทท้องถิ่นในการแก้ไขส่วนที่กำกวม' },
-      { num: '03', title: 'การสกัดด้วย Transformer', body: 'DrBERT-7GB ที่ปรับแต่งบนคลังข้อมูลมะเร็งวิทยาสามชุด จัดการกับเอนทิตีที่ต้องการความเข้าใจเชิงความหมายและโดเมนอย่างแท้จริง' },
-      { num: '04', title: 'การตัดสินด้วย LLM', body: 'ข้อขัดแย้งที่เหลือและกรณีชายขอบจะถูกส่งไปยังขั้นตอน LLM เพื่อขจัดความกำกวมขั้นสุดท้ายก่อนส่งออกผลลัพธ์' },
+      { num: '02', title: 'การสกัดด้วย Transformer', body: 'DrBERT-7GB ที่ปรับแต่งบนคลังข้อมูลมะเร็งวิทยาสามชุด จัดการกับเอนทิตีที่ต้องการความเข้าใจเชิงความหมายและโดเมนอย่างแท้จริง' },
+      { num: '03', title: 'การตัดสินด้วย LLM', body: 'ข้อขัดแย้งที่เหลือและกรณีชายขอบจะถูกส่งไปยังขั้นตอน LLM เพื่อขจัดความกำกวมขั้นสุดท้ายก่อนส่งออกผลลัพธ์' },
     ],
     aiAct: {
       title: 'ความสอดคล้องด้านกฎระเบียบ — EU AI Act',
@@ -4292,9 +5267,9 @@ const th: Dictionary = {
     label: 'ผลลัพธ์',
     title: 'สิ่งที่แนวทางแบบขั้นตอนมอบให้',
     items: [
-      { value: 0.941, decimals: 3, suffix: '', color: 'cyan', label: 'F1 เฉลี่ย — การตรวจสอบภายนอก' },
-      { value: 93.7, decimals: 1, suffix: '%', color: 'violet', label: 'การสกัดโดยไม่ใช้ GPU' },
-      { value: 300, suffix: '', color: 'text', label: 'บันทึกทางคลินิกของ AP-HP ที่ผ่านการตรวจสอบ' },
+      { value: 99.5, decimals: 1, suffix: '%', color: 'cyan', label: 'of mentions routed to rules (unseen AP-HP cohort, 411/413)' },
+      { value: 0.941, decimals: 3, suffix: '', color: 'violet', label: 'rule F1 vs 0.358 for a fine-tuned DrBERT' },
+      { value: 0.866, decimals: 3, suffix: '', color: 'text', label: 'leave-one-corpus-out routing concordance' },
     ],
   },
   experience: {
@@ -4323,22 +5298,73 @@ const th: Dictionary = {
     label: '05 — ผลงานเด่น',
     title: 'ผลงานเด่น',
     subtitle: 'นอกเหนือจาก DEMNE — เครื่องมือที่สร้างขึ้นตั้งแต่ต้นจนจบสำหรับแฮกกาธอนและงานในรายวิชา',
+    more: 'Learn more →',
     items: [
       {
-        date: 'มิถุนายน 2026',
+        date: 'June 2026 · SN@SU hackathon',
         title: 'NeuroStep',
         description:
-          'แคตตาล็อกดิจิทัลของเครื่องมือและแอปช่วยเสริมการรับรู้สำหรับผู้ที่มีภาวะสมองบาดเจ็บและเนื้องอก — รองรับด้านการสื่อสาร ความจำ และการวางแผน สร้างขึ้นสำหรับแฮกกาธอน SN@SU ด้วยอินเทอร์เฟซ Streamlit บนที่เก็บข้อมูลแบบ JSON',
-        tags: ['Python', 'Streamlit', 'JSON'],
+          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+        longBody:
+          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+        tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
+        image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'ธ.ค. 2025',
-        title: 'แดชบอร์ดคุณภาพอากาศ',
+        date: 'Dec. 2025 · Team project',
+        title: 'Air Quality Dashboard',
         description:
-          'แดชบอร์ดเชิงโต้ตอบที่จำลองมลพิษทางอากาศพื้นหลังในฝรั่งเศสย้อนหลัง 15 ปี (2000–2015) จากข้อมูล INERIS/Zenodo — จัดเก็บด้วย SQLite กราฟด้วย Plotly และแผนที่ความร้อนด้วย Leaflet จัดทำร่วมกับเพื่อนร่วมทีม William Zee',
-        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet'],
+          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+        longBody:
+          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+        tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
+        image: '/images/projects/air-quality.jpg',
+      },
+      {
+        date: '2025 · Course project',
+        title: 'Face Recognition with Deep Learning',
+        description:
+          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+        longBody:
+          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+        tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
+        url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
+        image: '/images/projects/face.svg',
+      },
+      {
+        date: '2025 · Pair project',
+        title: 'TBA — Text Adventure Game',
+        description:
+          'A terminal text-adventure game in Python, with an object-oriented design.',
+        longBody:
+          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+        tags: ['Python', 'OOP'],
+        url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
+        image: '/images/projects/tba.svg',
+      },
+      {
+        date: 'Feb. 2025 · Team project',
+        title: 'Marmiton Data Intelligence',
+        description:
+          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+        longBody:
+          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+        tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
+        url: 'https://github.com/william-zee/Projet_Data_Engineering',
+        image: '/images/projects/marmiton.svg',
+      },
+      {
+        date: '2025 · Synchrotron SOLEIL',
+        title: 'Debian ROCm CI',
+        description:
+          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+        longBody:
+          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+        url: 'https://salsa.debian.org/Clement_LONGEAC',
+        image: '/images/projects/debian.svg',
       },
     ],
   },

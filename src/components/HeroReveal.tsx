@@ -1,49 +1,28 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
-const ease = [0.16, 1, 0.3, 1] as const;
+// Pure-CSS entrance. The content is in the DOM and visible by default; the
+// `.hero-rise` class only adds a short fade-up that always finishes visible,
+// with no framer-motion / hydration dependency (fixes the blank-hero bug).
 
 export function RevealBlock({
   children,
   delay = 0,
-  y = 6,
 }: {
   children: ReactNode;
   delay?: number;
   y?: number;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay, ease }}
-    >
+    <div className="hero-rise" style={{ animationDelay: `${delay * 0.45}s` }}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 export function RevealWords({ text, delay = 0 }: { text: string; delay?: number }) {
-  const words = text.split(' ');
   return (
-    <>
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.5,
-            delay: delay + i * 0.04,
-            ease,
-          }}
-          className="reveal-word"
-        >
-          {word}
-        </motion.span>
-      ))}
-    </>
+    <span className="hero-rise" style={{ animationDelay: `${delay * 0.45}s` }}>
+      {text}
+    </span>
   );
 }

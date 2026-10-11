@@ -2,7 +2,10 @@
 
 import { useEffect } from 'react';
 import Nav from './Nav';
+import FloatingNav from './FloatingNav';
 import Hero from './Hero';
+import NodeField from './NodeField';
+import AnimatedSection from './AnimatedSection';
 import About from './About';
 import Research from './Research';
 import Experience from './Experience';
@@ -26,17 +29,37 @@ export default function PageContent({ lang }: { lang: Lang }) {
 
   return (
     <>
+      <NodeField fixed density={34000} className="ambient-field" />
       <Nav dict={dict} lang={lang} />
+      <FloatingNav dict={dict} />
       <Hero dict={dict} />
-      <About dict={dict} />
-      <Research dict={dict} />
-      <Experience dict={dict} />
-      <Publications dict={dict} />
-      <Projects dict={dict} />
-      <TechStack dict={dict} />
-      <AreasOfFocus dict={dict} />
-      <Writing dict={dict} lang={lang} />
-      <Contact dict={dict} />
+      <AnimatedSection>
+        <About dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Research dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Experience dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Publications dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Projects dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <TechStack dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <AreasOfFocus dict={dict} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Writing dict={dict} lang={lang} />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Contact dict={dict} />
+      </AnimatedSection>
       <Footer dict={dict} />
     </>
   );

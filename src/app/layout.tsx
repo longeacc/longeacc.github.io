@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { NoiseBackground } from '@/components/NoiseBackground';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://clement-longeac.com/'),
@@ -68,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
         {/* eslint-disable-next-line react/no-danger */}
@@ -83,7 +82,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <NoiseBackground />
         {children}
       </body>
     </html>

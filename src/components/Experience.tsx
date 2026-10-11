@@ -20,6 +20,15 @@ export default function Experience({ dict }: { dict: Dictionary }) {
               <h3>{item.title}</h3>
               <div className="tl-org">{item.org}</div>
               <p>{item.body}</p>
+              {item.skills && item.skills.length > 0 && (
+                <div className="tl-skills">
+                  {item.skills.map((skill) => (
+                    <span className="tl-skill" key={skill}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

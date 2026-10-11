@@ -1,33 +1,31 @@
-'use client';
-
-import { motion } from 'framer-motion';
-import PipelineCanvas from './PipelineCanvas';
 import { RevealBlock, RevealWords } from './HeroReveal';
+import InteractiveBackground from './InteractiveBackground';
 import type { Dictionary } from '@/lib/dictionaries';
 
 export default function Hero({ dict }: { dict: Dictionary }) {
   const { hero } = dict;
   return (
     <header className="hero">
+      <InteractiveBackground />
       <div className="wrap">
         <div className="hero-text">
-          <RevealBlock delay={0.35}>
+          <RevealBlock delay={0.15}>
             <div className="kicker">
               <span className="dot" />
               {hero.kicker}
             </div>
           </RevealBlock>
           <h1>
-            <RevealWords text={hero.h1Pre.trim()} delay={0.65} />{' '}
+            <RevealWords text={hero.h1Pre.trim()} delay={0.3} />{' '}
             <span className="accent">
-              <RevealWords text={hero.h1Accent.trim()} delay={0.85} />
+              <RevealWords text={hero.h1Accent.trim()} delay={0.45} />
             </span>{' '}
-            <RevealWords text={hero.h1Post.trim()} delay={1.05} />
+            <RevealWords text={hero.h1Post.trim()} delay={0.6} />
           </h1>
-          <RevealBlock delay={1.2}>
+          <RevealBlock delay={0.75}>
             <p className="hero-sub">{hero.sub}</p>
           </RevealBlock>
-          <RevealBlock delay={1.5}>
+          <RevealBlock delay={0.9}>
             <div className="cta-row">
               <a href="#research" className="btn btn-primary">
                 {hero.ctaResearch}
@@ -39,15 +37,17 @@ export default function Hero({ dict }: { dict: Dictionary }) {
           </RevealBlock>
         </div>
 
-        <motion.div
-          className="hero-visual"
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 1.7, ease: 'easeOut' }}
-        >
-          <PipelineCanvas />
-          <div className="caption">{hero.caption}</div>
-        </motion.div>
+        <figure className="hero-visual" style={{ margin: 0 }}>
+          <div className="mat">
+            <img
+              src="/images/demne-pipeline.png"
+              alt="DEMNE routing decision graph: entity metrics route to RULES, TBM or LLM"
+              width={1100}
+              height={620}
+            />
+          </div>
+          <figcaption className="caption">{hero.caption}</figcaption>
+        </figure>
       </div>
     </header>
   );
