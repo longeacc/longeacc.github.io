@@ -40,10 +40,10 @@ export default function Hero({ dict }: { dict: Dictionary }) {
         <figure className="hero-visual" style={{ margin: 0 }}>
           <div className="mat">
             <img
-              src="/images/demne-pipeline.png"
+              src="/images/demne-graph.svg"
               alt="DEMNE routing decision graph: entity metrics route to RULES, TBM or LLM"
-              width={1100}
-              height={620}
+              width={940}
+              height={470}
             />
           </div>
           <figcaption className="caption">{hero.caption}</figcaption>

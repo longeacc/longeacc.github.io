@@ -1,25 +1,15 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import NodeField from './NodeField';
-import type { Dictionary, Project } from '@/lib/dictionaries';
+import { pathForLang } from '@/lib/languages';
+import { slugForProject } from '@/lib/projects';
+import type { Dictionary, Lang } from '@/lib/dictionaries';
 
 // one distinct, muted accent per project — gives each card its own hover identity
 const ACCENTS = ['#36457C', '#2E6E74', '#6B4F9E', '#4A5468', '#9A6B3A', '#3C7A57'];
 
-export default function Projects({ dict }: { dict: Dictionary }) {
-  const { projects, research } = dict;
-  const [open, setOpen] = useState<Project | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(null);
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
-
+export default function Projects({ dict, lang }: { dict: Dictionary; lang: Lang }) {
+  const { projects } = dict;
+  const home = pathForLang(lang);
   const moreLabel = projects.more ?? 'En savoir plus →';
 
   return (
@@ -33,19 +23,7 @@ export default function Projects({ dict }: { dict: Dictionary }) {
 
         <div className="projects-grid">
           {projects.items.map((project, i) => (
-            <div
-              className="project-card"
-              key={project.title}
-              role="button"
-              tabIndex={0}
-              onClick={() => setOpen(project)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setOpen(project);
-                }
-              }}
-            >
+            <Link className="project-card" key={project.title} href={`${home}projects/${slugForProject(i)}/`}>
               {project.image && (
                 <div className="project-cover">
                   <img src={project.image} alt={project.title} loading="lazy" />
@@ -70,55 +48,10 @@ export default function Projects({ dict }: { dict: Dictionary }) {
                 </div>
                 <div className="project-more">{moreLabel}</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
-
-      {open && (
-        <div
-          className="pm-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label={open.title}
-          onClick={() => setOpen(null)}
-        >
-          <div className="pm-dialog" onClick={(e) => e.stopPropagation()}>
-            <button className="pm-close" onClick={() => setOpen(null)} aria-label="Fermer">
-              ×
-            </button>
-            {open.image && (
-              <div className="pm-cover">
-                <img src={open.image} alt={open.title} />
-              </div>
-            )}
-            <div className="pm-body">
-              <div className="pm-meta">{open.date}</div>
-              <h3>{open.title}</h3>
-              {(open.longBody ?? open.description).split('\n').map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
-              <div className="tag-row">
-                {open.tags.map((tag) => (
-                  <span className="tag" key={tag}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div className="link-row" style={{ marginTop: 18 }}>
-                <a href={open.url} target="_blank" rel="noopener">
-                  {research.viewRepo} →
-                </a>
-                {open.demo && (
-                  <a href={open.demo} target="_blank" rel="noopener">
-                    Demo →
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

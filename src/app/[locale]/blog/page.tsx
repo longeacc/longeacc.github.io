@@ -37,6 +37,10 @@ export default async function BlogIndex({
   const dict = dictionaries[locale];
   const home = pathForLang(locale);
 
+  const published = dict.writing.posts
+    .map((post, i) => ({ post, i }))
+    .filter((x) => x.post.content);
+
   return (
     <>
       <Nav dict={dict} lang={locale} />
@@ -44,7 +48,7 @@ export default async function BlogIndex({
         <div className="wrap blog-index-wrap">
           <h1 className="blog-index-title">Blog</h1>
           <div className="blog-list">
-            {dict.writing.posts.map((post, i) => (
+            {published.map(({ post, i }) => (
               <Link
                 key={post.title}
                 href={`${home}blog/${slugForPost(locale, i)}/`}

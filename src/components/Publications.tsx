@@ -1,7 +1,13 @@
-import type { Dictionary } from '@/lib/dictionaries';
+import Link from 'next/link';
+import { pathForLang } from '@/lib/languages';
+import type { Dictionary, Lang } from '@/lib/dictionaries';
 
-export default function Publications({ dict }: { dict: Dictionary }) {
+export default function Publications({ dict, lang }: { dict: Dictionary; lang: Lang }) {
   const { publications } = dict;
+  const fr = dict.htmlLang.startsWith('fr');
+  const home = pathForLang(lang);
+  const moreLabel = fr ? 'Voir les résultats →' : 'View the results →';
+
   return (
     <section id="publications" className="section-alt">
       <div className="wrap">
@@ -11,14 +17,15 @@ export default function Publications({ dict }: { dict: Dictionary }) {
           <p>{publications.subtitle}</p>
         </div>
 
-        <div className="publication-card">
+        <Link href={`${home}publications/demne/`} className="publication-card publication-card-clickable">
           <h3>{publications.entryTitle}</h3>
           <div className="pub-authors">{publications.authors}</div>
           <div className="pub-venue">
             {publications.journal} — {publications.status}
           </div>
           <p>{publications.description}</p>
-        </div>
+          <div className="project-more">{moreLabel}</div>
+        </Link>
       </div>
     </section>
   );

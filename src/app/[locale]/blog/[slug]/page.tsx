@@ -63,12 +63,16 @@ export default async function BlogPost({
             ))}
           </div>
           <hr className="blog-article-rule" />
-          <div className="prose">
-            <p>{post.body}</p>
-            <p className="blog-article-placeholder">
-              Full article coming soon — check back after publication.
-            </p>
-          </div>
+          {post.content ? (
+            <div className="prose" dangerouslySetInnerHTML={{ __html: post.content }} />
+          ) : (
+            <div className="prose">
+              <p>{post.body}</p>
+              <p className="blog-article-placeholder">
+                Full article coming soon — check back after publication.
+              </p>
+            </div>
+          )}
         </div>
       </article>
       <Footer dict={dict} />

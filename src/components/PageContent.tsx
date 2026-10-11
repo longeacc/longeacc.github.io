@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import Nav from './Nav';
 import FloatingNav from './FloatingNav';
 import Hero from './Hero';
-import NodeField from './NodeField';
 import AnimatedSection from './AnimatedSection';
 import About from './About';
 import Research from './Research';
@@ -29,7 +28,6 @@ export default function PageContent({ lang }: { lang: Lang }) {
 
   return (
     <>
-      <NodeField fixed density={34000} className="ambient-field" />
       <Nav dict={dict} lang={lang} />
       <FloatingNav dict={dict} />
       <Hero dict={dict} />
@@ -43,10 +41,10 @@ export default function PageContent({ lang }: { lang: Lang }) {
         <Experience dict={dict} />
       </AnimatedSection>
       <AnimatedSection>
-        <Publications dict={dict} />
+        <Publications dict={dict} lang={lang} />
       </AnimatedSection>
       <AnimatedSection>
-        <Projects dict={dict} />
+        <Projects dict={dict} lang={lang} />
       </AnimatedSection>
       <AnimatedSection>
         <TechStack dict={dict} />

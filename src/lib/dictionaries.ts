@@ -14,7 +14,7 @@ export type Metric = {
   label: string;
 };
 export type TimelineItem = { date: string; title: string; org: string; body: string; current?: boolean; skills?: string[] };
-export type WritingPost = { status: string; title: string; body: string };
+export type WritingPost = { status: string; title: string; body: string; content?: string };
 export type Project = {
   date: string;
   title: string;
@@ -165,23 +165,22 @@ const en: Dictionary = {
     menuToggleLabel: 'Toggle menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Extracting biomarkers from clinical text ',
     h1Accent: 'without waking the GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: "I'm Clément Longeac. I build DEMNE, a routing framework that picks, per entity type, the lightest method that stays reliable — rules, a transformer, or an LLM. On an unseen AP-HP cohort it routes 99.5% of mentions to auditable rules at F1 0.941, where a fine-tuned transformer reaches 0.358.",
     ctaResearch: 'See the research',
     ctaCV: 'Download CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, live schematic',
+    caption: 'DEMNE — decision graph: entity metrics route to Rules, TBM or LLM',
   },
   about: {
     label: '01 — About',
     title: 'From tutoring math to modeling tumor markers',
-    p1: "I'm a fourth-year student at ESIEE Paris, specializing in Data Science & AI, and enrolled in the school's Tremplin Recherche track — a program built for students heading toward doctoral research rather than a standard industry placement.",
+    p1: "I'm a fifth-year student at ESIEE Paris, specializing in Data Science & AI, and enrolled in the school's Tremplin Recherche track — a program built for students heading toward doctoral research rather than a standard industry placement.",
     p2: 'My work centers on making unstructured clinical text usable for research: extracting the biomarkers, staging information, and treatment details buried in French oncology reports, where general-purpose NLP tools consistently fail on domain vocabulary and document structure.',
     p3: "Alongside my studies I tutor mathematics and physics-chemistry through Complétude, and I'm preparing applications for a CIFRE industrial PhD in biomedical AI at Sorbonne University.",
-    visionLine:
-      "Longer term, the same discipline — pulling reliable structure out of messy, high-stakes text — is what draws me to AI safety research: building and evaluating world models through AMI Labs and the Anthropic Fellows Program. (Draft line — replace with your own wording.)",
+    visionLine: '',
     facts: [
       { dt: 'Institution', dd: 'ESIEE Paris' },
       { dt: 'Program', dd: 'Data Science & AI (DSIA)' },
@@ -192,7 +191,7 @@ const en: Dictionary = {
   },
   research: {
     label: '02 — Research',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'A hybrid named-entity recognition pipeline for French oncology clinical text.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Clinical NER · French oncology corpora',
@@ -225,7 +224,7 @@ const en: Dictionary = {
         {
           code: 'Art. 12',
           label: 'Record-keeping',
-          desc: 'Every extraction decision is traceable to the stage (rules, CRF, transformer, or LLM) and confidence score that produced it, enabling automatic audit logging.',
+          desc: 'Every extraction decision is traceable to the stage (rules, transformer, or LLM) and confidence score that produced it, enabling automatic audit logging.',
         },
         {
           code: 'Art. 14',
@@ -444,14 +443,15 @@ const en: Dictionary = {
     subtitle: 'Longer write-ups on the methods, dead ends, and decisions behind the work above.',
     posts: [
       {
-        status: 'Draft — coming soon',
+        status: 'Published · Oct 2026',
         title: 'Why French clinical NER breaks general-purpose models',
         body: 'A walkthrough of where standard NER pipelines fail on French oncology reports, and what that implies for how DEMNE is structured.',
+        content: `<p>Pull up a French oncology report and most off-the-shelf NER models stumble within the first sentence. The vocabulary is dense and abbreviated (ER, PR, HER2, Ki67, FISH), the formatting shifts from one hospital to the next, and the biomarker terminology that matters is almost absent from the corpora these models were trained on. The usual reflex &mdash; throw a large model at it &mdash; works, but it is expensive, opaque, and hard to defend to a clinician or an auditor.</p><h2>Not every entity needs an LLM</h2><p>DEMNE starts from a blunt observation: the entities in these reports are not equally hard. A biopsy mention is written in a handful of stable ways; a drug name can appear in a hundred. So instead of one model for everything, DEMNE measures each entity type and sends it to the lightest method that is reliable enough &mdash; a deterministic rule, a fine-tuned transformer, or an LLM only as a last resort.</p><p>The measurement is five corpus metrics computed from the annotations: how templateable the surface form is, how homogeneous the vocabulary is, whether a small keyword set is discriminative, how often the mention sits under negation or contradiction, and whether there is enough labelled data to train a supervised model at all. A deterministic decision graph turns those numbers into a tier, and its 17 thresholds are calibrated with a multi-objective search that penalises sending an entity to a method that is too weak twice as hard as sending it to one that is merely too expensive.</p><h2>What it buys</h2><p>On the oncology calibration set (59 entity types), the routing agrees with the expert reference tier with a concordance of 0.954 and a leave-one-corpus-out estimate of 0.866 &mdash; well above any fixed-tier baseline (always-rules reaches 0.729, always-LLM 0.148). The more convincing test is external: applied without any retuning to 300 AP-HP CT-scan reports from cancer sites the model had never seen, DEMNE routed 99.5% of highlighted mentions (411 of 413) to deterministic rules. Those rules reached a mean F1 of 0.941, while a transformer fine-tuned on the same entities under a realistic hospital budget managed only 0.358.</p><p>In other words: for the standardized entities that dominate oncology reporting, rules were not just cheaper &mdash; they were better, and every rule decision traces back to an explicit condition, which is exactly what Articles 12 and 14 of the EU AI Act ask for.</p><h2>Where it stops</h2><p>I want to be honest about the limits. The reference standard is small &mdash; 92 entity types, 59 of them in oncology &mdash; so single-corpus scores are optimistic and only relative comparisons hold. The LLM tier was never evaluated end to end on the external cohort; its one routed entity was too rare. And the calibration does not transfer across domains: move to a different clinical genre or language and concordance drops to 0.45&ndash;0.73, so the thresholds have to be refit. DEMNE is a proof of feasibility, not a finished product.</p><h2>Why it matters</h2><p>The point is not that rules beat transformers. It is that &ldquo;which method&rdquo; is a question you can answer per entity, from measurable properties of the text, instead of defaulting to the heaviest model and hoping. For clinical NLP &mdash; where cost, auditability and trust all matter at once &mdash; that framing is worth more than another percentage point on a benchmark.</p><p>The code and the full method are on <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; the manuscript is in preparation.</p>`,
       },
       {
         status: 'Draft — coming soon',
         title: 'Staged extraction vs. a single large model',
-        body: 'The case for routing entities through rules, a CRF, and a fine-tuned transformer before ever calling an LLM — and what it costs to get wrong.',
+        body: 'The case for routing entities through rules and a fine-tuned transformer before ever calling an LLM — and what it costs to get wrong.',
       },
     ],
   },
@@ -489,23 +489,23 @@ const fr: Dictionary = {
     menuToggleLabel: 'Ouvrir le menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · En recherche d\'un stage de recherche, février 2027',
     h1Pre: 'Extraire des biomarqueurs depuis du texte clinique ',
     h1Accent: 'sans réveiller le GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: "Je suis Clément Longeac. Je conçois DEMNE, un cadre de routage qui choisit, pour chaque type d'entité, la méthode la plus légère qui reste fiable : règles, transformer ou LLM. Sur une cohorte AP-HP jamais vue, il route 99,5 % des mentions vers des règles auditables à F1 0,941, là où un transformer affiné atteint 0,358.",
     ctaResearch: 'Voir la recherche',
     ctaCV: 'Télécharger le CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, schéma en direct',
+    caption: 'DEMNE — Rules → Transformer → LLM, schéma en direct',
   },
   about: {
     label: '01 — À propos',
     title: 'Du soutien scolaire en maths à la modélisation de biomarqueurs tumoraux',
-    p1: "Je suis étudiant en quatrième année à ESIEE Paris, spécialisation Data Science & IA, inscrit dans le parcours Tremplin Recherche de l'école — un programme conçu pour les étudiants visant une thèse plutôt qu'un stage classique en entreprise.",
+    p1: "Je suis étudiant en cinquième année à ESIEE Paris, spécialisation Data Science & IA, inscrit dans le parcours Tremplin Recherche de l'école — un programme conçu pour les étudiants visant une thèse plutôt qu'un stage classique en entreprise.",
     p2: "Mon travail consiste à rendre exploitable le texte clinique non structuré : extraire les biomarqueurs, les informations de stadification et les détails de traitement enfouis dans les comptes rendus d'oncologie français, là où les outils NLP génériques échouent systématiquement face au vocabulaire et à la structure documentaire du domaine.",
     p3: "En parallèle de mes études, je donne des cours de mathématiques et de physique-chimie via Complétude, et je prépare des candidatures pour une thèse CIFRE en IA biomédicale à Sorbonne Université.",
     visionLine:
-      "À plus long terme, cette même discipline — extraire une structure fiable d'un texte désordonné et à fort enjeu — est ce qui m'attire vers la recherche en sûreté de l'IA : construire et évaluer des world models via AMI Labs et le programme Anthropic Fellows. (Phrase provisoire — à remplacer par ta formulation définitive.)",
+      '',
     facts: [
       { dt: 'Établissement', dd: 'ESIEE Paris' },
       { dt: 'Programme', dd: 'Data Science & IA (DSIA)' },
@@ -516,7 +516,7 @@ const fr: Dictionary = {
   },
   research: {
     label: '02 — Recherche',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: "Un pipeline hybride de reconnaissance d'entités nommées pour le texte clinique oncologique français.",
     h3: "Determination of Extraction Methods for Named Entities",
     tagline: 'NER clinique · corpus d\'oncologie français',
@@ -549,7 +549,7 @@ const fr: Dictionary = {
         {
           code: 'Art. 12',
           label: 'Tenue de registres',
-          desc: "Chaque décision d'extraction est traçable jusqu'à l'étage (règles, CRF, transformer ou LLM) et au score de confiance qui l'a produite, ce qui permet une journalisation automatique pour l'audit.",
+          desc: "Chaque décision d'extraction est traçable jusqu'à l'étage (règles, transformer ou LLM) et au score de confiance qui l'a produite, ce qui permet une journalisation automatique pour l'audit.",
         },
         {
           code: 'Art. 14',
@@ -770,14 +770,15 @@ const fr: Dictionary = {
     subtitle: "Des articles plus longs sur les méthodes, les impasses et les décisions derrière le travail ci-dessus.",
     posts: [
       {
-        status: 'Brouillon — à venir',
+        status: 'Publié · oct. 2026',
         title: 'Pourquoi le NER clinique français casse les modèles génériques',
         body: "Un état des lieux des points où les pipelines NER standards échouent sur les comptes rendus d'oncologie français, et ce que ça implique pour la structure de DEMNE.",
+        content: `<p>Ouvrez un compte rendu d'oncologie fran&ccedil;ais et la plupart des mod&egrave;les de NER pr&ecirc;ts &agrave; l'emploi tr&eacute;buchent d&egrave;s la premi&egrave;re phrase. Le vocabulaire est dense et abr&eacute;g&eacute; (ER, PR, HER2, Ki67, FISH), la mise en forme change d'un h&ocirc;pital &agrave; l'autre, et la terminologie des biomarqueurs qui compte est presque absente des corpus sur lesquels ces mod&egrave;les ont &eacute;t&eacute; entra&icirc;n&eacute;s. Le r&eacute;flexe habituel &mdash; y jeter un gros mod&egrave;le &mdash; fonctionne, mais il est co&ucirc;teux, opaque et difficile &agrave; justifier devant un clinicien ou un auditeur.</p><h2>Toute entit&eacute; n'a pas besoin d'un LLM</h2><p>DEMNE part d'un constat simple&nbsp;: les entit&eacute;s de ces comptes rendus ne sont pas &eacute;galement difficiles. Une mention de biopsie s'&eacute;crit de quelques fa&ccedil;ons stables&nbsp;; un nom de m&eacute;dicament peut appara&icirc;tre sous cent formes. Plut&ocirc;t qu'un mod&egrave;le unique pour tout, DEMNE mesure chaque type d'entit&eacute; et l'envoie vers la m&eacute;thode la plus l&eacute;g&egrave;re qui reste fiable &mdash; une r&egrave;gle d&eacute;terministe, un transformer affin&eacute;, ou un LLM seulement en dernier recours.</p><p>La mesure, ce sont cinq m&eacute;triques de corpus calcul&eacute;es &agrave; partir des annotations&nbsp;: &agrave; quel point la forme de surface est r&eacute;guli&egrave;re, &agrave; quel point le vocabulaire est homog&egrave;ne, si un petit jeu de mots-cl&eacute;s est discriminant, &agrave; quelle fr&eacute;quence la mention appara&icirc;t sous n&eacute;gation ou contradiction, et s'il existe assez de donn&eacute;es annot&eacute;es pour entra&icirc;ner un mod&egrave;le supervis&eacute;. Un graphe de d&eacute;cision d&eacute;terministe transforme ces chiffres en niveau, et ses 17 seuils sont calibr&eacute;s par une recherche multi-objectif qui p&eacute;nalise deux fois plus le fait d'envoyer une entit&eacute; vers une m&eacute;thode trop faible que vers une m&eacute;thode seulement trop co&ucirc;teuse.</p><h2>Ce que &ccedil;a apporte</h2><p>Sur le jeu de calibration oncologie (59 types d'entit&eacute;s), le routage retrouve le niveau de r&eacute;f&eacute;rence des experts avec une concordance de 0,954, et de 0,866 en leave-one-corpus-out &mdash; bien au-dessus de tout pipeline &agrave; niveau fixe (toujours-r&egrave;gles atteint 0,729, toujours-LLM 0,148). Le test le plus convaincant est externe&nbsp;: appliqu&eacute; sans r&eacute;glage &agrave; 300 comptes rendus de scanner de l'AP-HP, sur des localisations canc&eacute;reuses jamais vues, DEMNE a rout&eacute; 99,5&nbsp;% des mentions (411 sur 413) vers des r&egrave;gles d&eacute;terministes. Ces r&egrave;gles ont atteint un F1 moyen de 0,941, l&agrave; o&ugrave; un transformer affin&eacute; sur les m&ecirc;mes entit&eacute;s, dans un budget hospitalier r&eacute;aliste, plafonnait &agrave; 0,358.</p><p>Autrement dit&nbsp;: pour les entit&eacute;s standardis&eacute;es qui dominent le compte rendu oncologique, les r&egrave;gles n'&eacute;taient pas seulement moins ch&egrave;res &mdash; elles &eacute;taient meilleures, et chaque d&eacute;cision de r&egrave;gle se trace jusqu'&agrave; une condition explicite, ce que demandent justement les articles 12 et 14 de l'EU AI Act.</p><h2>O&ugrave; &ccedil;a s'arr&ecirc;te</h2><p>Je veux &ecirc;tre honn&ecirc;te sur les limites. Le standard de r&eacute;f&eacute;rence est petit &mdash; 92 types d'entit&eacute;s, 59 en oncologie &mdash; donc les scores sur un seul corpus sont optimistes et seules les comparaisons relatives tiennent. Le niveau LLM n'a jamais &eacute;t&eacute; &eacute;valu&eacute; de bout en bout sur la cohorte externe&nbsp;; sa seule entit&eacute; rout&eacute;e &eacute;tait trop rare. Et la calibration ne se transf&egrave;re pas entre domaines&nbsp;: sur un autre genre clinique ou une autre langue, la concordance tombe &agrave; 0,45&ndash;0,73, et les seuils doivent &ecirc;tre r&eacute;ajust&eacute;s. DEMNE est une preuve de faisabilit&eacute;, pas un produit fini.</p><h2>Pourquoi &ccedil;a compte</h2><p>Le propos n'est pas que les r&egrave;gles battent les transformers. C'est que &laquo;&nbsp;quelle m&eacute;thode&nbsp;&raquo; est une question qu'on peut trancher entit&eacute; par entit&eacute;, &agrave; partir de propri&eacute;t&eacute;s mesurables du texte, au lieu de choisir par d&eacute;faut le mod&egrave;le le plus lourd en esp&eacute;rant. Pour le NLP clinique &mdash; o&ugrave; le co&ucirc;t, l'auditabilit&eacute; et la confiance comptent en m&ecirc;me temps &mdash; ce cadrage vaut plus qu'un point de pourcentage de plus sur un benchmark.</p><p>Le code et la m&eacute;thode compl&egrave;te sont sur <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>&nbsp;; le manuscrit est en pr&eacute;paration.</p>`,
       },
       {
         status: 'Brouillon — à venir',
         title: 'Extraction en étages vs un seul grand modèle',
-        body: "L'argumentaire pour router les entités à travers des règles, un CRF puis un transformer affiné avant tout appel à un LLM — et ce que ça coûte de se tromper.",
+        body: "L'argumentaire pour router les entités à travers des règles puis un transformer affiné avant tout appel à un LLM — et ce que ça coûte de se tromper.",
       },
     ],
   },
@@ -815,14 +816,14 @@ const es: Dictionary = {
     menuToggleLabel: 'Abrir el menú',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Extrayendo biomarcadores de texto clínico ',
     h1Accent: 'sin despertar la GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Soy Clément Longeac. Estoy trabajando en DEMNE, un framework de enrutamiento que decide — para cada tipo de entidad — si una expresión regular, un CRF, un transformer o un LLM es la herramienta honesta para la tarea. Primer resultado: 99,5 % de las entidades clínicas extraídas sin GPU, F1 = 0,941 sobre 300 notas de AP-HP.',
     ctaResearch: 'Ver la investigación',
     ctaCV: 'Descargar el CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, esquema en vivo',
+    caption: 'DEMNE — Rules → Transformer → LLM, esquema en vivo',
   },
   about: {
     label: '01 — Sobre mí',
@@ -842,7 +843,7 @@ const es: Dictionary = {
   },
   research: {
     label: '02 — Investigación',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Un pipeline híbrido de reconocimiento de entidades nombradas para texto clínico oncológico en francés.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'NER clínico · corpus de oncología en francés',
@@ -879,11 +880,48 @@ const es: Dictionary = {
     title: 'Dónde ha ocurrido el trabajo hasta ahora',
     currentLabel: 'En curso',
     items: [
-      { current: true, date: '2025 — Presente', title: 'Asistente de investigación, Tremplin Recherche', org: 'ESIEE Paris', body: 'Desarrollo de DEMNE, un pipeline híbrido de NER clínico para texto de oncología francés, como proyecto central del itinerario Tremplin Recherche de cara a las solicitudes de doctorado.' },
-      { current: true, date: '2026 — Presente', title: 'Fundador y Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construcción de una plataforma que da a pacientes con daño cerebral y a sus terapeutas ocupacionales una forma estructurada de comparar herramientas digitales de compensación cognitiva. Nacido como prototipo Python/Streamlit en el hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapeuta ocupacional en UEROS L\'ADAPT Île-de-France); actualmente en fase de definición de una reconstrucción de producción (FastAPI, PostgreSQL, Next.js) con alojamiento conforme a HDS/RGPD y un motor de búsqueda semántica para el emparejamiento clínico.' },
-      { date: '2024 — 2027', title: 'Estudiante de ingeniería — Data Science & IA', org: 'ESIEE Paris', body: 'Estudiante de cuarto año del programa de ingeniería de cinco años de ESIEE Paris, especialización Data Science & IA (DSIA).' },
-      { date: '2025', title: 'Becario de ingeniería, división GRADES', org: 'Synchrotron SOLEIL', body: 'Desarrollo de autopkgtests en OpenCL para la compatibilidad de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) en la infraestructura Debian/ROCm vía GitLab Salsa.' },
-      { date: '2022 — Presente', title: 'Tutor de ciencias', org: 'Complétude', body: 'Clases de matemáticas y física-química a una decena de estudiantes, desde primaria hasta el último año de secundaria, junto a mis estudios de ingeniería.' },
+      {
+        date: 'May. – jul. 2026',
+        title: 'Investigador en prácticas, Almacén de Datos Clínicos',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Apliqué y validé el enfoque de enrutamiento de DEMNE sobre datos hospitalarios: extracción de biomarcadores oncológicos (ER, PR, HER2, Ki67, FISH) a partir de informes clínicos franceses, y definición de una vía clínica auditable y realista para el despliegue.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Oct. 2025 – may. 2026',
+        title: 'Estudiante investigador, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Diseñé DEMNE, un pipeline híbrido de NER clínico (reglas / transformer / LLM) para texto oncológico francés, guiado por cinco métricas de corpus formalizadas — el proyecto central del itinerario Tremplin Recherche de cara a las solicitudes de doctorado.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Presente',
+        title: 'Product Lead y desarrollador, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Construcción de una plataforma que da a pacientes con daño cerebral y a sus terapeutas ocupacionales una forma estructurada de comparar herramientas de compensación cognitiva. Nació como prototipo Python/Streamlit en el hackathon SN@SU (Sorbonne Université, con Flor Sanchez-Luizard, terapeuta ocupacional en UEROS L’ADAPT Île-de-France); ahora se define una reconstrucción de producción (FastAPI, PostgreSQL, Next.js) con alojamiento conforme a HDS/RGPD y un motor de búsqueda semántica para el emparejamiento de herramientas clínicas.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Estudiante de ingeniería — Data Science e IA',
+        org: 'ESIEE Paris',
+        body: 'Estudiante de quinto año del programa de ingeniería de cinco años de ESIEE Paris, especialización Data Science e IA (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Ingeniero en prácticas, división GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Desarrollo de autopkgtests con OpenCL para la compatibilidad de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) en la infraestructura Debian/ROCm en GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Presente',
+        title: 'Profesor particular de ciencias',
+        org: 'Complétude',
+        body: 'Clases de matemáticas y física-química a una decena de alumnos, desde primaria hasta el último curso de secundaria, en paralelo a mis estudios de ingeniería.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -904,56 +942,56 @@ const es: Dictionary = {
     more: 'Saber más →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Junio de 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Un catálogo de herramientas digitales de compensación cognitiva para personas con daño cerebral y sus terapeutas ocupacionales.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep nació en el hackathon SN@SU (Sorbonne Université). Terapeutas ocupacionales y pacientes pueden encontrar apps de comunicación, memoria y planificación sin recorrer las tiendas una por una: cada herramienta está listada, clasificada por trastorno y tema, y es buscable.\nEl MVP es una aplicación Streamlit respaldada por un almacén JSON; ahora se define una reconstrucción de producción con FastAPI, PostgreSQL y un frontend Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Dic. 2025 · Proyecto en equipo',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Un panel interactivo que reconstruye 15 años de contaminación atmosférica de fondo en Francia (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Un pipeline de datos y un panel interactivo sobre indicadores comunales de INERIS (Zenodo). Los scripts descargan, limpian y almacenan los datos en SQLite; el panel muestra un mapa de calor de contaminación con Leaflet, con un control de año y filtros de contaminante, junto a gráficos Plotly.\nRealizado con mi compañero William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Proyecto de curso',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Reconocimiento facial basado en CNN sobre imágenes fijas y luego vídeo, con aumento de datos y alineación facial.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Un proyecto de curso sobre reconocimiento facial moderno. Un primer modelo entrenado con solo 218 imágenes sufría un fuerte sobreajuste; el aumento de datos (rotación, zoom) y un paso de alineación facial que normaliza la posición de ojos y labios, combinados con una red preentrenada, mejoraron la generalización. El objetivo era detectar rostros en vídeo a partir del propio conjunto de datos del proyecto.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Proyecto en pareja',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Un juego de aventura textual en terminal, escrito en Python con un diseño orientado a objetos.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Una aventura textual que se juega en la terminal: el jugador se mueve entre ocho salas escribiendo comandos. El código se divide en pequeñas clases de responsabilidad única (juego, sala, jugador, comando, acción, personaje, objeto), de modo que añadir una sala o un objeto sigue siendo un cambio local.\nRealizado con Anne-Colombe André en ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Feb. 2025 · Proyecto en equipo',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Una plataforma de analítica de datos culinarios: scraping, ETL y un panel sobre datos de recetas.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Un proyecto de ingeniería de datos en equipo que extrae datos de recetas de Marmiton, ejecuta un pipeline ETL y expone los resultados mediante un panel de analítica. Hecho en Python con notebooks Jupyter para la exploración.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -962,9 +1000,9 @@ const es: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Scripts autopkgtest que validan software científico en GPU AMD, sobre la infraestructura de CI de Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Parte de las prácticas en el Synchrotron SOLEIL: autopkgtests escritos en OpenCL para comprobar la compatibilidad de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) en la infraestructura de integración continua Debian/ROCm, ejecutados a través de GitLab Salsa. Los scripts instalan y desinstalan paquetes en máquinas virtuales limpias e informan de la compatibilidad entre GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -1037,8 +1075,8 @@ const es: Dictionary = {
     title: 'Notas de la investigación',
     subtitle: 'Artículos más extensos sobre los métodos, callejones sin salida y decisiones detrás del trabajo anterior.',
     posts: [
-      { status: 'Borrador — próximamente', title: 'Por qué el NER clínico francés rompe los modelos genéricos', body: 'Un recorrido por los puntos donde los pipelines NER estándar fallan en los informes de oncología franceses, y lo que eso implica para la estructura de DEMNE.' },
-      { status: 'Borrador — próximamente', title: 'Extracción por etapas frente a un único modelo grande', body: 'El argumento para enrutar entidades a través de reglas, un CRF y un transformer afinado antes de llamar a un LLM — y lo que cuesta equivocarse.' },
+      { status: 'Publicado · oct. 2026', title: 'Por qué el NER clínico francés rompe los modelos genéricos', body: 'Un recorrido por los puntos donde los pipelines NER estándar fallan en los informes de oncología franceses, y lo que eso implica para la estructura de DEMNE.', content: `<p>Abra un informe de oncología en francés y la mayoría de los modelos de NER listos para usar tropiezan en la primera frase. El vocabulario es denso y abreviado (ER, PR, HER2, Ki67, FISH), el formato cambia de un hospital a otro, y la terminología de biomarcadores que importa casi no aparece en los corpus con los que se entrenaron esos modelos. El reflejo habitual &mdash; lanzarle un modelo grande &mdash; funciona, pero es costoso, opaco y difícil de justificar ante un clínico o un auditor.</p><h2>No toda entidad necesita un LLM</h2><p>DEMNE parte de una observación simple: las entidades de estos informes no son igual de difíciles. Una mención de biopsia se escribe de unas pocas formas estables; un nombre de fármaco puede aparecer de cien maneras. Así que, en lugar de un único modelo para todo, DEMNE mide cada tipo de entidad y la envía al método más ligero que resulte fiable &mdash; una regla determinista, un transformer afinado o un LLM solo como último recurso.</p><p>La medida son cinco métricas de corpus calculadas a partir de las anotaciones: cuán regular es la forma de superficie, cuán homogéneo es el vocabulario, si un pequeño conjunto de palabras clave es discriminante, con qué frecuencia la mención está bajo negación o contradicción, y si existen suficientes datos anotados para entrenar un modelo supervisado. Un grafo de decisión determinista convierte esos números en un nivel, y sus 17 umbrales se calibran con una búsqueda multiobjetivo que penaliza el doble enviar una entidad a un método demasiado débil que a uno meramente demasiado costoso.</p><h2>Lo que aporta</h2><p>En el conjunto de calibración de oncología (59 tipos de entidad), el enrutamiento coincide con el nivel de referencia de los expertos con una concordancia de 0,954 y una estimación leave-one-corpus-out de 0,866 &mdash; muy por encima de cualquier baseline de nivel fijo (siempre-reglas alcanza 0,729, siempre-LLM 0,148). La prueba más convincente es externa: aplicado sin reajuste a 300 informes de TC de la AP-HP, en localizaciones cancerosas que el modelo nunca había visto, DEMNE enrutó el 99,5 % de las menciones (411 de 413) hacia reglas deterministas. Esas reglas alcanzaron un F1 medio de 0,941, mientras que un transformer afinado sobre las mismas entidades, con un presupuesto hospitalario realista, se quedó en 0,358.</p><p>Dicho de otro modo: para las entidades estandarizadas que dominan el informe oncológico, las reglas no solo eran más baratas &mdash; eran mejores, y cada decisión de regla se rastrea hasta una condición explícita, que es justo lo que piden los artículos 12 y 14 de la EU AI Act.</p><h2>Dónde se detiene</h2><p>Quiero ser honesto sobre los límites. El estándar de referencia es pequeño &mdash; 92 tipos de entidad, 59 de ellos en oncología &mdash; así que las puntuaciones sobre un solo corpus son optimistas y solo valen las comparaciones relativas. El nivel LLM nunca se evaluó de principio a fin en la cohorte externa; su única entidad enrutada era demasiado rara. Y la calibración no se transfiere entre dominios: en otro género clínico u otro idioma la concordancia cae a 0,45&ndash;0,73, por lo que los umbrales deben reajustarse. DEMNE es una prueba de viabilidad, no un producto terminado.</p><h2>Por qué importa</h2><p>La cuestión no es que las reglas ganen a los transformers. Es que &laquo;qué método&raquo; es una pregunta que se puede responder entidad por entidad, a partir de propiedades medibles del texto, en vez de recurrir por defecto al modelo más pesado y confiar. Para el PLN clínico &mdash; donde el coste, la auditabilidad y la confianza importan a la vez &mdash; ese enfoque vale más que un punto porcentual en un benchmark.</p><p>El código y el método completo están en <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; el manuscrito está en preparación.</p>` },
+      { status: 'Borrador — próximamente', title: 'Extracción por etapas frente a un único modelo grande', body: 'El argumento para enrutar entidades a través de reglas y un transformer afinado antes de llamar a un LLM — y lo que cuesta equivocarse.' },
     ],
   },
   contact: {
@@ -1075,14 +1113,14 @@ const de: Dictionary = {
     menuToggleLabel: 'Menü öffnen',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Biomarker aus klinischem Text extrahieren ',
     h1Accent: 'ohne die GPU zu wecken',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Ich bin Clément Longeac. Ich arbeite an DEMNE, einem Routing-Framework, das für jeden Entitätstyp entscheidet, ob eine Regex, ein CRF, ein Transformer oder ein LLM das ehrliche Werkzeug für die Aufgabe ist. Erstes Ergebnis: 99,5 % der klinischen Entitäten ohne GPU extrahiert, F1 = 0,941 bei 300 AP-HP-Notizen.',
     ctaResearch: 'Zur Forschung',
     ctaCV: 'Lebenslauf herunterladen',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, Live-Schema',
+    caption: 'DEMNE — Rules → Transformer → LLM, Live-Schema',
   },
   about: {
     label: '01 — Über mich',
@@ -1102,7 +1140,7 @@ const de: Dictionary = {
   },
   research: {
     label: '02 — Forschung',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Eine hybride Named-Entity-Recognition-Pipeline für französischen onkologischen klinischen Text.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Klinisches NER · französische Onkologie-Korpora',
@@ -1139,11 +1177,48 @@ const de: Dictionary = {
     title: 'Wo die Arbeit bisher stattgefunden hat',
     currentLabel: 'Laufend',
     items: [
-      { current: true, date: '2025 — Heute', title: 'Forschungsassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Entwicklung von DEMNE, einer hybriden klinischen NER-Pipeline für französischen Onkologie-Text, als Kernprojekt des Tremplin-Recherche-Programms vor den Promotionsbewerbungen.' },
-      { current: true, date: '2026 — Heute', title: 'Gründer & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Aufbau einer Plattform, die hirnverletzten Patienten und ihren Ergotherapeuten eine strukturierte Möglichkeit gibt, digitale Werkzeuge zur kognitiven Kompensation zu vergleichen. Entstanden als Python/Streamlit-Prototyp beim SN@SU-Hackathon (Sorbonne-Universität, mit Flor Sanchez-Luizard, Ergotherapeutin bei UEROS L\'ADAPT Île-de-France); derzeit in der Planungsphase für einen Produktions-Relaunch (FastAPI, PostgreSQL, Next.js) mit HDS/RGPD-konformem Hosting und einer semantischen Suchmaschine für klinisches Matching.' },
-      { date: '2024 — 2027', title: 'Ingenieurstudent — Data Science & KI', org: 'ESIEE Paris', body: 'Student im vierten Jahr des fünfjährigen Ingenieurstudiengangs der ESIEE Paris, Schwerpunkt Data Science & KI (DSIA).' },
-      { date: '2025', title: 'Ingenieurpraktikant, GRADES-Abteilung', org: 'Synchrotron SOLEIL', body: 'Entwicklung von Autopkgtests in OpenCL für AMD-GPU-Kompatibilität (pyopencl, nabu, ufo-filters, pyvkfft) auf Debian/ROCm-Infrastruktur über GitLab Salsa.' },
-      { date: '2022 — Heute', title: 'MINT-Nachhilfelehrer', org: 'Complétude', body: 'Unterricht in Mathematik und Physik-Chemie für etwa zehn Schüler, von der Grundschule bis zum Abitur, parallel zu meinem Ingenieurstudium.' },
+      {
+        date: 'Mai – Jul. 2026',
+        title: 'Forschungspraktikant, klinisches Data Warehouse',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Anwendung und Validierung des DEMNE-Routing-Ansatzes auf Krankenhausdaten: Extraktion onkologischer Biomarker (ER, PR, HER2, Ki67, FISH) aus französischen klinischen Berichten und Definition eines auditierbaren, einsatznahen klinischen Pfads.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Okt. 2025 – Mai 2026',
+        title: 'Studentischer Forscher, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Entwurf von DEMNE, einer hybriden klinischen NER-Pipeline (Regeln / Transformer / LLM) für französische onkologische Texte, gesteuert durch fünf formalisierte Korpusmetriken — das Kernprojekt des Tremplin-Recherche-Tracks im Vorfeld der Promotionsbewerbungen.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Heute',
+        title: 'Product Lead & Entwickler, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Aufbau einer Plattform, die Hirnverletzten und Ergotherapeuten einen strukturierten Vergleich kognitiver Kompensationswerkzeuge ermöglicht. Begann als Python/Streamlit-Prototyp beim SN@SU-Hackathon (Sorbonne Université, mit Flor Sanchez-Luizard, Ergotherapeutin bei UEROS L’ADAPT Île-de-France); derzeit wird ein Produktions-Neuaufbau (FastAPI, PostgreSQL, Next.js) mit HDS/DSGVO-konformem Hosting und einer semantischen Suchmaschine für das Matching klinischer Werkzeuge abgesteckt.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Ingenieurstudent — Data Science & KI',
+        org: 'ESIEE Paris',
+        body: 'Student im fünften Jahr des fünfjährigen Ingenieurstudiums der ESIEE Paris, Spezialisierung Data Science & KI (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Ingenieurpraktikant, Abteilung GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Entwicklung von autopkgtests mit OpenCL für die AMD-GPU-Kompatibilität (pyopencl, nabu, ufo-filters, pyvkfft) über die Debian/ROCm-Infrastruktur auf GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Heute',
+        title: 'Nachhilfelehrer (MINT)',
+        org: 'Complétude',
+        body: 'Unterricht in Mathematik und Physik-Chemie für rund zehn Schüler, von der Grundschule bis zur Abschlussklasse, parallel zum Ingenieurstudium.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -1164,56 +1239,56 @@ const de: Dictionary = {
     more: 'Mehr erfahren →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Juni 2026 · SN@SU-Hackathon',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Ein Katalog digitaler Werkzeuge zur kognitiven Kompensation für Menschen mit Hirnverletzungen und ihre Ergotherapeuten.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep entstand beim SN@SU-Hackathon (Sorbonne Université). Ergotherapeuten und Patienten finden Apps für Kommunikation, Gedächtnis und Planung, ohne die App-Stores einzeln zu durchsuchen: Jedes Werkzeug ist gelistet, nach Störung und Thema klassifiziert und durchsuchbar.\nDas MVP ist eine Streamlit-Anwendung mit einem JSON-Speicher; derzeit wird ein Produktions-Neuaufbau mit FastAPI, PostgreSQL und einem Next.js-Frontend abgesteckt.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Dez. 2025 · Teamprojekt',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Ein interaktives Dashboard, das 15 Jahre Hintergrund-Luftverschmutzung in Frankreich rekonstruiert (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Eine Datenpipeline und ein interaktives Dashboard über INERIS-Indikatoren auf Gemeindeebene (Zenodo). Skripte laden, bereinigen und speichern die Daten in SQLite; das Dashboard zeigt eine Leaflet-Verschmutzungs-Heatmap mit Jahresregler und Schadstofffiltern, neben Plotly-Diagrammen.\nEntstanden mit Teamkollege William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Kursprojekt',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'CNN-basierte Gesichtserkennung auf Standbildern und dann Video, mit Datenaugmentation und Gesichtsausrichtung.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Ein Kursprojekt zur modernen Gesichtserkennung. Ein erstes Modell, das mit nur 218 Bildern trainiert wurde, überfittete stark; Datenaugmentation (Rotation, Zoom) und ein Schritt zur Gesichtsausrichtung, der Augen- und Lippenposition normalisiert, zusammen mit einem vortrainierten Netz, verbesserten die Generalisierung. Ziel war, Gesichter in Videos aus dem projekteigenen Datensatz zu erkennen.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Partnerprojekt',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Ein Text-Adventure fürs Terminal in Python, mit objektorientiertem Design.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Ein Text-Adventure, das im Terminal gespielt wird: Der Spieler bewegt sich per Befehlseingabe zwischen acht Räumen. Der Code ist in kleine Klassen mit einer einzigen Verantwortung aufgeteilt (Spiel, Raum, Spieler, Befehl, Aktion, Figur, Gegenstand), sodass das Hinzufügen eines Raums oder Gegenstands eine lokale Änderung bleibt.\nEntstanden mit Anne-Colombe André an der ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Feb. 2025 · Teamprojekt',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Eine Plattform für kulinarische Datenanalyse: Scraping, ETL und ein Dashboard über Rezeptdaten.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Ein Data-Engineering-Teamprojekt, das Rezeptdaten von Marmiton scrapt, eine ETL-Pipeline ausführt und die Ergebnisse über ein Analyse-Dashboard bereitstellt. Umgesetzt in Python mit Jupyter-Notebooks zur Exploration.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -1222,9 +1297,9 @@ const de: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'autopkgtest-Skripte, die wissenschaftliche Software auf AMD-GPUs validieren, auf Debians CI-Infrastruktur.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Teil des Praktikums am Synchrotron SOLEIL: autopkgtests in OpenCL zur Prüfung der AMD-GPU-Kompatibilität (pyopencl, nabu, ufo-filters, pyvkfft) über die Debian/ROCm-Continuous-Integration-Infrastruktur, ausgeführt über GitLab Salsa. Die Skripte installieren und deinstallieren Pakete auf sauberen virtuellen Maschinen und melden die Kompatibilität über GPUs hinweg.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -1296,8 +1371,8 @@ const de: Dictionary = {
     title: 'Notizen aus der Forschung',
     subtitle: 'Längere Beiträge zu Methoden, Sackgassen und Entscheidungen hinter der obigen Arbeit.',
     posts: [
-      { status: 'Entwurf — demnächst', title: 'Warum französisches klinisches NER generische Modelle scheitern lässt', body: 'Ein Überblick darüber, wo Standard-NER-Pipelines bei französischen Onkologieberichten versagen, und was das für die Struktur von DEMNE bedeutet.' },
-      { status: 'Entwurf — demnächst', title: 'Gestufte Extraktion vs. ein einzelnes großes Modell', body: 'Das Argument dafür, Entitäten durch Regeln, ein CRF und einen feinabgestimmten Transformer zu leiten, bevor überhaupt ein LLM aufgerufen wird — und was ein Fehler dabei kostet.' },
+      { status: 'Veröffentlicht · Okt. 2026', title: 'Warum französisches klinisches NER generische Modelle scheitern lässt', body: 'Ein Überblick darüber, wo Standard-NER-Pipelines bei französischen Onkologieberichten versagen, und was das für die Struktur von DEMNE bedeutet.', content: `<p>Öffnen Sie einen französischen onkologischen Bericht, und die meisten gebrauchsfertigen NER-Modelle stolpern schon im ersten Satz. Das Vokabular ist dicht und abgekürzt (ER, PR, HER2, Ki67, FISH), die Formatierung wechselt von Klinik zu Klinik, und die entscheidende Biomarker-Terminologie fehlt in den Korpora, auf denen diese Modelle trainiert wurden, fast völlig. Der übliche Reflex &mdash; ein großes Modell darauf werfen &mdash; funktioniert, ist aber teuer, intransparent und vor einem Kliniker oder Prüfer schwer zu rechtfertigen.</p><h2>Nicht jede Entität braucht ein LLM</h2><p>DEMNE geht von einer schlichten Beobachtung aus: Die Entitäten in diesen Berichten sind nicht gleich schwer. Eine Biopsie-Erwähnung wird auf wenige stabile Arten geschrieben; ein Medikamentenname kann in hundert Formen auftreten. Statt eines Modells für alles misst DEMNE daher jeden Entitätstyp und schickt ihn an die leichteste Methode, die zuverlässig genug ist &mdash; eine deterministische Regel, einen feinabgestimmten Transformer oder ein LLM nur als letztes Mittel.</p><p>Die Messung besteht aus fünf Korpusmetriken, die aus den Annotationen berechnet werden: wie schablonenhaft die Oberflächenform ist, wie homogen das Vokabular ist, ob ein kleiner Schlüsselwortsatz diskriminierend ist, wie oft die Erwähnung unter Negation oder Widerspruch steht, und ob überhaupt genug annotierte Daten für ein überwachtes Modell vorhanden sind. Ein deterministischer Entscheidungsgraph macht aus diesen Zahlen eine Stufe, und seine 17 Schwellenwerte werden mit einer multikriteriellen Suche kalibriert, die das Senden einer Entität an eine zu schwache Methode doppelt so stark bestraft wie an eine bloß zu teure.</p><h2>Was es bringt</h2><p>Auf dem onkologischen Kalibrierungssatz (59 Entitätstypen) stimmt das Routing mit der Experten-Referenzstufe mit einer Konkordanz von 0,954 überein, bei einer Leave-one-corpus-out-Schätzung von 0,866 &mdash; deutlich über jeder Baseline mit fester Stufe (immer-Regeln erreicht 0,729, immer-LLM 0,148). Der überzeugendere Test ist extern: ohne Nachjustierung auf 300 AP-HP-CT-Berichte aus zuvor ungesehenen Krebslokalisationen angewandt, leitete DEMNE 99,5 % der markierten Erwähnungen (411 von 413) an deterministische Regeln. Diese Regeln erreichten einen mittleren F1 von 0,941, während ein auf denselben Entitäten unter realistischem Klinikbudget feinabgestimmter Transformer nur 0,358 schaffte.</p><p>Mit anderen Worten: Für die standardisierten Entitäten, die die onkologische Berichterstattung dominieren, waren Regeln nicht nur billiger &mdash; sie waren besser, und jede Regelentscheidung lässt sich auf eine explizite Bedingung zurückführen, genau das, was die Artikel 12 und 14 der EU AI Act verlangen.</p><h2>Wo es endet</h2><p>Ich will bei den Grenzen ehrlich sein. Der Referenzstandard ist klein &mdash; 92 Entitätstypen, 59 davon in der Onkologie &mdash; daher sind Einzelkorpus-Werte optimistisch und nur relative Vergleiche tragen. Die LLM-Stufe wurde auf der externen Kohorte nie durchgängig evaluiert; ihre eine geroutete Entität war zu selten. Und die Kalibrierung überträgt sich nicht zwischen Domänen: In einem anderen klinischen Genre oder einer anderen Sprache fällt die Konkordanz auf 0,45&ndash;0,73, sodass die Schwellen neu angepasst werden müssen. DEMNE ist ein Machbarkeitsnachweis, kein fertiges Produkt.</p><h2>Warum es zählt</h2><p>Der Punkt ist nicht, dass Regeln Transformer schlagen. Es ist, dass &bdquo;welche Methode&ldquo; eine Frage ist, die man pro Entität beantworten kann &mdash; aus messbaren Eigenschaften des Textes, statt standardmäßig das schwerste Modell zu wählen und zu hoffen. Für die klinische NLP &mdash; wo Kosten, Prüfbarkeit und Vertrauen zugleich zählen &mdash; ist diese Rahmung mehr wert als ein weiterer Prozentpunkt auf einem Benchmark.</p><p>Der Code und die vollständige Methode sind auf <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; das Manuskript ist in Vorbereitung.</p>` },
+      { status: 'Entwurf — demnächst', title: 'Gestufte Extraktion vs. ein einzelnes großes Modell', body: 'Das Argument dafür, Entitäten durch Regeln und einen feinabgestimmten Transformer zu leiten, bevor überhaupt ein LLM aufgerufen wird — und was ein Fehler dabei kostet.' },
     ],
   },
   contact: {
@@ -1334,14 +1409,14 @@ const it: Dictionary = {
     menuToggleLabel: 'Apri il menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Estraggo biomarcatori da testo clinico ',
     h1Accent: 'senza svegliare la GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Sono Clément Longeac. Sto lavorando a DEMNE, un framework di routing che decide — per ogni tipo di entità — se una regex, un CRF, un transformer o un LLM sia lo strumento onesto per il compito. Primo risultato: 99,5% delle entità cliniche estratte senza GPU, F1 = 0,941 su 300 note AP-HP.',
     ctaResearch: 'Vedi la ricerca',
     ctaCV: 'Scarica il CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, schema dal vivo',
+    caption: 'DEMNE — Rules → Transformer → LLM, schema dal vivo',
   },
   about: {
     label: '01 — Chi sono',
@@ -1361,7 +1436,7 @@ const it: Dictionary = {
   },
   research: {
     label: '02 — Ricerca',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Una pipeline ibrida di riconoscimento di entità nominate per il testo clinico oncologico francese.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'NER clinico · corpus di oncologia francesi',
@@ -1398,11 +1473,48 @@ const it: Dictionary = {
     title: 'Dove si è svolto il lavoro finora',
     currentLabel: 'In corso',
     items: [
-      { current: true, date: '2025 — Presente', title: 'Assistente di ricerca, Tremplin Recherche', org: 'ESIEE Paris', body: 'Sviluppo di DEMNE, una pipeline ibrida di NER clinico per testo di oncologia francese, come progetto centrale del percorso Tremplin Recherche in vista delle candidature al dottorato.' },
-      { current: true, date: '2026 — Presente', title: 'Fondatore e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Costruzione di una piattaforma che offre a pazienti con lesioni cerebrali e ai loro terapisti occupazionali un modo strutturato per confrontare strumenti digitali di compensazione cognitiva. Nato come prototipo Python/Streamlit all\'hackathon SN@SU (Sorbona, con Flor Sanchez-Luizard, terapista occupazionale presso UEROS L\'ADAPT Île-de-France); ora in fase di definizione per una riprogettazione in produzione (FastAPI, PostgreSQL, Next.js) con hosting conforme a HDS/RGPD e un motore di ricerca semantica per l\'abbinamento clinico.' },
-      { date: '2024 — 2027', title: 'Studente di ingegneria — Data Science & IA', org: 'ESIEE Paris', body: 'Studente del quarto anno del percorso di ingegneria quinquennale di ESIEE Paris, specializzazione Data Science & IA (DSIA).' },
-      { date: '2025', title: 'Stagista ingegnere, divisione GRADES', org: 'Synchrotron SOLEIL', body: 'Sviluppo di autopkgtest in OpenCL per la compatibilità GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sull\'infrastruttura Debian/ROCm via GitLab Salsa.' },
-      { date: '2022 — Presente', title: 'Tutor STEM', org: 'Complétude', body: "Insegnamento di matematica e fisica-chimica a una decina di studenti, dalle elementari fino all'ultimo anno delle superiori, in parallelo ai miei studi di ingegneria." },
+      {
+        date: 'Mag – lug 2026',
+        title: 'Tirocinante di ricerca, Data Warehouse clinico',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Ho applicato e validato l’approccio di instradamento di DEMNE su dati ospedalieri: estrazione di biomarcatori oncologici (ER, PR, HER2, Ki67, FISH) da referti clinici francesi e definizione di un percorso clinico auditabile e realistico per il deployment.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Ott 2025 – mag 2026',
+        title: 'Studente ricercatore, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Ho progettato DEMNE, una pipeline ibrida di NER clinico (regole / transformer / LLM) per testi oncologici francesi, guidata da cinque metriche di corpus formalizzate — il progetto centrale del percorso Tremplin Recherche in vista delle candidature al dottorato.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Presente',
+        title: 'Product Lead e sviluppatore, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Costruzione di una piattaforma che offre a pazienti con lesioni cerebrali e terapisti occupazionali un modo strutturato per confrontare strumenti di compensazione cognitiva. Nata come prototipo Python/Streamlit all’hackathon SN@SU (Sorbonne Université, con Flor Sanchez-Luizard, terapista occupazionale presso UEROS L’ADAPT Île-de-France); ora si definisce una ricostruzione di produzione (FastAPI, PostgreSQL, Next.js) con hosting conforme a HDS/GDPR e un motore di ricerca semantica per l’abbinamento degli strumenti clinici.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Studente di ingegneria — Data Science e IA',
+        org: 'ESIEE Paris',
+        body: 'Studente del quinto anno del programma di ingegneria quinquennale dell’ESIEE Paris, specializzazione Data Science e IA (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Tirocinante ingegnere, divisione GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Sviluppo di autopkgtest con OpenCL per la compatibilità delle GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sull’infrastruttura Debian/ROCm su GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Presente',
+        title: 'Tutor di materie STEM',
+        org: 'Complétude',
+        body: 'Lezioni di matematica e fisica-chimica a una decina di studenti, dalla primaria all’ultimo anno delle superiori, in parallelo agli studi di ingegneria.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -1423,56 +1535,56 @@ const it: Dictionary = {
     more: 'Scopri di più →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Giugno 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Un catalogo di strumenti digitali di compensazione cognitiva per persone con lesioni cerebrali e i loro terapisti occupazionali.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep è nato all’hackathon SN@SU (Sorbonne Université). Terapisti occupazionali e pazienti trovano app per comunicazione, memoria e pianificazione senza setacciare gli store uno a uno: ogni strumento è elencato, classificato per disturbo e tema, e ricercabile.\nL’MVP è un’applicazione Streamlit con uno store JSON; ora si sta definendo una ricostruzione di produzione con FastAPI, PostgreSQL e un frontend Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Dic. 2025 · Progetto di gruppo',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Una dashboard interattiva che ricostruisce 15 anni di inquinamento atmosferico di fondo in Francia (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Una pipeline di dati e una dashboard interattiva sugli indicatori comunali INERIS (Zenodo). Gli script scaricano, puliscono e salvano i dati in SQLite; la dashboard mostra una heatmap dell’inquinamento con Leaflet, con uno slider per l’anno e filtri per inquinante, accanto a grafici Plotly.\nRealizzata con il compagno di squadra William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Progetto di corso',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Riconoscimento facciale basato su CNN su immagini fisse e poi video, con data augmentation e allineamento del volto.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Un progetto di corso sul riconoscimento facciale moderno. Un primo modello addestrato su sole 218 immagini andava in forte overfitting; la data augmentation (rotazione, zoom) e un passo di allineamento del volto che normalizza la posizione di occhi e labbra, uniti a una rete pre-addestrata, hanno migliorato la generalizzazione. L’obiettivo era rilevare volti nei video a partire dal dataset del progetto stesso.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Progetto in coppia',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Un gioco di avventura testuale da terminale in Python, con un design orientato agli oggetti.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Un’avventura testuale giocata nel terminale: il giocatore si sposta tra otto stanze digitando comandi. Il codice è suddiviso in piccole classi a responsabilità singola (gioco, stanza, giocatore, comando, azione, personaggio, oggetto), così aggiungere una stanza o un oggetto resta una modifica locale.\nRealizzata con Anne-Colombe André all’ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Feb. 2025 · Progetto di gruppo',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Una piattaforma di analisi dati culinari: scraping, ETL e una dashboard sui dati delle ricette.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Un progetto di gruppo di data engineering che estrae i dati delle ricette da Marmiton, esegue una pipeline ETL ed espone i risultati tramite una dashboard di analisi. Realizzato in Python con notebook Jupyter per l’esplorazione.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -1481,9 +1593,9 @@ const it: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Script autopkgtest che validano software scientifico su GPU AMD, sull’infrastruttura CI di Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Parte del tirocinio al Synchrotron SOLEIL: autopkgtest scritti in OpenCL per verificare la compatibilità delle GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sull’infrastruttura di integrazione continua Debian/ROCm, eseguiti tramite GitLab Salsa. Gli script installano e disinstallano pacchetti su macchine virtuali pulite e riportano la compatibilità tra le GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -1556,8 +1668,8 @@ const it: Dictionary = {
     title: 'Note dalla ricerca',
     subtitle: 'Approfondimenti sui metodi, i vicoli ciechi e le decisioni dietro al lavoro sopra descritto.',
     posts: [
-      { status: 'Bozza — in arrivo', title: 'Perché il NER clinico francese manda in crisi i modelli generici', body: 'Una panoramica di dove le pipeline NER standard falliscono sui referti di oncologia francesi, e cosa questo implica per la struttura di DEMNE.' },
-      { status: 'Bozza — in arrivo', title: 'Estrazione a stadi contro un unico grande modello', body: 'L\'argomentazione per instradare le entità attraverso regole, un CRF e un transformer affinato prima di chiamare un LLM — e cosa costa sbagliare.' },
+      { status: 'Pubblicato · ott. 2026', title: 'Perché il NER clinico francese manda in crisi i modelli generici', body: 'Una panoramica di dove le pipeline NER standard falliscono sui referti di oncologia francesi, e cosa questo implica per la struttura di DEMNE.', content: `<p>Aprite un referto oncologico francese e la maggior parte dei modelli NER pronti all’uso inciampa già nella prima frase. Il vocabolario è denso e abbreviato (ER, PR, HER2, Ki67, FISH), la formattazione cambia da un ospedale all’altro, e la terminologia dei biomarcatori che conta è quasi assente dai corpora su cui questi modelli sono stati addestrati. Il riflesso abituale &mdash; lanciarci contro un modello grande &mdash; funziona, ma è costoso, opaco e difficile da giustificare davanti a un clinico o a un revisore.</p><h2>Non ogni entità ha bisogno di un LLM</h2><p>DEMNE parte da un’osservazione netta: le entità di questi referti non sono ugualmente difficili. Una menzione di biopsia si scrive in poche forme stabili; un nome di farmaco può comparire in cento modi. Così, invece di un unico modello per tutto, DEMNE misura ogni tipo di entità e la indirizza al metodo più leggero che resti affidabile &mdash; una regola deterministica, un transformer affinato o un LLM solo come ultima risorsa.</p><p>La misura sono cinque metriche di corpus calcolate dalle annotazioni: quanto la forma di superficie è regolare, quanto il vocabolario è omogeneo, se un piccolo insieme di parole chiave è discriminante, con quale frequenza la menzione cade sotto negazione o contraddizione, e se esistono abbastanza dati annotati per addestrare un modello supervisionato. Un grafo decisionale deterministico trasforma quei numeri in un livello, e le sue 17 soglie sono calibrate con una ricerca multi-obiettivo che penalizza il doppio inviare un’entità a un metodo troppo debole rispetto a uno solo troppo costoso.</p><h2>Cosa porta</h2><p>Sul set di calibrazione oncologico (59 tipi di entità), l’instradamento concorda con il livello di riferimento degli esperti con una concordanza di 0,954 e una stima leave-one-corpus-out di 0,866 &mdash; ben oltre qualsiasi baseline a livello fisso (sempre-regole raggiunge 0,729, sempre-LLM 0,148). La prova più convincente è esterna: applicato senza ritaratura a 300 referti TC dell’AP-HP, su sedi tumorali mai viste, DEMNE ha instradato il 99,5 % delle menzioni (411 su 413) verso regole deterministiche. Quelle regole hanno raggiunto un F1 medio di 0,941, mentre un transformer affinato sulle stesse entità, con un budget ospedaliero realistico, si è fermato a 0,358.</p><p>In altre parole: per le entità standardizzate che dominano la refertazione oncologica, le regole non erano solo più economiche &mdash; erano migliori, e ogni decisione di regola si traccia fino a una condizione esplicita, esattamente ciò che chiedono gli articoli 12 e 14 dell’EU AI Act.</p><h2>Dove si ferma</h2><p>Voglio essere onesto sui limiti. Lo standard di riferimento è piccolo &mdash; 92 tipi di entità, 59 in oncologia &mdash; perciò i punteggi su un singolo corpus sono ottimistici e valgono solo i confronti relativi. Il livello LLM non è mai stato valutato end-to-end sulla coorte esterna; la sua unica entità instradata era troppo rara. E la calibrazione non si trasferisce tra domini: in un altro genere clinico o in un’altra lingua la concordanza scende a 0,45&ndash;0,73, quindi le soglie vanno ritarate. DEMNE è una prova di fattibilità, non un prodotto finito.</p><h2>Perché conta</h2><p>Il punto non è che le regole battono i transformer. È che &laquo;quale metodo&raquo; è una domanda a cui si può rispondere entità per entità, a partire da proprietà misurabili del testo, invece di scegliere per default il modello più pesante e sperare. Per l’NLP clinico &mdash; dove costo, auditabilità e fiducia contano insieme &mdash; questa impostazione vale più di un altro punto percentuale su un benchmark.</p><p>Il codice e il metodo completo sono su <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; il manoscritto è in preparazione.</p>` },
+      { status: 'Bozza — in arrivo', title: 'Estrazione a stadi contro un unico grande modello', body: 'L\'argomentazione per instradare le entità attraverso regole e un transformer affinato prima di chiamare un LLM — e cosa costa sbagliare.' },
     ],
   },
   contact: {
@@ -1594,14 +1706,14 @@ const pt: Dictionary = {
     menuToggleLabel: 'Abrir menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Extraindo biomarcadores de texto clínico ',
     h1Accent: 'sem acordar a GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Sou Clément Longeac. Estou trabalhando no DEMNE, um framework de roteamento que decide — para cada tipo de entidade — se uma regex, um CRF, um transformer ou um LLM é a ferramenta honesta para a tarefa. Primeiro resultado: 99,5% das entidades clínicas extraídas sem GPU, F1 = 0,941 em 300 notas AP-HP.',
     ctaResearch: 'Ver a pesquisa',
     ctaCV: 'Baixar o currículo',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, esquema ao vivo',
+    caption: 'DEMNE — Rules → Transformer → LLM, esquema ao vivo',
   },
   about: {
     label: '01 — Sobre mim',
@@ -1621,7 +1733,7 @@ const pt: Dictionary = {
   },
   research: {
     label: '02 — Pesquisa',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Um pipeline híbrido de reconhecimento de entidades nomeadas para texto clínico oncológico francês.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'NER clínico · corpus de oncologia franceses',
@@ -1658,11 +1770,48 @@ const pt: Dictionary = {
     title: 'Onde o trabalho aconteceu até agora',
     currentLabel: 'Em andamento',
     items: [
-      { current: true, date: '2025 — Atualmente', title: 'Assistente de pesquisa, Tremplin Recherche', org: 'ESIEE Paris', body: 'Desenvolvimento do DEMNE, um pipeline híbrido de NER clínico para texto de oncologia francês, como projeto central da trilha Tremplin Recherche antes das candidaturas de doutorado.' },
-      { current: true, date: '2026 — Atualmente', title: 'Fundador e Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Construção de uma plataforma que dá a pacientes com lesão cerebral e a seus terapeutas ocupacionais uma forma estruturada de comparar ferramentas digitais de compensação cognitiva. Nasceu como protótipo Python/Streamlit no hackathon SN@SU (Sorbonne, com Flor Sanchez-Luizard, terapeuta ocupacional na UEROS L\'ADAPT Île-de-France); atualmente em fase de definição de uma reconstrução de produção (FastAPI, PostgreSQL, Next.js) com hospedagem compatível com HDS/RGPD e um motor de busca semântica para correspondência clínica.' },
-      { date: '2024 — 2027', title: 'Estudante de engenharia — Data Science & IA', org: 'ESIEE Paris', body: 'Estudante do quarto ano do programa de engenharia de cinco anos da ESIEE Paris, especialização em Data Science & IA (DSIA).' },
-      { date: '2025', title: 'Estagiário de engenharia, divisão GRADES', org: 'Synchrotron SOLEIL', body: 'Desenvolvimento de autopkgtests em OpenCL para compatibilidade de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infraestrutura Debian/ROCm via GitLab Salsa.' },
-      { date: '2022 — Atualmente', title: 'Tutor de ciências exatas', org: 'Complétude', body: 'Aulas de matemática e físico-química para cerca de dez alunos, do ensino fundamental até o último ano do ensino médio, paralelamente aos meus estudos de engenharia.' },
+      {
+        date: 'Mai. – jul. 2026',
+        title: 'Estagiário de investigação, Armazém de Dados Clínicos',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Apliquei e validei a abordagem de encaminhamento do DEMNE em dados hospitalares: extração de biomarcadores oncológicos (ER, PR, HER2, Ki67, FISH) de relatórios clínicos franceses e definição de um percurso clínico auditável e realista para implantação.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Out. 2025 – mai. 2026',
+        title: 'Investigador estudante, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Concebi o DEMNE, um pipeline híbrido de NER clínico (regras / transformer / LLM) para texto oncológico francês, orientado por cinco métricas de corpus formalizadas — o projeto central do percurso Tremplin Recherche antes das candidaturas a doutoramento.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Presente',
+        title: 'Product Lead e programador, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Construção de uma plataforma que dá a pacientes com lesões cerebrais e a terapeutas ocupacionais uma forma estruturada de comparar ferramentas de compensação cognitiva. Nasceu como protótipo Python/Streamlit no hackathon SN@SU (Sorbonne Université, com Flor Sanchez-Luizard, terapeuta ocupacional na UEROS L’ADAPT Île-de-France); está agora a definir-se uma reconstrução de produção (FastAPI, PostgreSQL, Next.js) com alojamento conforme HDS/RGPD e um motor de pesquisa semântica para o emparelhamento de ferramentas clínicas.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Estudante de engenharia — Data Science e IA',
+        org: 'ESIEE Paris',
+        body: 'Estudante do quinto ano do programa de engenharia de cinco anos da ESIEE Paris, especialização Data Science e IA (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Estagiário de engenharia, divisão GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Desenvolvimento de autopkgtests com OpenCL para a compatibilidade de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infraestrutura Debian/ROCm no GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Presente',
+        title: 'Explicador de ciências (STEM)',
+        org: 'Complétude',
+        body: 'Aulas de matemática e físico-química a cerca de dez alunos, do primário ao último ano do secundário, em paralelo com os estudos de engenharia.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -1683,56 +1832,56 @@ const pt: Dictionary = {
     more: 'Saiba mais →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Junho de 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Um catálogo de ferramentas digitais de compensação cognitiva para pessoas com lesões cerebrais e os seus terapeutas ocupacionais.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'O NeuroStep nasceu no hackathon SN@SU (Sorbonne Université). Terapeutas ocupacionais e pacientes encontram apps de comunicação, memória e planeamento sem percorrer as lojas uma a uma: cada ferramenta está listada, classificada por perturbação e tema, e é pesquisável.\nO MVP é uma aplicação Streamlit com um armazenamento JSON; está agora a definir-se uma reconstrução de produção com FastAPI, PostgreSQL e um frontend Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Dez. 2025 · Projeto em equipa',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Um painel interativo que reconstrói 15 anos de poluição atmosférica de fundo em França (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Um pipeline de dados e um painel interativo sobre indicadores comunais do INERIS (Zenodo). Os scripts descarregam, limpam e guardam os dados em SQLite; o painel apresenta um mapa de calor de poluição com Leaflet, com um seletor de ano e filtros de poluente, a par de gráficos Plotly.\nFeito com o colega de equipa William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Projeto de curso',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Reconhecimento facial baseado em CNN em imagens fixas e depois vídeo, com aumento de dados e alinhamento facial.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Um projeto de curso sobre reconhecimento facial moderno. Um primeiro modelo treinado com apenas 218 imagens sofria de forte sobreajuste; o aumento de dados (rotação, zoom) e um passo de alinhamento facial que normaliza a posição dos olhos e dos lábios, combinados com uma rede pré-treinada, melhoraram a generalização. O objetivo era detetar rostos em vídeo a partir do próprio conjunto de dados do projeto.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Projeto a dois',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Um jogo de aventura textual em terminal, em Python, com um desenho orientado a objetos.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Uma aventura textual jogada no terminal: o jogador move-se entre oito salas escrevendo comandos. O código está dividido em pequenas classes de responsabilidade única (jogo, sala, jogador, comando, ação, personagem, objeto), pelo que acrescentar uma sala ou um objeto continua a ser uma alteração local.\nFeita com Anne-Colombe André na ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Fev. 2025 · Projeto em equipa',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Uma plataforma de analítica de dados culinários: scraping, ETL e um painel sobre dados de receitas.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Um projeto de equipa de engenharia de dados que extrai dados de receitas do Marmiton, corre um pipeline ETL e expõe os resultados através de um painel de analítica. Feito em Python com notebooks Jupyter para exploração.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -1741,9 +1890,9 @@ const pt: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Scripts autopkgtest que validam software científico em GPU AMD, na infraestrutura de CI do Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Parte do estágio no Synchrotron SOLEIL: autopkgtests escritos em OpenCL para verificar a compatibilidade de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infraestrutura de integração contínua Debian/ROCm, executados através do GitLab Salsa. Os scripts instalam e desinstalam pacotes em máquinas virtuais limpas e reportam a compatibilidade entre GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -1815,8 +1964,8 @@ const pt: Dictionary = {
     title: 'Notas da pesquisa',
     subtitle: 'Textos mais longos sobre os métodos, becos sem saída e decisões por trás do trabalho acima.',
     posts: [
-      { status: 'Rascunho — em breve', title: 'Por que o NER clínico francês quebra modelos genéricos', body: 'Um panorama de onde pipelines NER padrão falham em laudos de oncologia franceses, e o que isso implica para a estrutura do DEMNE.' },
-      { status: 'Rascunho — em breve', title: 'Extração em estágios vs. um único modelo grande', body: 'O argumento para rotear entidades por regras, um CRF e um transformer ajustado antes de chamar um LLM — e o que custa errar.' },
+      { status: 'Publicado · out. 2026', title: 'Por que o NER clínico francês quebra modelos genéricos', body: 'Um panorama de onde pipelines NER padrão falham em laudos de oncologia franceses, e o que isso implica para a estrutura do DEMNE.', content: `<p>Abra um relatório de oncologia em francês e a maioria dos modelos de NER prontos a usar tropeça logo na primeira frase. O vocabulário é denso e abreviado (ER, PR, HER2, Ki67, FISH), a formatação muda de um hospital para outro, e a terminologia de biomarcadores que importa está quase ausente dos corpora com que esses modelos foram treinados. O reflexo habitual &mdash; atirar-lhe um modelo grande &mdash; funciona, mas é caro, opaco e difícil de justificar perante um clínico ou um auditor.</p><h2>Nem toda entidade precisa de um LLM</h2><p>O DEMNE parte de uma observação direta: as entidades destes relatórios não são igualmente difíceis. Uma menção de biópsia escreve-se de umas poucas formas estáveis; um nome de fármaco pode aparecer de cem maneiras. Assim, em vez de um único modelo para tudo, o DEMNE mede cada tipo de entidade e encaminha-a para o método mais leve que seja fiável &mdash; uma regra determinística, um transformer afinado ou um LLM apenas como último recurso.</p><p>A medida são cinco métricas de corpus calculadas a partir das anotações: quão regular é a forma de superfície, quão homogéneo é o vocabulário, se um pequeno conjunto de palavras-chave é discriminante, com que frequência a menção surge sob negação ou contradição, e se há dados anotados suficientes para treinar um modelo supervisionado. Um grafo de decisão determinístico transforma esses números num nível, e os seus 17 limiares são calibrados com uma busca multiobjetivo que penaliza a dobrar enviar uma entidade para um método demasiado fraco face a um apenas demasiado caro.</p><h2>O que traz</h2><p>No conjunto de calibração de oncologia (59 tipos de entidade), o encaminhamento concorda com o nível de referência dos especialistas com uma concordância de 0,954 e uma estimativa leave-one-corpus-out de 0,866 &mdash; bem acima de qualquer baseline de nível fixo (sempre-regras atinge 0,729, sempre-LLM 0,148). O teste mais convincente é externo: aplicado sem reajuste a 300 relatórios de TC da AP-HP, em localizações tumorais nunca vistas, o DEMNE encaminhou 99,5 % das menções (411 de 413) para regras determinísticas. Essas regras atingiram um F1 médio de 0,941, ao passo que um transformer afinado nas mesmas entidades, com um orçamento hospitalar realista, ficou-se por 0,358.</p><p>Por outras palavras: para as entidades padronizadas que dominam o relatório oncológico, as regras não eram apenas mais baratas &mdash; eram melhores, e cada decisão de regra traça-se até uma condição explícita, exatamente o que pedem os artigos 12 e 14 do EU AI Act.</p><h2>Onde para</h2><p>Quero ser honesto quanto aos limites. O padrão de referência é pequeno &mdash; 92 tipos de entidade, 59 deles em oncologia &mdash; por isso as pontuações num único corpus são otimistas e só valem as comparações relativas. O nível LLM nunca foi avaliado de ponta a ponta na coorte externa; a sua única entidade encaminhada era demasiado rara. E a calibração não se transfere entre domínios: noutro género clínico ou noutra língua a concordância cai para 0,45&ndash;0,73, pelo que os limiares têm de ser reajustados. O DEMNE é uma prova de viabilidade, não um produto acabado.</p><h2>Porque importa</h2><p>A questão não é que as regras batam os transformers. É que &laquo;qual método&raquo; é uma pergunta que se pode responder entidade a entidade, a partir de propriedades mensuráveis do texto, em vez de recorrer por defeito ao modelo mais pesado e esperar. Para o PLN clínico &mdash; onde o custo, a auditabilidade e a confiança importam ao mesmo tempo &mdash; este enquadramento vale mais do que mais um ponto percentual num benchmark.</p><p>O código e o método completo estão no <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; o manuscrito está em preparação.</p>` },
+      { status: 'Rascunho — em breve', title: 'Extração em estágios vs. um único modelo grande', body: 'O argumento para rotear entidades por regras e um transformer ajustado antes de chamar um LLM — e o que custa errar.' },
     ],
   },
   contact: {
@@ -1853,14 +2002,14 @@ const nl: Dictionary = {
     menuToggleLabel: 'Menu openen',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Biomarkers uit klinische tekst halen ',
     h1Accent: 'zonder de GPU wakker te maken',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Ik ben Clément Longeac. Ik werk aan DEMNE, een routeringsframework dat per entiteitstype beslist of een regex, een CRF, een transformer of een LLM het eerlijke gereedschap voor de taak is. Eerste resultaat: 99,5% van de klinische entiteiten geëxtraheerd zonder GPU, F1 = 0,941 op 300 AP-HP-notities.',
     ctaResearch: 'Bekijk het onderzoek',
     ctaCV: 'Download CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, live schema',
+    caption: 'DEMNE — Rules → Transformer → LLM, live schema',
   },
   about: {
     label: '01 — Over mij',
@@ -1880,7 +2029,7 @@ const nl: Dictionary = {
   },
   research: {
     label: '02 — Onderzoek',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Een hybride named-entity-recognitionpipeline voor Franse oncologische klinische tekst.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Klinische NER · Franse oncologiecorpora',
@@ -1917,11 +2066,48 @@ const nl: Dictionary = {
     title: 'Waar het werk tot nu toe heeft plaatsgevonden',
     currentLabel: 'Lopend',
     items: [
-      { current: true, date: '2025 — Heden', title: 'Onderzoeksassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Ontwikkeling van DEMNE, een hybride klinische NER-pipeline voor Franse oncologietekst, als kernproject van het Tremplin Recherche-traject voorafgaand aan doctoraatssollicitaties.' },
-      { current: true, date: '2026 — Heden', title: 'Oprichter & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bouw van een platform dat hersenletselpatiënten en hun ergotherapeuten een gestructureerde manier geeft om digitale hulpmiddelen voor cognitieve compensatie te vergelijken. Ontstaan als Python/Streamlit-prototype tijdens de SN@SU-hackathon (Sorbonne-universiteit, met Flor Sanchez-Luizard, ergotherapeut bij UEROS L\'ADAPT Île-de-France); momenteel in de planningsfase voor een productieherbouw (FastAPI, PostgreSQL, Next.js) met HDS/RGPD-conforme hosting en een semantische zoekmachine voor klinische matching.' },
-      { date: '2024 — 2027', title: 'Ingenieursstudent — Data Science & AI', org: 'ESIEE Paris', body: 'Vierdejaars student in het vijfjarige ingenieursprogramma van ESIEE Paris, specialisatie Data Science & AI (DSIA).' },
-      { date: '2025', title: 'Ingenieursstagiair, afdeling GRADES', org: 'Synchrotron SOLEIL', body: 'Ontwikkeling van autopkgtests in OpenCL voor AMD-GPU-compatibiliteit (pyopencl, nabu, ufo-filters, pyvkfft) op Debian/ROCm-infrastructuur via GitLab Salsa.' },
-      { date: '2022 — Heden', title: 'Bijlesdocent bèta-vakken', org: 'Complétude', body: 'Bijles wiskunde en natuurkunde-scheikunde aan een tiental leerlingen, van de basisschool tot het laatste jaar middelbare school, naast mijn ingenieursstudie.' },
+      {
+        date: 'Mei – jul. 2026',
+        title: 'Onderzoeksstagiair, klinisch datawarehouse',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'De DEMNE-routeringsaanpak toegepast en gevalideerd op ziekenhuisgegevens: extractie van oncologische biomarkers (ER, PR, HER2, Ki67, FISH) uit Franse klinische rapporten en definitie van een auditeerbaar, inzetgericht klinisch traject.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Okt. 2025 – mei 2026',
+        title: 'Stud, onderzoeker, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'DEMNE ontworpen, een hybride klinische NER-pijplijn (regels / transformer / LLM) voor Franse oncologische tekst, gestuurd door vijf geformaliseerde corpusmetingen — het kernproject van het Tremplin-Recherche-traject met het oog op promotieaanvragen.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Heden',
+        title: 'Product Lead & ontwikkelaar, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Bouw van een platform dat mensen met hersenletsel en ergotherapeuten een gestructureerde manier biedt om cognitieve compensatiehulpmiddelen te vergelijken. Begonnen als Python/Streamlit-prototype op de SN@SU-hackathon (Sorbonne Université, met Flor Sanchez-Luizard, ergotherapeut bij UEROS L’ADAPT Île-de-France); nu wordt een productieherbouw (FastAPI, PostgreSQL, Next.js) afgebakend met HDS/AVG-conforme hosting en een semantische zoekmachine voor het matchen van klinische hulpmiddelen.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Ingenieursstudent — Data Science & AI',
+        org: 'ESIEE Paris',
+        body: 'Vijfdejaarsstudent in het vijfjarige ingenieursprogramma van ESIEE Paris, specialisatie Data Science & AI (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Ingenieursstagiair, afdeling GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'autopkgtests ontwikkeld met OpenCL voor AMD-GPU-compatibiliteit (pyopencl, nabu, ufo-filters, pyvkfft) over de Debian/ROCm-infrastructuur op GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Heden',
+        title: 'Bijlesdocent (bèta)',
+        org: 'Complétude',
+        body: 'Wiskunde en natuur-scheikunde gegeven aan een tiental leerlingen, van de basisschool tot het eindexamenjaar, naast mijn ingenieursstudie.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -1942,56 +2128,56 @@ const nl: Dictionary = {
     more: 'Meer weten →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Juni 2026 · SN@SU-hackathon',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Een catalogus van digitale hulpmiddelen voor cognitieve compensatie voor mensen met hersenletsel en hun ergotherapeuten.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep begon op de SN@SU-hackathon (Sorbonne Université). Ergotherapeuten en patiënten vinden apps voor communicatie, geheugen en planning zonder de appstores één voor één te doorzoeken: elk hulpmiddel is opgenomen, geclassificeerd op stoornis en thema, en doorzoekbaar.\nDe MVP is een Streamlit-applicatie met een JSON-opslag; momenteel wordt een productieherbouw met FastAPI, PostgreSQL en een Next.js-frontend afgebakend.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Dec. 2025 · Teamproject',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Een interactief dashboard dat 15 jaar achtergrondluchtvervuiling in Frankrijk reconstrueert (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Een datapijplijn en interactief dashboard over INERIS-indicatoren op gemeenteniveau (Zenodo). Scripts downloaden, schonen en bewaren de data in SQLite; het dashboard toont een Leaflet-heatmap van vervuiling met een jaarschuif en vervuilingsfilters, naast Plotly-grafieken.\nGemaakt met teamgenoot William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Cursusproject',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'CNN-gebaseerde gezichtsherkenning op stilstaande beelden en daarna video, met data-augmentatie en gezichtsuitlijning.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Een cursusproject over moderne gezichtsherkenning. Een eerste model, getraind op slechts 218 beelden, overfitte sterk; data-augmentatie (rotatie, zoom) en een gezichtsuitlijningsstap die de positie van ogen en lippen normaliseert, gecombineerd met een voorgetraind netwerk, verbeterden de generalisatie. Het doel was gezichten in video te detecteren vanuit de eigen dataset van het project.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Duoproject',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Een tekstavontuur voor de terminal in Python, met een objectgeoriënteerd ontwerp.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Een tekstavontuur dat in de terminal wordt gespeeld: de speler beweegt tussen acht kamers door commando’s te typen. De code is opgesplitst in kleine klassen met één verantwoordelijkheid (spel, kamer, speler, commando, actie, personage, voorwerp), zodat een kamer of voorwerp toevoegen een lokale wijziging blijft.\nGemaakt met Anne-Colombe André aan de ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Feb. 2025 · Teamproject',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Een platform voor culinaire data-analyse: scraping, ETL en een dashboard over receptgegevens.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Een data-engineering-teamproject dat receptgegevens van Marmiton scrapt, een ETL-pijplijn draait en de resultaten via een analysedashboard ontsluit. Gebouwd in Python met Jupyter-notebooks voor verkenning.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -2000,9 +2186,9 @@ const nl: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'autopkgtest-scripts die wetenschappelijke software op AMD-GPU’s valideren, op de CI-infrastructuur van Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Onderdeel van de stage bij Synchrotron SOLEIL: autopkgtests in OpenCL om de compatibiliteit van AMD-GPU’s te controleren (pyopencl, nabu, ufo-filters, pyvkfft) over de Debian/ROCm continuous-integration-infrastructuur, uitgevoerd via GitLab Salsa. De scripts installeren en verwijderen pakketten op schone virtuele machines en rapporteren de compatibiliteit over GPU’s heen.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -2074,8 +2260,8 @@ const nl: Dictionary = {
     title: 'Notities uit het onderzoek',
     subtitle: 'Langere stukken over de methoden, doodlopende wegen en beslissingen achter het werk hierboven.',
     posts: [
-      { status: 'Concept — binnenkort', title: 'Waarom Franse klinische NER generieke modellen breekt', body: 'Een overzicht van waar standaard NER-pipelines falen op Franse oncologierapporten, en wat dat betekent voor de structuur van DEMNE.' },
-      { status: 'Concept — binnenkort', title: 'Gefaseerde extractie versus één groot model', body: 'Het argument om entiteiten via regels, een CRF en een fijn afgestelde transformer te leiden voordat er ooit een LLM wordt aangeroepen — en wat het kost om dat verkeerd te doen.' },
+      { status: 'Gepubliceerd · okt. 2026', title: 'Waarom Franse klinische NER generieke modellen breekt', body: 'Een overzicht van waar standaard NER-pipelines falen op Franse oncologierapporten, en wat dat betekent voor de structuur van DEMNE.', content: `<p>Open een Frans oncologisch verslag en de meeste kant-en-klare NER-modellen struikelen al in de eerste zin. Het vocabulaire is dicht en afgekort (ER, PR, HER2, Ki67, FISH), de opmaak verschilt per ziekenhuis, en de biomarkerterminologie die ertoe doet ontbreekt vrijwel in de corpora waarop deze modellen zijn getraind. De gebruikelijke reflex &mdash; er een groot model op loslaten &mdash; werkt, maar is duur, ondoorzichtig en moeilijk te verantwoorden tegenover een clinicus of auditor.</p><h2>Niet elke entiteit heeft een LLM nodig</h2><p>DEMNE vertrekt van een nuchtere observatie: de entiteiten in deze verslagen zijn niet even moeilijk. Een biopsievermelding wordt op een handvol stabiele manieren geschreven; een medicijnnaam kan in honderd vormen opduiken. Dus in plaats van één model voor alles meet DEMNE elk entiteitstype en stuurt het naar de lichtste methode die betrouwbaar genoeg is &mdash; een deterministische regel, een fijn afgestemde transformer, of een LLM alleen als laatste redmiddel.</p><p>De meting bestaat uit vijf corpusmetingen berekend uit de annotaties: hoe sjabloonmatig de oppervlaktevorm is, hoe homogeen het vocabulaire is, of een kleine set trefwoorden onderscheidend is, hoe vaak de vermelding onder negatie of tegenspraak valt, en of er wel genoeg gelabelde data is om een supervised model te trainen. Een deterministische beslisgraaf zet die getallen om in een niveau, en de 17 drempels worden gekalibreerd met een multi-objective zoektocht die een entiteit naar een te zwakke methode sturen twee keer zo zwaar bestraft als naar een slechts te dure.</p><h2>Wat het oplevert</h2><p>Op de oncologische kalibratieset (59 entiteitstypen) komt de routering overeen met het expertreferentieniveau met een concordantie van 0,954 en een leave-one-corpus-out-schatting van 0,866 &mdash; ruim boven elke baseline met vast niveau (altijd-regels haalt 0,729, altijd-LLM 0,148). De overtuigender test is extern: zonder bijstelling toegepast op 300 CT-verslagen van de AP-HP, op nooit geziene tumorlocaties, routeerde DEMNE 99,5 % van de gemarkeerde vermeldingen (411 van 413) naar deterministische regels. Die regels haalden een gemiddelde F1 van 0,941, terwijl een op dezelfde entiteiten fijn afgestemde transformer binnen een realistisch ziekenhuisbudget bleef steken op 0,358.</p><p>Met andere woorden: voor de gestandaardiseerde entiteiten die de oncologische verslaglegging domineren, waren regels niet alleen goedkoper &mdash; ze waren beter, en elke regelbeslissing is te herleiden tot een expliciete voorwaarde, precies wat de artikelen 12 en 14 van de EU AI Act vragen.</p><h2>Waar het stopt</h2><p>Ik wil eerlijk zijn over de grenzen. De referentiestandaard is klein &mdash; 92 entiteitstypen, 59 ervan in de oncologie &mdash; dus scores op één corpus zijn optimistisch en alleen relatieve vergelijkingen houden stand. Het LLM-niveau is op het externe cohort nooit end-to-end geëvalueerd; de ene gerouteerde entiteit was te zeldzaam. En de kalibratie draagt niet over tussen domeinen: in een ander klinisch genre of een andere taal zakt de concordantie naar 0,45&ndash;0,73, dus de drempels moeten opnieuw worden afgesteld. DEMNE is een haalbaarheidsbewijs, geen afgewerkt product.</p><h2>Waarom het ertoe doet</h2><p>Het punt is niet dat regels transformers verslaan. Het is dat &bdquo;welke methode&rdquo; een vraag is die je per entiteit kunt beantwoorden, vanuit meetbare eigenschappen van de tekst, in plaats van standaard het zwaarste model te kiezen en te hopen. Voor klinische NLP &mdash; waar kosten, auditeerbaarheid en vertrouwen tegelijk tellen &mdash; is die insteek meer waard dan nog een procentpunt op een benchmark.</p><p>De code en de volledige methode staan op <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; het manuscript is in voorbereiding.</p>` },
+      { status: 'Concept — binnenkort', title: 'Gefaseerde extractie versus één groot model', body: 'Het argument om entiteiten via regels en een fijn afgestelde transformer te leiden voordat er ooit een LLM wordt aangeroepen — en wat het kost om dat verkeerd te doen.' },
     ],
   },
   contact: {
@@ -2112,14 +2298,14 @@ const zh: Dictionary = {
     menuToggleLabel: '打开菜单',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: '从临床文本中提取生物标志物，',
     h1Accent: '却不必唤醒GPU',
     h1Post: '。',
     sub: '我是Clément Longeac。我正在研发DEMNE，一个路由框架——针对每种实体类型，决定正则表达式、CRF、Transformer还是LLM才是诚实可靠的工具。首个成果：99.5%的临床实体在无需GPU的情况下被提取，在300份AP-HP病历上F1值达到0.941。',
     ctaResearch: '查看研究',
     ctaCV: '下载简历',
-    caption: 'DEMNE — 规则 → CRF → Transformer → LLM，实时示意图',
+    caption: 'DEMNE — 规则 → Transformer → LLM，实时示意图',
   },
   about: {
     label: '01 — 关于我',
@@ -2139,7 +2325,7 @@ const zh: Dictionary = {
   },
   research: {
     label: '02 — 研究',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: '面向法语肿瘤学临床文本的混合命名实体识别流水线。',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: '临床命名实体识别 · 法语肿瘤学语料库',
@@ -2176,11 +2362,48 @@ const zh: Dictionary = {
     title: '迄今为止的工作历程',
     currentLabel: '进行中',
     items: [
-      { current: true, date: '2025年 — 至今', title: '研究助理，Tremplin Recherche', org: 'ESIEE Paris', body: '开发DEMNE，一个面向法语肿瘤学文本的混合临床命名实体识别流水线，作为Tremplin Recherche项目的核心课题，为博士申请做准备。' },
-      { current: true, date: '2026年 — 至今', title: '创始人兼产品负责人，NeuroStep', org: 'ESIEE Paris学生创业公司', body: '构建一个平台，让脑损伤患者及其职业治疗师能够以结构化方式比较认知补偿数字工具。项目起源于索邦大学SN@SU黑客松上的Python/Streamlit原型（与UEROS L\'ADAPT法兰西岛的职业治疗师Flor Sanchez-Luizard合作）；目前正规划以FastAPI、PostgreSQL和Next.js重构为生产版本，采用符合HDS/RGPD标准的托管方案,并配备用于临床工具匹配的语义搜索引擎。' },
-      { date: '2024年 — 2027年', title: '工程学学生 — 数据科学与人工智能', org: 'ESIEE Paris', body: '巴黎ESIEE工程学院五年制工程学项目四年级学生，专攻数据科学与人工智能（DSIA）。' },
-      { date: '2025年', title: '工程实习生，GRADES部门', org: 'Synchrotron SOLEIL（法国索莱伊同步辐射光源）', body: '使用OpenCL开发autopkgtest测试脚本，用于AMD GPU兼容性测试（pyopencl、nabu、ufo-filters、pyvkfft），并通过GitLab Salsa在Debian/ROCm基础设施上运行。' },
-      { date: '2022年 — 至今', title: '理科家教', org: 'Complétude', body: '在攻读工程学学位的同时，为约十名学生教授数学和物理化学，从小学到高中毕业班（不含高等教育阶段）。' },
+      {
+        date: '2026年5月 – 7月',
+        title: '科研实习生，临床数据仓库',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: '在医院数据上应用并验证了 DEMNE 的路由方法：从法语临床报告中抽取肿瘤学生物标志物（ER、PR、HER2、Ki67、FISH），并定义了一条可审计、贴近实际部署的临床路径。',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: '2025年10月 – 2026年5月',
+        title: '学生研究员，Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: '设计了 DEMNE——一个面向法语肿瘤学文本的混合临床 NER 流水线（规则 / transformer / LLM），由五项形式化的语料库指标驱动，是 Tremplin Recherche 路线在博士申请前的核心项目。',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026年 – 至今',
+        title: '产品负责人兼开发者，NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: '构建一个平台，让脑损伤患者及作业治疗师能够以结构化方式比较认知补偿工具。最初是 SN@SU 黑客松上的 Python/Streamlit 原型（Sorbonne Université，与 UEROS L’ADAPT Île-de-France 的作业治疗师 Flor Sanchez-Luizard 合作）；目前正在规划生产级重建（FastAPI、PostgreSQL、Next.js），采用符合 HDS/GDPR 的托管，并配备用于临床工具匹配的语义搜索引擎。',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024年 – 2027年',
+        title: '工程学学生 — 数据科学与人工智能',
+        org: 'ESIEE Paris',
+        body: 'ESIEE Paris 五年制工程项目的五年级学生，主修数据科学与人工智能（DSIA）。',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025年',
+        title: '工程实习生，GRADES 部门',
+        org: 'Synchrotron SOLEIL',
+        body: '使用 OpenCL 开发 autopkgtest，在 GitLab Salsa 上的 Debian/ROCm 基础设施中检查 AMD GPU 兼容性（pyopencl、nabu、ufo-filters、pyvkfft）。',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022年 – 至今',
+        title: '理工科家教',
+        org: 'Complétude',
+        body: '在工程学业之余，为约十名从小学到高中毕业班的学生讲授数学和物理化学。',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -2200,67 +2423,67 @@ const zh: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: '2026年6月 · SN@SU 黑客松',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          '面向脑损伤人士及其作业治疗师的数字认知补偿工具目录。',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep 始于 SN@SU 黑客松（Sorbonne Université）。作业治疗师和患者无需逐个翻找应用商店，即可找到用于沟通、记忆和规划的应用：每个工具都被收录，并按障碍类型和主题分类、可检索。\nMVP 是一个以 JSON 存储为后端的 Streamlit 应用；目前正在规划用 FastAPI、PostgreSQL 和 Next.js 前端进行生产级重建。',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: '2025年12月 · 团队项目',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          '一个交互式仪表板，重建法国 15 年的背景空气污染数据（2000–2015）。',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          '一个围绕 INERIS 市镇级指标（Zenodo）的数据管道与交互式仪表板。脚本负责下载、清洗并将数据存入 SQLite；仪表板用 Leaflet 呈现污染热力图，配有年份滑块和污染物筛选，并辅以 Plotly 图表。\n与队友 William Zee 共同完成。',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025年 · 课程项目',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          '基于 CNN 的人脸识别，先用静态图像再用视频，并采用数据增强与人脸对齐。',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          '一个关于现代人脸识别的课程项目。仅用 218 张图像训练的初始模型严重过拟合；数据增强（旋转、缩放）与归一化眼睛和嘴唇位置的人脸对齐步骤，结合预训练网络，改善了泛化能力。目标是从项目自有数据集的视频中检测人脸。',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025年 · 结对项目',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          '一个在终端中运行的 Python 文字冒险游戏，采用面向对象设计。',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          '一个在终端中进行的文字冒险：玩家通过输入命令在八个房间之间移动。代码被拆分为职责单一的小类（游戏、房间、玩家、命令、动作、角色、物品），因此新增房间或物品仍是局部改动。\n与 Anne-Colombe André 在 ESIEE Paris 共同完成。',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: '2025年2月 · 团队项目',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          '一个烹饪数据分析平台：爬取、ETL 以及基于食谱数据的仪表板。',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          '一个数据工程团队项目：从 Marmiton 爬取食谱数据，运行 ETL 管道，并通过分析仪表板呈现结果。使用 Python 开发，并用 Jupyter notebook 进行探索。',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
       },
       {
-        date: '2025 · Synchrotron SOLEIL',
+        date: '2025年 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          '在 Debian 的 CI 基础设施上，用于在 AMD GPU 上验证科学软件的 autopkgtest 脚本。',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Synchrotron SOLEIL 实习的一部分：用 OpenCL 编写 autopkgtest，在 Debian/ROCm 持续集成基础设施上检查 AMD GPU 兼容性（pyopencl、nabu、ufo-filters、pyvkfft），通过 GitLab Salsa 运行。脚本在干净的虚拟机上安装和卸载软件包，并报告各 GPU 的兼容性。',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -2332,8 +2555,8 @@ const zh: Dictionary = {
     title: '研究札记',
     subtitle: '关于上述工作背后的方法、弯路与决策的深入文章。',
     posts: [
-      { status: '草稿 — 即将发布', title: '为什么法语临床命名实体识别会让通用模型失效', body: '梳理标准命名实体识别流水线在法语肿瘤学报告上失败的原因，以及这对DEMNE结构设计的启示。' },
-      { status: '草稿 — 即将发布', title: '分阶段抽取与单一大模型的对比', body: '在调用LLM之前，先通过规则、CRF和微调Transformer路由实体的理由——以及出错时的代价。' },
+      { status: '已发布 · 2026年10月', title: '为什么法语临床命名实体识别会让通用模型失效', body: '梳理标准命名实体识别流水线在法语肿瘤学报告上失败的原因，以及这对DEMNE结构设计的启示。', content: `<p>翻开一份法语肿瘤学报告，大多数开箱即用的 NER 模型在第一句话就会出错。词汇密集且多缩写（ER、PR、HER2、Ki67、FISH），排版因医院而异，而真正重要的生物标志物术语在这些模型训练所用的语料库中几乎不存在。惯常的反应&mdash;&mdash;直接上大模型&mdash;&mdash;确实有用，但成本高、不透明，且难以向临床医生或审计者交代。</p><h2>并非每个实体都需要 LLM</h2><p>DEMNE 从一个朴素的观察出发：这些报告中的实体并非同样困难。活检提及只有几种稳定写法；药物名称却可能有上百种形式。因此，DEMNE 不用一个模型包打天下，而是度量每一种实体类型，并将其送往足够可靠的最轻方法&mdash;&mdash;确定性规则、微调过的 transformer，或仅在万不得已时才用 LLM。</p><p>所谓度量，是从标注中计算的五项语料库指标：表层形式的模板化程度、词汇的同质程度、一小组关键词是否具有判别力、提及出现在否定或矛盾之下的频率，以及是否有足够的标注数据来训练有监督模型。一个确定性决策图把这些数字转化为层级，其 17 个阈值通过多目标搜索来校准&mdash;&mdash;将实体送往过弱方法所受的惩罚，是送往仅仅过于昂贵方法的两倍。</p><h2>它带来了什么</h2><p>在肿瘤学校准集（59 种实体类型）上，路由与专家参考层级的一致性达到 0.954，留一语料库交叉验证估计为 0.866&mdash;&mdash;远高于任何固定层级的基线（全用规则为 0.729，全用 LLM 为 0.148）。更有说服力的是外部测试：在不做任何重新调参的情况下，应用于 AP-HP 的 300 份 CT 报告（涉及模型从未见过的癌症部位），DEMNE 将 99.5% 的标记提及（413 个中的 411 个）路由到确定性规则。这些规则达到了 0.941 的平均 F1，而在现实医院预算下对同样实体微调的 transformer 仅为 0.358。</p><p>换言之：对于主导肿瘤学报告的标准化实体，规则不仅更便宜&mdash;&mdash;而且更好，并且每一条规则决策都能追溯到一个明确条件，这正是欧盟 AI 法案第 12 条和第 14 条所要求的。</p><h2>它的边界</h2><p>我想坦诚地谈谈局限。参考标准很小&mdash;&mdash;92 种实体类型，其中 59 种属肿瘤学&mdash;&mdash;因此单一语料库上的分数偏乐观，只有相对比较才成立。LLM 层级从未在外部队列上端到端评估过；它唯一路由到的实体过于罕见。而且校准无法跨域迁移：换到另一种临床体裁或另一种语言，一致性会降到 0.45&ndash;0.73，阈值必须重新拟合。DEMNE 是可行性证明，而非成品。</p><h2>为什么重要</h2><p>重点并不是规则胜过 transformer，而是&ldquo;用哪种方法&rdquo;可以逐实体地、依据文本的可度量属性来回答，而不是默认选最重的模型碰运气。对于临床 NLP&mdash;&mdash;成本、可审计性与信任同时重要&mdash;&mdash;这种思路比在基准上再多一个百分点更有价值。</p><p>代码与完整方法见 <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>；论文正在撰写中。</p>` },
+      { status: '草稿 — 即将发布', title: '分阶段抽取与单一大模型的对比', body: '在调用LLM之前，先通过规则和微调Transformer路由实体的理由——以及出错时的代价。' },
     ],
   },
   contact: {
@@ -2370,14 +2593,14 @@ const ja: Dictionary = {
     menuToggleLabel: 'メニューを開く',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'GPUを起こさずに、',
     h1Accent: '臨床テキストからバイオマーカーを抽出する',
     h1Post: '。',
     sub: '私はClément Longeacです。現在、DEMNEというルーティングフレームワークに取り組んでいます——エンティティの種類ごとに、正規表現、CRF、トランスフォーマー、LLMのどれが誠実な選択かを判断します。最初の成果：GPUを使わずに臨床エンティティの99.5%を抽出し、300件のAP-HPノートでF1値0.941を達成しました。',
     ctaResearch: '研究を見る',
     ctaCV: '履歴書をダウンロード',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM、ライブ図解',
+    caption: 'DEMNE — Rules → Transformer → LLM、ライブ図解',
   },
   about: {
     label: '01 — プロフィール',
@@ -2397,7 +2620,7 @@ const ja: Dictionary = {
   },
   research: {
     label: '02 — 研究',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'フランス語の腫瘍学臨床テキスト向けハイブリッド固有表現抽出パイプライン。',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: '臨床NER · フランス語腫瘍学コーパス',
@@ -2434,11 +2657,48 @@ const ja: Dictionary = {
     title: 'これまでの活動の場',
     currentLabel: '進行中',
     items: [
-      { current: true, date: '2025年 — 現在', title: '研究アシスタント、Tremplin Recherche', org: 'ESIEE Paris', body: 'フランス語腫瘍学テキスト向けのハイブリッド臨床NERパイプラインであるDEMNEを、博士課程出願を見据えたTremplin Rechercheコースの中核プロジェクトとして開発。' },
-      { current: true, date: '2026年 — 現在', title: '創業者兼プロダクトリード、NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '脳損傷患者とその作業療法士が認知補償デジタルツールを比較検討できる構造化された手段を提供するプラットフォームを構築中。ソルボンヌ大学のSN@SUハッカソン（UEROS L\'ADAPT イル＝ド＝フランスの作業療法士Flor Sanchez-Luizard氏との共同）でPython/Streamlit製プロトタイプとして誕生し、現在はHDS/RGPD準拠のホスティングと臨床マッチング用のセマンティック検索エンジンを備えた本番版（FastAPI、PostgreSQL、Next.js）への再構築を計画中。' },
-      { date: '2024年 — 2027年', title: '工学部学生 — データサイエンス・AI', org: 'ESIEE Paris', body: 'パリESIEE工科大学の5年制工学プログラム4年生、データサイエンス・AI（DSIA）専攻。' },
-      { date: '2025年', title: 'エンジニアインターン、GRADES部門', org: 'Synchrotron SOLEIL（シンクロトロン・ソレイユ）', body: 'GitLab Salsa経由のDebian/ROCm基盤上で、AMD GPU互換性検証のためOpenCLを用いたautopkgtestスクリプト（pyopencl、nabu、ufo-filters、pyvkfft）を開発。' },
-      { date: '2022年 — 現在', title: '理系家庭教師', org: 'Complétude', body: '工学の学業と並行して、約10名の生徒に数学・物理化学を指導（小学校から高校最終学年まで、高等教育は対象外）。' },
+      {
+        date: '2026年5月 – 7月',
+        title: '研究インターン、臨床データウェアハウス',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: '病院データ上で DEMNE のルーティング手法を適用・検証：フランス語臨床レポートから腫瘍学バイオマーカー（ER, PR, HER2, Ki67, FISH）を抽出し、監査可能で実運用に即した臨床パスを定義しました。',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: '2025年10月 – 2026年5月',
+        title: '学生研究員、Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'フランス語腫瘍学テキスト向けのハイブリッド臨床 NER パイプライン（ルール / transformer / LLM）である DEMNE を設計。5 つの形式化されたコーパス指標に基づき、博士課程出願に向けた Tremplin Recherche の中核プロジェクトです。',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026年 – 現在',
+        title: 'プロダクトリード兼開発者、NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: '脳損傷の患者と作業療法士が認知補償ツールを体系的に比較できるプラットフォームを構築。SN@SU ハッカソンでの Python/Streamlit プロトタイプとして始まりました（Sorbonne Université、UEROS L’ADAPT Île-de-France の作業療法士 Flor Sanchez-Luizard と協働）。現在、HDS/GDPR 準拠のホスティングと臨床ツールマッチング用のセマンティック検索エンジンを備えた本番再構築（FastAPI, PostgreSQL, Next.js）を検討中です。',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024年 – 2027年',
+        title: '工学系学生 — データサイエンス & AI',
+        org: 'ESIEE Paris',
+        body: 'ESIEE Paris の 5 年制工学課程の 5 年次生で、データサイエンス & AI（DSIA）を専攻。',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025年',
+        title: 'エンジニアインターン、GRADES 部門',
+        org: 'Synchrotron SOLEIL',
+        body: 'AMD GPU の互換性（pyopencl, nabu, ufo-filters, pyvkfft）を確認するため OpenCL で autopkgtest を開発し、GitLab Salsa 上の Debian/ROCm 基盤で実行。',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022年 – 現在',
+        title: '理数系の家庭教師',
+        org: 'Complétude',
+        body: '工学の学業と並行して、小学生から高校最終学年までの約 10 名に数学と物理・化学を指導。',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -2458,67 +2718,67 @@ const ja: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: '2026年6月 · SN@SU ハッカソン',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          '脳損傷のある人々とその作業療法士のための、デジタル認知補償ツールのカタログ。',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep は SN@SU ハッカソン（Sorbonne Université）で始まりました。作業療法士と患者は、アプリストアを一つずつ探さずに、コミュニケーション・記憶・計画のためのアプリを見つけられます。各ツールは一覧化され、障害と主題で分類され、検索できます。\nMVP は JSON ストアを備えた Streamlit アプリで、現在 FastAPI・PostgreSQL・Next.js フロントエンドによる本番再構築を検討中です。',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: '2025年12月 · チームプロジェクト',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'フランスの 15 年分の背景大気汚染を再構成するインタラクティブなダッシュボード（2000–2015）。',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'INERIS の市町村レベル指標（Zenodo）に基づくデータパイプラインとインタラクティブなダッシュボード。スクリプトがデータをダウンロード・クリーニングし SQLite に格納します。ダッシュボードは Leaflet による汚染ヒートマップを、年スライダーと汚染物質フィルター、Plotly のグラフとともに表示します。\nチームメイトの William Zee と共同制作。',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025年 · 授業プロジェクト',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'CNN ベースの顔認識を静止画、次いで動画に適用し、データ拡張と顔のアライメントを用いる。',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          '現代的な顔認識に関する授業プロジェクト。わずか 218 枚の画像で学習した初期モデルは大きく過学習しました。データ拡張（回転・ズーム）と、目と唇の位置を正規化する顔アライメント処理を、事前学習済みネットワークと組み合わせることで汎化性能が向上しました。目的は、プロジェクト独自のデータセットの動画から顔を検出することでした。',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025年 · ペアプロジェクト',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'オブジェクト指向設計による、ターミナルで遊ぶ Python のテキストアドベンチャー。',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'ターミナルで遊ぶテキストアドベンチャー。プレイヤーはコマンドを入力して 8 つの部屋を移動します。コードは単一責任の小さなクラス（ゲーム、部屋、プレイヤー、コマンド、アクション、キャラクター、アイテム）に分割されており、部屋やアイテムの追加は局所的な変更で済みます。\nESIEE Paris にて Anne-Colombe André と共同制作。',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: '2025年2月 · チームプロジェクト',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          '料理データ分析プラットフォーム：スクレイピング、ETL、レシピデータのダッシュボード。',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Marmiton からレシピデータをスクレイピングし、ETL パイプラインを実行し、分析ダッシュボードで結果を提示するデータエンジニアリングのチームプロジェクト。Python で構築し、探索には Jupyter ノートブックを使用。',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
       },
       {
-        date: '2025 · Synchrotron SOLEIL',
+        date: '2025年 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Debian の CI 基盤上で、AMD GPU 上の科学ソフトウェアを検証する autopkgtest スクリプト。',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Synchrotron SOLEIL でのインターンシップの一部。AMD GPU の互換性（pyopencl, nabu, ufo-filters, pyvkfft）を Debian/ROCm の継続的インテグレーション基盤上で確認するため、OpenCL で autopkgtest を記述し、GitLab Salsa 経由で実行しました。スクリプトはクリーンな仮想マシンにパッケージをインストール・アンインストールし、GPU 間の互換性を報告します。',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -2590,8 +2850,8 @@ const ja: Dictionary = {
     title: '研究ノート',
     subtitle: '上記の研究の背後にある手法、行き詰まり、意思決定についての詳しい記事。',
     posts: [
-      { status: '下書き — 近日公開', title: 'なぜフランス語臨床NERは汎用モデルを機能不全にするのか', body: '標準的なNERパイプラインがフランス語腫瘍学レポートで失敗する箇所と、それがDEMNEの構造設計に与える意味についての解説。' },
-      { status: '下書き — 近日公開', title: '段階的抽出 対 単一の大規模モデル', body: 'LLMを呼び出す前にルール、CRF、ファインチューニング済みTransformerを経由させて実体をルーティングすることの根拠と、それを誤った場合のコスト。' },
+      { status: '公開 · 2026年10月', title: 'なぜフランス語臨床NERは汎用モデルを機能不全にするのか', body: '標準的なNERパイプラインがフランス語腫瘍学レポートで失敗する箇所と、それがDEMNEの構造設計に与える意味についての解説。', content: `<p>フランス語の腫瘍学レポートを開くと、既製の NER モデルの多くは最初の一文でつまずきます。語彙は密で略語が多く（ER, PR, HER2, Ki67, FISH）、書式は病院ごとに変わり、重要なバイオマーカー用語はこれらのモデルが学習したコーパスにほとんど現れません。よくある反応&mdash;&mdash;大きなモデルを投入する&mdash;&mdash;は機能しますが、高コストで不透明、臨床医や監査人に説明しづらいものです。</p><h2>すべての実体に LLM が要るわけではない</h2><p>DEMNE は率直な観察から出発します。これらのレポートの実体は一様に難しいわけではありません。生検の言及は数通りの安定した書き方しかありませんが、薬剤名は百通りにも現れます。そこで DEMNE は、何にでも一つのモデルを使うのではなく、実体の種類ごとに測定し、十分に信頼できる最も軽い手法&mdash;&mdash;決定的ルール、ファインチューンした transformer、最後の手段としてのみ LLM&mdash;&mdash;へ振り分けます。</p><p>その測定とは、アノテーションから算出する 5 つのコーパス指標です。表層形がどれほど定型的か、語彙がどれほど均質か、小さなキーワード集合が識別的か、言及が否定や矛盾の下にどれほどの頻度で現れるか、そして教師あり学習に足る注釈データがそもそもあるか。決定的な決定グラフがこれらの数値を階層に変換し、その 17 の閾値は多目的探索で較正されます。実体を弱すぎる手法に送る誤りは、単に高価すぎる手法に送る誤りの 2 倍重く罰せられます。</p><h2>何が得られるか</h2><p>腫瘍学の較正セット（59 種の実体）では、ルーティングは専門家の参照階層と 0.954 の一致度で合致し、leave-one-corpus-out 推定は 0.866&mdash;&mdash;いかなる固定階層のベースライン（常にルールで 0.729、常に LLM で 0.148）をも大きく上回ります。より説得力があるのは外部評価です。再調整なしに、モデルが一度も見たことのないがん部位の AP-HP の CT レポート 300 件へ適用したところ、DEMNE は強調された言及の 99.5%（413 件中 411 件）を決定的ルールへ振り分けました。これらのルールは平均 F1 0.941 に達し、現実的な病院予算で同じ実体にファインチューンした transformer は 0.358 にとどまりました。</p><p>言い換えれば、腫瘍学レポートを占める標準化された実体については、ルールは単に安いだけでなく&mdash;&mdash;より優れており、しかも各ルール判断は明示的な条件まで遡れます。これはまさに EU AI Act 第 12 条・第 14 条が求めるものです。</p><h2>どこで止まるか</h2><p>限界について正直でありたいと思います。参照標準は小さく&mdash;&mdash;実体 92 種、うち腫瘍学は 59 種&mdash;&mdash;単一コーパスのスコアは楽観的で、相対比較しか成り立ちません。LLM 階層は外部コホートでエンドツーエンドに評価されておらず、唯一振り分けられた実体は稀すぎました。さらに較正はドメイン間で転移しません。別の臨床ジャンルや言語に移ると一致度は 0.45&ndash;0.73 まで下がり、閾値は再調整が必要です。DEMNE は実現可能性の証明であり、完成品ではありません。</p><h2>なぜ重要か</h2><p>要点はルールが transformer に勝つことではありません。&ldquo;どの手法を使うか&rdquo;が、最も重いモデルを既定にして祈るのではなく、テキストの測定可能な性質から実体ごとに答えられる問いだということです。臨床 NLP&mdash;&mdash;コスト・監査可能性・信頼が同時に問われる領域&mdash;&mdash;では、この枠組みはベンチマークの 1 ポイントより価値があります。</p><p>コードと完全な手法は <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> にあります。論文は準備中です。</p>` },
+      { status: '下書き — 近日公開', title: '段階的抽出 対 単一の大規模モデル', body: 'LLMを呼び出す前にルールとファインチューニング済みTransformerを経由させて実体をルーティングすることの根拠と、それを誤った場合のコスト。' },
     ],
   },
   contact: {
@@ -2628,14 +2888,14 @@ const ko: Dictionary = {
     menuToggleLabel: '메뉴 열기',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'GPU를 깨우지 않고 ',
     h1Accent: '임상 텍스트에서 바이오마커를 추출합니다',
-    h1Post: '.',
+    h1Post: '',
     sub: '저는 Clément Longeac입니다. 저는 DEMNE라는 라우팅 프레임워크를 개발하고 있습니다 — 엔티티 유형마다 정규식, CRF, 트랜스포머, LLM 중 어느 것이 그 작업에 정직한 도구인지 결정합니다. 첫 결과: GPU 없이 임상 엔티티의 99.5%를 추출했으며, 300건의 AP-HP 노트에서 F1 = 0.941을 달성했습니다.',
     ctaResearch: '연구 보기',
     ctaCV: '이력서 다운로드',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, 실시간 도식',
+    caption: 'DEMNE — Rules → Transformer → LLM, 실시간 도식',
   },
   about: {
     label: '01 — 소개',
@@ -2655,7 +2915,7 @@ const ko: Dictionary = {
   },
   research: {
     label: '02 — 연구',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: '프랑스어 종양학 임상 텍스트를 위한 하이브리드 개체명 인식 파이프라인.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: '임상 NER · 프랑스어 종양학 코퍼스',
@@ -2692,11 +2952,48 @@ const ko: Dictionary = {
     title: '지금까지의 활동 이력',
     currentLabel: '진행 중',
     items: [
-      { current: true, date: '2025년 — 현재', title: '연구 조교, Tremplin Recherche', org: 'ESIEE Paris', body: '박사과정 지원을 앞두고 Tremplin Recherche 트랙의 핵심 프로젝트로서, 프랑스어 종양학 텍스트를 위한 하이브리드 임상 NER 파이프라인인 DEMNE를 개발.' },
-      { current: true, date: '2026년 — 현재', title: '창립자 & 프로덕트 리드, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: '뇌손상 환자와 이들을 돕는 작업치료사가 인지 보상 디지털 도구를 구조적으로 비교할 수 있는 플랫폼을 구축 중. 소르본 대학교 SN@SU 해커톤에서 (UEROS L\'ADAPT 일드프랑스 소속 작업치료사 Flor Sanchez-Luizard와 함께) Python/Streamlit 프로토타입으로 시작했으며, 현재 HDS/RGPD 준수 호스팅과 임상 도구 매칭을 위한 시맨틱 검색 엔진을 갖춘 프로덕션 버전(FastAPI, PostgreSQL, Next.js)으로의 재구축을 기획 중.' },
-      { date: '2024년 — 2027년', title: '공학도 — 데이터 사이언스 & AI', org: 'ESIEE Paris', body: '파리 ESIEE 공과대학 5년제 공학 프로그램 4학년, 데이터 사이언스 & AI(DSIA) 전공.' },
-      { date: '2025년', title: '엔지니어링 인턴, GRADES 부서', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa를 통한 Debian/ROCm 인프라에서 AMD GPU 호환성을 위한 OpenCL 기반 autopkgtest 스크립트(pyopencl, nabu, ufo-filters, pyvkfft) 개발.' },
-      { date: '2022년 — 현재', title: '이공계 과외 교사', org: 'Complétude', body: '공학 학업과 병행하여 약 10명의 학생에게 초등학교부터 고등학교 졸업반까지 수학과 물리화학을 지도(고등교육은 제외).' },
+      {
+        date: '2026년 5월 – 7월',
+        title: '연구 인턴, 임상 데이터 웨어하우스',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: '병원 데이터에 DEMNE 라우팅 방식을 적용·검증: 프랑스어 임상 보고서에서 종양학 바이오마커(ER, PR, HER2, Ki67, FISH)를 추출하고, 감사 가능하고 실제 배포에 가까운 임상 경로를 정의했습니다.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: '2025년 10월 – 2026년 5월',
+        title: '학생 연구원, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: '프랑스어 종양학 텍스트를 위한 하이브리드 임상 NER 파이프라인(규칙 / transformer / LLM)인 DEMNE를 설계. 형식화된 다섯 가지 코퍼스 지표에 기반하며, 박사 지원을 앞둔 Tremplin Recherche 트랙의 핵심 프로젝트입니다.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026년 – 현재',
+        title: '프로덕트 리드 겸 개발자, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: '뇌 손상 환자와 작업치료사가 인지 보상 도구를 체계적으로 비교할 수 있는 플랫폼을 구축. SN@SU 해커톤의 Python/Streamlit 프로토타입으로 시작했습니다(Sorbonne Université, UEROS L’ADAPT Île-de-France의 작업치료사 Flor Sanchez-Luizard와 협업). 현재 HDS/GDPR 준수 호스팅과 임상 도구 매칭용 시맨틱 검색 엔진을 갖춘 프로덕션 재구축(FastAPI, PostgreSQL, Next.js)을 검토 중입니다.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024년 – 2027년',
+        title: '공학도 — 데이터 사이언스 & AI',
+        org: 'ESIEE Paris',
+        body: 'ESIEE Paris 5년제 공학 과정의 5학년 학생으로, 데이터 사이언스 & AI(DSIA) 전공.',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025년',
+        title: '엔지니어링 인턴, GRADES 부서',
+        org: 'Synchrotron SOLEIL',
+        body: 'AMD GPU 호환성(pyopencl, nabu, ufo-filters, pyvkfft)을 확인하기 위해 OpenCL로 autopkgtest를 개발하고 GitLab Salsa의 Debian/ROCm 인프라에서 실행.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022년 – 현재',
+        title: '이공계 과외 교사',
+        org: 'Complétude',
+        body: '공학 학업과 병행하여 초등학생부터 고등학교 마지막 학년까지 약 열 명에게 수학과 물리·화학을 지도.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -2716,67 +3013,67 @@ const ko: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: '2026년 6월 · SN@SU 해커톤',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          '뇌 손상 환자와 작업치료사를 위한 디지털 인지 보상 도구 카탈로그.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep은 SN@SU 해커톤(Sorbonne Université)에서 시작되었습니다. 작업치료사와 환자는 앱스토어를 하나씩 뒤지지 않고도 의사소통·기억·계획용 앱을 찾을 수 있습니다. 각 도구는 목록화되어 장애와 주제별로 분류되고 검색이 가능합니다.\nMVP는 JSON 저장소를 갖춘 Streamlit 애플리케이션이며, 현재 FastAPI·PostgreSQL·Next.js 프런트엔드로 프로덕션 재구축을 검토 중입니다.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: '2025년 12월 · 팀 프로젝트',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          '프랑스의 15년간 배경 대기오염을 재구성하는 인터랙티브 대시보드(2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'INERIS의 코뮌 단위 지표(Zenodo)를 다루는 데이터 파이프라인과 인터랙티브 대시보드. 스크립트가 데이터를 내려받아 정제하고 SQLite에 저장하며, 대시보드는 연도 슬라이더와 오염물질 필터가 있는 Leaflet 오염 히트맵을 Plotly 차트와 함께 표시합니다.\n팀원 William Zee와 함께 제작.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025년 · 수업 프로젝트',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          '정지 이미지에 이어 동영상에 적용하는 CNN 기반 얼굴 인식으로, 데이터 증강과 얼굴 정렬을 사용.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          '현대적 얼굴 인식에 관한 수업 프로젝트. 단 218장의 이미지로 학습한 첫 모델은 심하게 과적합되었습니다. 데이터 증강(회전, 확대)과 눈·입 위치를 정규화하는 얼굴 정렬 단계를 사전학습 네트워크와 결합해 일반화를 개선했습니다. 목표는 프로젝트 자체 데이터셋의 영상에서 얼굴을 검출하는 것이었습니다.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025년 · 페어 프로젝트',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          '객체 지향 설계로 만든, 터미널에서 즐기는 Python 텍스트 어드벤처 게임.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          '터미널에서 즐기는 텍스트 어드벤처: 플레이어는 명령을 입력해 여덟 개의 방을 오갑니다. 코드는 단일 책임의 작은 클래스(게임, 방, 플레이어, 명령, 동작, 캐릭터, 아이템)로 나뉘어 있어 방이나 아이템 추가가 국소적 변경으로 끝납니다.\nESIEE Paris에서 Anne-Colombe André와 함께 제작.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: '2025년 2월 · 팀 프로젝트',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          '요리 데이터 분석 플랫폼: 스크래핑, ETL, 그리고 레시피 데이터 대시보드.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Marmiton에서 레시피 데이터를 스크래핑하고 ETL 파이프라인을 실행해 분석 대시보드로 결과를 제공하는 데이터 엔지니어링 팀 프로젝트. Python으로 구축하고 탐색에는 Jupyter 노트북을 사용.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
       },
       {
-        date: '2025 · Synchrotron SOLEIL',
+        date: '2025년 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Debian의 CI 인프라에서 AMD GPU상의 과학 소프트웨어를 검증하는 autopkgtest 스크립트.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Synchrotron SOLEIL 인턴십의 일부: AMD GPU 호환성(pyopencl, nabu, ufo-filters, pyvkfft)을 Debian/ROCm 지속적 통합 인프라에서 확인하기 위해 OpenCL로 autopkgtest를 작성하고 GitLab Salsa로 실행했습니다. 스크립트는 깨끗한 가상 머신에서 패키지를 설치·제거하고 GPU 간 호환성을 보고합니다.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -2848,8 +3145,8 @@ const ko: Dictionary = {
     title: '연구 노트',
     subtitle: '위 연구를 뒷받침하는 방법, 막다른 길, 결정들에 대한 더 긴 글.',
     posts: [
-      { status: '초안 — 곧 공개', title: '프랑스어 임상 NER이 범용 모델을 무너뜨리는 이유', body: '표준 NER 파이프라인이 프랑스어 종양학 보고서에서 실패하는 지점과, 이것이 DEMNE의 구조 설계에 시사하는 바에 대한 설명.' },
-      { status: '초안 — 곧 공개', title: '단계별 추출 대 단일 대형 모델', body: 'LLM을 호출하기 전에 규칙, CRF, 미세조정된 Transformer를 거쳐 개체를 라우팅해야 하는 이유와, 잘못했을 때의 대가.' },
+      { status: '게시됨 · 2026년 10월', title: '프랑스어 임상 NER이 범용 모델을 무너뜨리는 이유', body: '표준 NER 파이프라인이 프랑스어 종양학 보고서에서 실패하는 지점과, 이것이 DEMNE의 구조 설계에 시사하는 바에 대한 설명.', content: `<p>프랑스어 종양학 보고서를 펼치면 대부분의 기성 NER 모델은 첫 문장부터 흔들립니다. 어휘는 조밀하고 약어가 많으며(ER, PR, HER2, Ki67, FISH), 서식은 병원마다 다르고, 정작 중요한 바이오마커 용어는 이 모델들이 학습한 코퍼스에 거의 나타나지 않습니다. 흔한 반응&mdash;&mdash;큰 모델을 투입하는 것&mdash;&mdash;은 통하지만, 비싸고 불투명하며 임상의나 감사자에게 설명하기 어렵습니다.</p><h2>모든 엔터티에 LLM이 필요하지는 않다</h2><p>DEMNE는 단순한 관찰에서 출발합니다. 이 보고서의 엔터티들이 똑같이 어려운 것은 아닙니다. 생검 언급은 몇 가지 안정적인 방식으로 쓰이지만, 약물명은 수백 가지 형태로 나타날 수 있습니다. 그래서 DEMNE는 모든 것에 하나의 모델을 쓰는 대신, 엔터티 유형마다 측정하여 충분히 신뢰할 수 있는 가장 가벼운 방법&mdash;&mdash;결정적 규칙, 미세조정한 transformer, 그리고 최후의 수단으로서의 LLM&mdash;&mdash;으로 보냅니다.</p><p>측정이란 주석에서 계산한 다섯 가지 코퍼스 지표입니다. 표층 형태가 얼마나 정형적인지, 어휘가 얼마나 균질한지, 작은 키워드 집합이 변별력이 있는지, 언급이 부정이나 모순 아래 얼마나 자주 등장하는지, 그리고 지도학습 모델을 훈련할 만큼의 레이블 데이터가 있는지입니다. 결정적 결정 그래프가 이 수치들을 계층으로 바꾸며, 17개의 임계값은 다목적 탐색으로 보정됩니다. 엔터티를 너무 약한 방법으로 보내는 오류는 단지 너무 비싼 방법으로 보내는 오류보다 두 배 무겁게 벌점을 받습니다.</p><h2>무엇을 얻는가</h2><p>종양학 보정 세트(엔터티 유형 59개)에서 라우팅은 전문가 참조 계층과 0.954의 일치도로 일치하며, leave-one-corpus-out 추정치는 0.866&mdash;&mdash;어떤 고정 계층 기준선(항상 규칙 0.729, 항상 LLM 0.148)도 크게 상회합니다. 더 설득력 있는 것은 외부 검증입니다. 재조정 없이, 모델이 한 번도 보지 못한 암 부위의 AP-HP CT 보고서 300건에 적용했을 때 DEMNE는 강조된 언급의 99.5%(413건 중 411건)를 결정적 규칙으로 보냈습니다. 그 규칙들은 평균 F1 0.941에 도달한 반면, 현실적인 병원 예산에서 같은 엔터티로 미세조정한 transformer는 0.358에 그쳤습니다.</p><p>바꿔 말하면, 종양학 보고를 지배하는 표준화된 엔터티에 대해 규칙은 더 저렴할 뿐 아니라&mdash;&mdash;더 우수했고, 모든 규칙 결정은 명시적 조건까지 추적됩니다. 이는 바로 EU AI Act 제12조와 제14조가 요구하는 바입니다.</p><h2>어디서 멈추는가</h2><p>한계에 대해 정직하고 싶습니다. 참조 표준은 작습니다&mdash;&mdash;엔터티 92종, 그중 59종이 종양학&mdash;&mdash;따라서 단일 코퍼스 점수는 낙관적이며 상대 비교만 유효합니다. LLM 계층은 외부 코호트에서 종단 간으로 평가된 적이 없고, 거기로 라우팅된 유일한 엔터티는 너무 드물었습니다. 또한 보정은 도메인 간에 전이되지 않습니다. 다른 임상 장르나 언어로 옮기면 일치도가 0.45&ndash;0.73으로 떨어져 임계값을 다시 맞춰야 합니다. DEMNE는 실현 가능성의 증명이지 완성품이 아닙니다.</p><h2>왜 중요한가</h2><p>핵심은 규칙이 transformer를 이긴다는 것이 아닙니다. &ldquo;어떤 방법을 쓸까&rdquo;를, 가장 무거운 모델을 기본값으로 삼아 요행을 바라는 대신, 텍스트의 측정 가능한 속성으로부터 엔터티별로 답할 수 있다는 것입니다. 비용·감사가능성·신뢰가 동시에 중요한 임상 NLP에서&mdash;&mdash;이 관점은 벤치마크에서 1퍼센트포인트를 더 얻는 것보다 값집니다.</p><p>코드와 전체 방법은 <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>에 있습니다. 논문은 준비 중입니다.</p>` },
+      { status: '초안 — 곧 공개', title: '단계별 추출 대 단일 대형 모델', body: 'LLM을 호출하기 전에 규칙과 미세조정된 Transformer를 거쳐 개체를 라우팅해야 하는 이유와, 잘못했을 때의 대가.' },
     ],
   },
   contact: {
@@ -2886,14 +3183,14 @@ const ru: Dictionary = {
     menuToggleLabel: 'Открыть меню',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Извлекаю биомаркеры из клинического текста ',
     h1Accent: 'не пробуждая GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Я Clément Longeac. Я работаю над DEMNE — фреймворком маршрутизации, который для каждого типа сущности решает, что является честным инструментом для задачи: регулярное выражение, CRF, трансформер или LLM. Первый результат: 99,5% клинических сущностей извлечено без GPU, F1 = 0,941 на 300 заметках AP-HP.',
     ctaResearch: 'Смотреть исследование',
     ctaCV: 'Скачать резюме',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, живая схема',
+    caption: 'DEMNE — Rules → Transformer → LLM, живая схема',
   },
   about: {
     label: '01 — Обо мне',
@@ -2913,7 +3210,7 @@ const ru: Dictionary = {
   },
   research: {
     label: '02 — Исследования',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Гибридный конвейер распознавания именованных сущностей для французского онкологического клинического текста.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Клинический NER · французские онкологические корпуса',
@@ -2950,11 +3247,48 @@ const ru: Dictionary = {
     title: 'Где проходила работа до сих пор',
     currentLabel: 'Текущий',
     items: [
-      { current: true, date: '2025 — настоящее время', title: 'Научный ассистент, Tremplin Recherche', org: 'ESIEE Paris', body: 'Разработка DEMNE, гибридного конвейера клинического NER для французского онкологического текста, в качестве основного проекта программы Tremplin Recherche перед подачей заявок в докторантуру.' },
-      { current: true, date: '2026 — настоящее время', title: 'Основатель и Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Разработка платформы, которая даёт пациентам с черепно-мозговыми травмами и их эрготерапевтам структурированный способ сравнивать цифровые инструменты когнитивной компенсации. Проект начался как прототип на Python/Streamlit на хакатоне SN@SU (Сорбоннский университет, совместно с Flor Sanchez-Luizard, эрготерапевтом из UEROS L\'ADAPT Иль-де-Франс); сейчас на стадии планирования продакшн-версии (FastAPI, PostgreSQL, Next.js) с хостингом, соответствующим HDS/RGPD, и семантическим поисковым движком для клинического сопоставления.' },
-      { date: '2024 — 2027', title: 'Студент-инженер — Data Science & AI', org: 'ESIEE Paris', body: 'Студент четвёртого курса пятилетней инженерной программы ESIEE Paris, специализация Data Science & AI (DSIA).' },
-      { date: '2025', title: 'Инженер-стажёр, отдел GRADES', org: 'Synchrotron SOLEIL', body: 'Разработка autopkgtest-скриптов на OpenCL для проверки совместимости с GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) на инфраструктуре Debian/ROCm через GitLab Salsa.' },
-      { date: '2022 — настоящее время', title: 'Репетитор по точным наукам', org: 'Complétude', body: 'Преподавание математики и физики-химии примерно десяти ученикам, от начальной школы до выпускного класса лицея, параллельно с инженерной учёбой.' },
+      {
+        date: 'Май – июль 2026',
+        title: 'Стажёр-исследователь, клиническое хранилище данных',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Применил и валидировал подход маршрутизации DEMNE на больничных данных: извлечение онкологических биомаркеров (ER, PR, HER2, Ki67, FISH) из французских клинических отчётов и определение аудируемого, реалистичного для внедрения клинического пути.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Окт. 2025 – май 2026',
+        title: 'Студент-исследователь, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Спроектировал DEMNE — гибридный клинический NER-конвейер (правила / transformer / LLM) для французских онкологических текстов, управляемый пятью формализованными метриками корпусов; ключевой проект трека Tremplin Recherche перед подачей на PhD.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – наст. время',
+        title: 'Продакт-лид и разработчик, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Создание платформы, дающей пациентам с травмами мозга и эрготерапевтам структурированный способ сравнивать инструменты когнитивной компенсации. Начиналась как прототип на Python/Streamlit на хакатоне SN@SU (Sorbonne Université, совместно с Flor Sanchez-Luizard, эрготерапевтом в UEROS L’ADAPT Île-de-France); сейчас прорабатывается продакшен-перестройка (FastAPI, PostgreSQL, Next.js) с хостингом, соответствующим HDS/GDPR, и семантическим поисковым движком для подбора клинических инструментов.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Студент-инженер — Data Science и ИИ',
+        org: 'ESIEE Paris',
+        body: 'Студент пятого курса пятилетней инженерной программы ESIEE Paris, специализация Data Science и ИИ (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Инженер-стажёр, отдел GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Разработка autopkgtests на OpenCL для проверки совместимости GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) в инфраструктуре Debian/ROCm на GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – наст. время',
+        title: 'Репетитор по точным наукам',
+        org: 'Complétude',
+        body: 'Преподавание математики и физики-химии примерно десяти ученикам, от начальной школы до выпускного класса, параллельно с учёбой на инженера.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -2975,56 +3309,56 @@ const ru: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Июнь 2026 · Хакатон SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Каталог цифровых инструментов когнитивной компенсации для людей с черепно-мозговыми травмами и их эрготерапевтов.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep начался на хакатоне SN@SU (Sorbonne Université). Эрготерапевты и пациенты находят приложения для общения, памяти и планирования, не перебирая магазины приложений по одному: каждый инструмент внесён в каталог, классифицирован по нарушению и теме и доступен для поиска.\nMVP — это приложение на Streamlit с хранилищем JSON; сейчас прорабатывается продакшен-переход на FastAPI, PostgreSQL и фронтенд на Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Дек. 2025 · Командный проект',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Интерактивная панель, реконструирующая 15 лет фонового загрязнения воздуха во Франции (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Конвейер данных и интерактивная панель по показателям INERIS на уровне коммун (Zenodo). Скрипты загружают, очищают и сохраняют данные в SQLite; панель отображает тепловую карту загрязнения на Leaflet со слайдером года и фильтрами по загрязнителям, рядом с графиками Plotly.\nСделано вместе с коллегой William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Учебный проект',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Распознавание лиц на основе CNN на статичных изображениях, затем на видео, с аугментацией данных и выравниванием лица.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Учебный проект по современному распознаванию лиц. Первая модель, обученная всего на 218 изображениях, сильно переобучалась; аугментация данных (поворот, масштабирование) и шаг выравнивания лица, нормализующий положение глаз и губ, вместе с предобученной сетью улучшили обобщение. Цель — обнаруживать лица на видео из собственного набора данных проекта.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Парный проект',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Текстовая приключенческая игра для терминала на Python с объектно-ориентированным дизайном.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Текстовое приключение в терминале: игрок перемещается между восемью комнатами, вводя команды. Код разбит на небольшие классы с единственной ответственностью (игра, комната, игрок, команда, действие, персонаж, предмет), поэтому добавление комнаты или предмета остаётся локальным изменением.\nСделано с Anne-Colombe André в ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Фев. 2025 · Командный проект',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Платформа аналитики кулинарных данных: скрапинг, ETL и панель по данным рецептов.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Командный проект по инженерии данных: скрапинг данных рецептов с Marmiton, запуск ETL-конвейера и вывод результатов через аналитическую панель. Реализован на Python с ноутбуками Jupyter для исследования.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -3033,9 +3367,9 @@ const ru: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Скрипты autopkgtest, проверяющие научное ПО на GPU AMD в CI-инфраструктуре Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Часть стажировки в Synchrotron SOLEIL: autopkgtests на OpenCL для проверки совместимости GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) в инфраструктуре непрерывной интеграции Debian/ROCm, запускаемые через GitLab Salsa. Скрипты устанавливают и удаляют пакеты на чистых виртуальных машинах и сообщают о совместимости между GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -3107,8 +3441,8 @@ const ru: Dictionary = {
     title: 'Заметки из исследования',
     subtitle: 'Более развёрнутые материалы о методах, тупиках и решениях, стоящих за работой выше.',
     posts: [
-      { status: 'Черновик — скоро', title: 'Почему французский клинический NER ломает универсальные модели', body: 'Обзор того, где стандартные конвейеры NER терпят неудачу на французских онкологических отчётах, и что это означает для структуры DEMNE.' },
-      { status: 'Черновик — скоро', title: 'Поэтапное извлечение против одной большой модели', body: 'Аргументы в пользу направления сущностей через правила, CRF и дообученный трансформер, прежде чем вообще вызывать LLM — и цена ошибки в этом решении.' },
+      { status: 'Опубликовано · окт. 2026', title: 'Почему французский клинический NER ломает универсальные модели', body: 'Обзор того, где стандартные конвейеры NER терпят неудачу на французских онкологических отчётах, и что это означает для структуры DEMNE.', content: `<p>Откройте французский онкологический отчёт &mdash; и большинство готовых NER-моделей спотыкаются уже на первом предложении. Лексика плотная и сокращённая (ER, PR, HER2, Ki67, FISH), форматирование меняется от больницы к больнице, а важная терминология биомаркеров почти отсутствует в корпусах, на которых эти модели обучались. Привычный рефлекс &mdash; бросить на задачу большую модель &mdash; работает, но дорог, непрозрачен и труден для обоснования перед клиницистом или аудитором.</p><h2>Не каждой сущности нужен LLM</h2><p>DEMNE исходит из простого наблюдения: сущности в этих отчётах не одинаково трудны. Упоминание биопсии пишется несколькими устойчивыми способами; название препарата может встречаться в сотне форм. Поэтому вместо одной модели на всё DEMNE измеряет каждый тип сущности и направляет его к самому лёгкому достаточно надёжному методу &mdash; детерминированному правилу, дообученному transformer или LLM лишь в крайнем случае.</p><p>Измерение &mdash; это пять корпусных метрик, вычисляемых из разметки: насколько шаблонна поверхностная форма, насколько однородна лексика, различителен ли небольшой набор ключевых слов, как часто упоминание попадает под отрицание или противоречие и достаточно ли вообще размеченных данных для обучения модели с учителем. Детерминированный граф решений превращает эти числа в уровень, а его 17 порогов калибруются многокритериальным поиском, который вдвое сильнее штрафует отправку сущности к слишком слабому методу, чем к просто слишком дорогому.</p><h2>Что это даёт</h2><p>На онкологическом калибровочном наборе (59 типов сущностей) маршрутизация совпадает с экспертным эталонным уровнем с согласованностью 0,954 и оценкой leave-one-corpus-out 0,866 &mdash; намного выше любой базовой стратегии с фиксированным уровнем (всегда-правила дают 0,729, всегда-LLM 0,148). Более убедителен внешний тест: примённый без перенастройки к 300 КТ-отчётам AP-HP по ранее не виденным локализациям рака, DEMNE направил 99,5 % выделенных упоминаний (411 из 413) к детерминированным правилам. Эти правила достигли среднего F1 0,941, тогда как transformer, дообученный на тех же сущностях при реалистичном больничном бюджете, дошёл лишь до 0,358.</p><p>Иными словами: для стандартизованных сущностей, доминирующих в онкологической отчётности, правила были не только дешевле &mdash; они были лучше, и каждое решение правила прослеживается до явного условия, что как раз и требуют статьи 12 и 14 EU AI Act.</p><h2>Где он останавливается</h2><p>Хочу быть честным о пределах. Эталонный стандарт мал &mdash; 92 типа сущностей, 59 из них в онкологии &mdash; поэтому оценки на одном корпусе оптимистичны, и верны лишь относительные сравнения. Уровень LLM ни разу не оценивался сквозным образом на внешней когорте; его единственная направленная сущность была слишком редкой. И калибровка не переносится между доменами: в другом клиническом жанре или языке согласованность падает до 0,45&ndash;0,73, так что пороги приходится перенастраивать. DEMNE &mdash; доказательство осуществимости, а не готовый продукт.</p><h2>Почему это важно</h2><p>Суть не в том, что правила побеждают transformer’ы. Суть в том, что &laquo;какой метод&raquo; &mdash; это вопрос, на который можно ответить для каждой сущности, исходя из измеримых свойств текста, а не выбирать по умолчанию самую тяжёлую модель и надеяться. Для клинического NLP &mdash; где цена, аудируемость и доверие важны одновременно &mdash; такая постановка стоит больше, чем ещё один процентный пункт на бенчмарке.</p><p>Код и полный метод &mdash; на <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; рукопись готовится.</p>` },
+      { status: 'Черновик — скоро', title: 'Поэтапное извлечение против одной большой модели', body: 'Аргументы в пользу направления сущностей через правила и дообученный трансформер, прежде чем вообще вызывать LLM — и цена ошибки в этом решении.' },
     ],
   },
   contact: {
@@ -3145,14 +3479,14 @@ const ar: Dictionary = {
     menuToggleLabel: 'فتح القائمة',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'أستخرج المؤشرات الحيوية من النص السريري ',
     h1Accent: 'دون إيقاظ وحدة معالجة الرسومات',
-    h1Post: '.',
+    h1Post: '',
     sub: 'أنا كليمون لونجياك. أعمل على DEMNE، إطار عمل للتوجيه يقرر — لكل نوع من الكيانات — ما إذا كانت الأداة الصادقة للمهمة هي تعبير نمطي (regex)، أو CRF، أو محول (transformer)، أو نموذج لغوي كبير (LLM). النتيجة الأولى: استخراج 99.5% من الكيانات السريرية دون استخدام وحدة معالجة الرسومات، بدقة F1 = 0.941 على 300 ملاحظة من AP-HP.',
     ctaResearch: 'استعرض الأبحاث',
     ctaCV: 'تحميل السيرة الذاتية',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM، مخطط حي',
+    caption: 'DEMNE — Rules → Transformer → LLM، مخطط حي',
   },
   about: {
     label: '01 — نبذة عني',
@@ -3172,7 +3506,7 @@ const ar: Dictionary = {
   },
   research: {
     label: '02 — الأبحاث',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'خط أنابيب هجين للتعرف على الكيانات المسماة للنصوص السريرية الخاصة بالأورام باللغة الفرنسية.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'التعرف على الكيانات السريرية · مجموعات نصوص الأورام الفرنسية',
@@ -3209,11 +3543,48 @@ const ar: Dictionary = {
     title: 'أين جرى العمل حتى الآن',
     currentLabel: 'جارٍ',
     items: [
-      { current: true, date: '2025 — حتى الآن', title: 'مساعد باحث، Tremplin Recherche', org: 'ESIEE Paris', body: 'تطوير DEMNE، خط أنابيب هجين للتعرف على الكيانات السريرية للنص الفرنسي الخاص بالأورام، كمشروع أساسي لمسار Tremplin Recherche استعدادًا لطلبات الدكتوراه.' },
-      { current: true, date: '2026 — حتى الآن', title: 'مؤسس ورئيس المنتج، NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'بناء منصة تمنح مرضى الإصابات الدماغية ومعالجيهم الوظيفيين طريقة منظمة لمقارنة الأدوات الرقمية للتعويض المعرفي. وُلد المشروع كنموذج أولي بلغة Python وStreamlit في هاكاثون SN@SU (جامعة السوربون، بالتعاون مع Flor Sanchez-Luizard، معالجة وظيفية في UEROS L\'ADAPT إيل دو فرانس)؛ وهو الآن في مرحلة التخطيط لإعادة بناء إنتاجية (FastAPI، PostgreSQL، Next.js) باستضافة متوافقة مع معايير HDS/RGPD ومحرك بحث دلالي لمطابقة الأدوات السريرية.' },
-      { date: '2024 — 2027', title: 'طالب هندسة — علوم البيانات والذكاء الاصطناعي', org: 'ESIEE Paris', body: 'طالب في السنة الرابعة من برنامج الهندسة الخماسي في ESIEE Paris، تخصص علوم البيانات والذكاء الاصطناعي (DSIA).' },
-      { date: '2025', title: 'متدرب هندسي، قسم GRADES', org: 'Synchrotron SOLEIL', body: 'تطوير سكريبتات autopkgtest باستخدام OpenCL لاختبار توافق معالجات AMD الرسومية (pyopencl، nabu، ufo-filters، pyvkfft) على بنية Debian/ROCm عبر GitLab Salsa.' },
-      { date: '2022 — حتى الآن', title: 'مدرّس خصوصي في العلوم', org: 'Complétude', body: 'تدريس الرياضيات والفيزياء والكيمياء لنحو عشرة طلاب، من المرحلة الابتدائية حتى الصف الأخير من الثانوية، إلى جانب دراستي الهندسية.' },
+      {
+        date: 'مايو – يوليو 2026',
+        title: 'متدرّب بحثي، مستودع البيانات السريرية',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'طبّقت نهج التوجيه في DEMNE وتحققت منه على بيانات المستشفى: استخراج المؤشرات الحيوية الأورامية (ER، PR، HER2، Ki67، FISH) من التقارير السريرية الفرنسية، وتحديد مسار سريري قابل للتدقيق وواقعي للنشر.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'أكتوبر 2025 – مايو 2026',
+        title: 'باحث طالب، Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'صمّمت DEMNE، وهو خط معالجة سريري هجين للتعرف على الكيانات المسمّاة (قواعد / transformer / LLM) للنصوص الأورامية الفرنسية، مدفوعًا بخمسة مقاييس مُمَنهَجة للمجموعات — المشروع المحوري لمسار Tremplin Recherche قبل طلبات الدكتوراه.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – حتى الآن',
+        title: 'قائد المنتج ومطوّر، NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'بناء منصة تتيح لمرضى إصابات الدماغ والمعالجين المهنيين طريقة منظّمة لمقارنة أدوات التعويض المعرفي. بدأت كنموذج أولي بلغة Python/Streamlit في هاكاثون SN@SU (Sorbonne Université، مع Flor Sanchez-Luizard، معالِجة مهنية في UEROS L’ADAPT Île-de-France)؛ ويجري حاليًا تحديد إعادة بناء إنتاجية (FastAPI، PostgreSQL، Next.js) باستضافة متوافقة مع HDS/GDPR ومحرك بحث دلالي لمطابقة الأدوات السريرية.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'طالب هندسة — علوم البيانات والذكاء الاصطناعي',
+        org: 'ESIEE Paris',
+        body: 'طالب في السنة الخامسة من برنامج الهندسة الممتد لخمس سنوات في ESIEE Paris، تخصّص علوم البيانات والذكاء الاصطناعي (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'متدرّب هندسي، قسم GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'تطوير autopkgtests باستخدام OpenCL للتحقق من توافق وحدات معالجة الرسوميات AMD (pyopencl، nabu، ufo-filters، pyvkfft) عبر بنية Debian/ROCm على GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – حتى الآن',
+        title: 'مدرّس خصوصي للعلوم',
+        org: 'Complétude',
+        body: 'تدريس الرياضيات والفيزياء-الكيمياء لنحو عشرة طلاب، من الابتدائية حتى السنة النهائية من الثانوية، بالتوازي مع دراستي الهندسية.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -3233,56 +3604,56 @@ const ar: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'يونيو 2026 · هاكاثون SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'دليل لأدوات التعويض المعرفي الرقمية لذوي إصابات الدماغ والمعالجين المهنيين العاملين معهم.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'انطلق NeuroStep في هاكاثون SN@SU (Sorbonne Université). يستطيع المعالجون المهنيون والمرضى إيجاد تطبيقات للتواصل والذاكرة والتخطيط دون البحث في المتاجر واحدًا تلو الآخر: فكل أداة مُدرجة ومصنّفة حسب الاضطراب والموضوع وقابلة للبحث.\nالنسخة الأولية تطبيق Streamlit يعتمد على مخزن JSON، ويجري حاليًا تحديد إعادة بناء إنتاجية باستخدام FastAPI وPostgreSQL وواجهة أمامية Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'ديسمبر 2025 · مشروع جماعي',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'لوحة تفاعلية تعيد بناء 15 عامًا من تلوث الهواء الخلفي في فرنسا (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'خط بيانات ولوحة تفاعلية على مؤشرات INERIS على مستوى البلديات (Zenodo). تقوم النصوص بتنزيل البيانات وتنظيفها وتخزينها في SQLite؛ وتعرض اللوحة خريطة حرارية للتلوث باستخدام Leaflet مع شريط لاختيار السنة ومرشحات للملوّثات، إلى جانب رسوم Plotly.\nأُنجز مع زميل الفريق William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · مشروع دراسي',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'التعرف على الوجوه بالاعتماد على CNN على الصور الثابتة ثم الفيديو، باستخدام زيادة البيانات ومحاذاة الوجه.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'مشروع دراسي حول التعرف الحديث على الوجوه. أفرط النموذج الأول المدرَّب على 218 صورة فقط في التكيّف؛ وقد أدّت زيادة البيانات (الدوران والتكبير) وخطوة محاذاة الوجه التي تطبّع موضع العينين والشفتين، مع شبكة مدرَّبة مسبقًا، إلى تحسين التعميم. كان الهدف اكتشاف الوجوه في الفيديو من مجموعة بيانات المشروع نفسها.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · مشروع ثنائي',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'لعبة مغامرة نصية في الطرفية بلغة Python، بتصميم كائني التوجّه.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'مغامرة نصية تُلعب في الطرفية: يتنقل اللاعب بين ثماني غرف بكتابة الأوامر. الشيفرة مقسّمة إلى أصناف صغيرة ذات مسؤولية واحدة (اللعبة، الغرفة، اللاعب، الأمر، الفعل، الشخصية، العنصر)، بحيث تبقى إضافة غرفة أو عنصر تغييرًا محليًا.\nأُنجزت مع Anne-Colombe André في ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'فبراير 2025 · مشروع جماعي',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'منصة لتحليل البيانات الغذائية: جمع البيانات، ETL، ولوحة تحكم على بيانات الوصفات.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'مشروع جماعي في هندسة البيانات يجمع بيانات الوصفات من Marmiton، ويشغّل خط ETL، ويعرض النتائج عبر لوحة تحليلية. بُني بلغة Python مع دفاتر Jupyter للاستكشاف.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -3291,9 +3662,9 @@ const ar: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'نصوص autopkgtest تتحقق من البرمجيات العلمية على وحدات معالجة الرسوميات AMD، على بنية التكامل المستمر في Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'جزء من تدريب في Synchrotron SOLEIL: نصوص autopkgtest مكتوبة بلغة OpenCL للتحقق من توافق وحدات معالجة الرسوميات AMD (pyopencl، nabu، ufo-filters، pyvkfft) عبر بنية التكامل المستمر Debian/ROCm، تُشغَّل عبر GitLab Salsa. تثبّت النصوص الحِزم وتزيلها على أجهزة افتراضية نظيفة وتُبلّغ عن التوافق بين وحدات المعالجة.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -3365,8 +3736,8 @@ const ar: Dictionary = {
     title: 'ملاحظات من البحث',
     subtitle: 'مقالات أطول حول الأساليب والطرق المسدودة والقرارات التي شكّلت العمل أعلاه.',
     posts: [
-      { status: 'مسودة — قريبًا', title: 'لماذا يُفشل التعرف على الكيانات السريرية الفرنسية النماذج العامة', body: 'جولة على النقاط التي تفشل فيها خطوط أنابيب التعرف على الكيانات القياسية في تقارير الأورام الفرنسية، وما يعنيه ذلك لبنية DEMNE.' },
-      { status: 'مسودة — قريبًا', title: 'الاستخراج المتدرج مقابل نموذج كبير واحد', body: 'الحجة وراء توجيه الكيانات عبر القواعد وCRF ومحوّل مضبوط قبل استدعاء أي نموذج لغوي كبير — وما تكلفة الخطأ في ذلك.' },
+      { status: 'نُشر · أكتوبر 2026', title: 'لماذا يُفشل التعرف على الكيانات السريرية الفرنسية النماذج العامة', body: 'جولة على النقاط التي تفشل فيها خطوط أنابيب التعرف على الكيانات القياسية في تقارير الأورام الفرنسية، وما يعنيه ذلك لبنية DEMNE.', content: `<p>افتح تقريرًا فرنسيًا في علم الأورام، وستتعثر معظم نماذج NER الجاهزة منذ الجملة الأولى. فالمفردات كثيفة ومختصرة (ER، PR، HER2، Ki67، FISH)، والتنسيق يتغيّر من مستشفى إلى آخر، ومصطلحات المؤشرات الحيوية المهمة تكاد تغيب عن المجموعات التي دُرِّبت عليها هذه النماذج. ورد الفعل المعتاد &mdash; إلقاء نموذج كبير على المشكلة &mdash; ينجح، لكنه مكلف وغامض ويصعب تبريره أمام طبيب سريري أو مدقّق.</p><h2>ليست كل كيان بحاجة إلى نموذج لغوي كبير</h2><p>ينطلق DEMNE من ملاحظة صريحة: الكيانات في هذه التقارير ليست متساوية الصعوبة. فذكر الخزعة يُكتب بعدد قليل من الصيغ الثابتة؛ أما اسم الدواء فقد يظهر بمئة شكل. لذا، بدلًا من نموذج واحد لكل شيء، يقيس DEMNE كل نوع كيان ويوجّهه إلى أخف طريقة تظل موثوقة &mdash; قاعدة حتمية، أو transformer مضبوط، أو نموذج لغوي كبير كملاذ أخير فقط.</p><p>والقياس هو خمسة مقاييس للمجموعات تُحسب من التعليقات التوضيحية: مدى انتظام الشكل السطحي، ومدى تجانس المفردات، وما إذا كانت مجموعة صغيرة من الكلمات المفتاحية مميِّزة، وكم مرة يقع الذكر تحت النفي أو التناقض، وما إذا كانت هناك بيانات موسومة كافية لتدريب نموذج خاضع للإشراف أصلًا. ويحوّل مخطط قرار حتمي هذه الأرقام إلى مستوى، وتُعاير عتباته السبع عشرة ببحث متعدد الأهداف يعاقب إرسال كيان إلى طريقة أضعف من اللازم ضعفَي عقوبة إرساله إلى طريقة مكلفة أكثر من اللازم فحسب.</p><h2>ماذا يحقق</h2><p>على مجموعة المعايرة الأورامية (59 نوع كيان)، يتوافق التوجيه مع المستوى المرجعي للخبراء بتوافق قدره 0.954 وتقدير leave-one-corpus-out قدره 0.866 &mdash; أعلى بكثير من أي أساس ثابت المستوى (دائمًا-القواعد يبلغ 0.729، ودائمًا-النموذج اللغوي 0.148). والاختبار الأكثر إقناعًا خارجي: إذ طُبِّق دون أي إعادة ضبط على 300 تقرير أشعة مقطعية من AP-HP في مواقع سرطانية لم يرها النموذج قط، فوجّه DEMNE 99.5% من الإشارات المميَّزة (411 من 413) إلى قواعد حتمية. وبلغت هذه القواعد متوسط F1 قدره 0.941، بينما لم يتجاوز transformer مضبوط على الكيانات نفسها ضمن ميزانية مستشفى واقعية سوى 0.358.</p><p>بعبارة أخرى: بالنسبة للكيانات المعيارية التي تهيمن على التقارير الأورامية، لم تكن القواعد أرخص فحسب &mdash; بل كانت أفضل، ويمكن تتبّع كل قرار قاعدة حتى شرط صريح، وهو تحديدًا ما تطلبه المادتان 12 و14 من EU AI Act.</p><h2>أين يتوقف</h2><p>أودّ أن أكون صادقًا بشأن الحدود. فالمعيار المرجعي صغير &mdash; 92 نوع كيان، منها 59 في علم الأورام &mdash; لذا فإن درجات المجموعة الواحدة متفائلة ولا تصحّ إلا المقارنات النسبية. ولم يُقيَّم مستوى النموذج اللغوي الكبير من طرف إلى طرف على المجموعة الخارجية؛ إذ كان الكيان الوحيد الموجَّه إليه نادرًا للغاية. كما أن المعايرة لا تنتقل بين المجالات: فعند الانتقال إلى نوع سريري آخر أو لغة أخرى يهبط التوافق إلى 0.45&ndash;0.73، ويجب إعادة ضبط العتبات. إن DEMNE إثبات جدوى، لا منتجًا مكتملًا.</p><h2>لماذا يهم</h2><p>ليست الفكرة أن القواعد تتفوّق على transformer. بل أن &laquo;أي طريقة&raquo; سؤال يمكن الإجابة عنه كيانًا بكيان، انطلاقًا من خصائص قابلة للقياس في النص، بدل اللجوء افتراضيًا إلى أثقل نموذج والأمل في النجاح. وبالنسبة لمعالجة اللغة السريرية &mdash; حيث تتزامن أهمية الكلفة وقابلية التدقيق والثقة &mdash; يساوي هذا التأطير أكثر من نقطة مئوية إضافية على معيار قياس.</p><p>الشيفرة والطريقة الكاملة على <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>؛ والمخطوطة قيد الإعداد.</p>` },
+      { status: 'مسودة — قريبًا', title: 'الاستخراج المتدرج مقابل نموذج كبير واحد', body: 'الحجة وراء توجيه الكيانات عبر القواعد ومحوّل مضبوط قبل استدعاء أي نموذج لغوي كبير — وما تكلفة الخطأ في ذلك.' },
     ],
   },
   contact: {
@@ -3403,14 +3774,14 @@ const hi: Dictionary = {
     menuToggleLabel: 'मेनू खोलें',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'क्लिनिकल टेक्स्ट से बायोमार्कर निकालना, ',
     h1Accent: 'बिना GPU जगाए',
     h1Post: '।',
     sub: 'मैं क्लेमों लोंज्याक हूँ। मैं DEMNE पर काम कर रहा हूँ, एक रूटिंग फ्रेमवर्क जो हर एंटिटी टाइप के लिए तय करता है — कि क्या रेगेक्स, CRF, ट्रांसफॉर्मर, या LLM उस काम के लिए ईमानदार टूल है। पहला परिणाम: बिना GPU के 99.5% क्लिनिकल एंटिटी निकाली गईं, 300 AP-HP नोट्स पर F1 = 0.941।',
     ctaResearch: 'अनुसंधान देखें',
     ctaCV: 'सीवी डाउनलोड करें',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, लाइव योजनाबद्ध चित्र',
+    caption: 'DEMNE — Rules → Transformer → LLM, लाइव योजनाबद्ध चित्र',
   },
   about: {
     label: '01 — मेरे बारे में',
@@ -3430,7 +3801,7 @@ const hi: Dictionary = {
   },
   research: {
     label: '02 — अनुसंधान',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'फ्रेंच ऑन्कोलॉजी क्लिनिकल टेक्स्ट के लिए एक हाइब्रिड नेम्ड-एंटिटी-रिकग्निशन पाइपलाइन।',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'क्लिनिकल एनईआर · फ्रेंच ऑन्कोलॉजी कॉर्पस',
@@ -3467,11 +3838,48 @@ const hi: Dictionary = {
     title: 'अब तक काम कहाँ हुआ है',
     currentLabel: 'जारी',
     items: [
-      { current: true, date: '2025 — अब तक', title: 'रिसर्च असिस्टेंट, Tremplin Recherche', org: 'ESIEE Paris', body: 'फ्रेंच ऑन्कोलॉजी टेक्स्ट के लिए एक हाइब्रिड क्लिनिकल एनईआर पाइपलाइन, DEMNE का विकास, पीएचडी आवेदनों से पहले Tremplin Recherche ट्रैक की मुख्य परियोजना के रूप में।' },
-      { current: true, date: '2026 — अब तक', title: 'संस्थापक और प्रोडक्ट लीड, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'एक ऐसा प्लेटफ़ॉर्म बना रहा हूँ जो मस्तिष्क-चोट वाले रोगियों और उनके ऑक्यूपेशनल थेरेपिस्ट को कॉग्निटिव कंपेंसेशन डिजिटल टूल्स की तुलना करने का एक संरचित तरीका देता है। इसकी शुरुआत सोरबोन विश्वविद्यालय के SN@SU हैकाथॉन में (UEROS L\'ADAPT इल-द-फ्रांस की ऑक्यूपेशनल थेरेपिस्ट Flor Sanchez-Luizard के साथ) एक Python/Streamlit प्रोटोटाइप के रूप में हुई; अब यह HDS/RGPD-अनुरूप होस्टिंग और क्लिनिकल मैचिंग के लिए एक सिमेंटिक सर्च इंजन के साथ एक प्रोडक्शन रीबिल्ड (FastAPI, PostgreSQL, Next.js) की योजना के चरण में है।' },
-      { date: '2024 — 2027', title: 'इंजीनियरिंग छात्र — डेटा साइंस एवं एआई', org: 'ESIEE Paris', body: 'ESIEE Paris के पाँच-वर्षीय इंजीनियरिंग कार्यक्रम का चौथे वर्ष का छात्र, डेटा साइंस एवं एआई (DSIA) में विशेषज्ञता।' },
-      { date: '2025', title: 'इंजीनियरिंग इंटर्न, GRADES डिवीज़न', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa के माध्यम से Debian/ROCm इंफ्रास्ट्रक्चर पर AMD GPU संगतता के लिए OpenCL में autopkgtest स्क्रिप्ट (pyopencl, nabu, ufo-filters, pyvkfft) विकसित कीं।' },
-      { date: '2022 — अब तक', title: 'STEM ट्यूटर', org: 'Complétude', body: 'अपनी इंजीनियरिंग पढ़ाई के साथ-साथ लगभग दस छात्रों को, प्राथमिक से लेकर बारहवीं कक्षा तक, गणित और भौतिकी-रसायन विज्ञान पढ़ाना।' },
+      {
+        date: 'मई – जुल. 2026',
+        title: 'शोध प्रशिक्षु, क्लिनिकल डेटा वेयरहाउस',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'अस्पताल डेटा पर DEMNE के रूटिंग दृष्टिकोण को लागू और सत्यापित किया: फ़्रेंच क्लिनिकल रिपोर्टों से ऑन्कोलॉजी बायोमार्कर (ER, PR, HER2, Ki67, FISH) निकालना, और एक ऑडिट-योग्य, परिनियोजन-यथार्थ क्लिनिकल पथ परिभाषित करना।',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'अक्तू. 2025 – मई 2026',
+        title: 'छात्र शोधकर्ता, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'फ़्रेंच ऑन्कोलॉजी टेक्स्ट के लिए एक हाइब्रिड क्लिनिकल NER पाइपलाइन (नियम / transformer / LLM), DEMNE, डिज़ाइन की — पाँच औपचारिक कॉर्पस मेट्रिक्स से संचालित; PhD आवेदनों से पहले Tremplin Recherche मार्ग की केंद्रीय परियोजना।',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – वर्तमान',
+        title: 'प्रोडक्ट लीड व डेवलपर, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'एक प्लेटफ़ॉर्म का निर्माण जो मस्तिष्क-चोट के मरीज़ों और व्यावसायिक चिकित्सकों को संज्ञानात्मक-क्षतिपूर्ति उपकरणों की तुलना का संरचित तरीका देता है। SN@SU हैकाथॉन में Python/Streamlit प्रोटोटाइप के रूप में शुरू हुआ (Sorbonne Université, UEROS L’ADAPT Île-de-France की व्यावसायिक चिकित्सक Flor Sanchez-Luizard के साथ); अब HDS/GDPR-अनुरूप होस्टिंग और क्लिनिकल टूल मिलान हेतु सिमेंटिक सर्च इंजन के साथ उत्पादन-स्तरीय पुनर्निर्माण (FastAPI, PostgreSQL, Next.js) की रूपरेखा बन रही है।',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'इंजीनियरिंग छात्र — डेटा साइंस व AI',
+        org: 'ESIEE Paris',
+        body: 'ESIEE Paris के पाँच-वर्षीय इंजीनियरिंग कार्यक्रम का पाँचवें वर्ष का छात्र, डेटा साइंस व AI (DSIA) में विशेषज्ञता।',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'इंजीनियरिंग प्रशिक्षु, GRADES प्रभाग',
+        org: 'Synchrotron SOLEIL',
+        body: 'AMD GPU संगतता (pyopencl, nabu, ufo-filters, pyvkfft) की जाँच हेतु OpenCL से autopkgtests विकसित किए, GitLab Salsa पर Debian/ROCm अवसंरचना में।',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – वर्तमान',
+        title: 'विज्ञान-गणित ट्यूटर',
+        org: 'Complétude',
+        body: 'इंजीनियरिंग पढ़ाई के साथ-साथ प्राथमिक से बारहवीं तक के लगभग दस छात्रों को गणित और भौतिकी-रसायन पढ़ाना।',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -3491,56 +3899,56 @@ const hi: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'जून 2026 · SN@SU हैकाथॉन',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'मस्तिष्क चोट से ग्रस्त लोगों और उनके व्यावसायिक चिकित्सकों के लिए डिजिटल संज्ञानात्मक-क्षतिपूर्ति उपकरणों की सूची।',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep की शुरुआत SN@SU हैकाथॉन (Sorbonne Université) में हुई। व्यावसायिक चिकित्सक और मरीज़ ऐप स्टोर एक-एक कर खंगाले बिना संचार, स्मृति और योजना के लिए ऐप पा सकते हैं: हर उपकरण सूचीबद्ध है, विकार और विषय के अनुसार वर्गीकृत है, और खोजा जा सकता है।\nMVP एक Streamlit एप्लिकेशन है जिसके पीछे JSON स्टोर है; अब FastAPI, PostgreSQL और Next.js फ्रंटएंड के साथ उत्पादन-स्तरीय पुनर्निर्माण की रूपरेखा बनाई जा रही है।',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'दिस. 2025 · टीम प्रोजेक्ट',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'फ़्रांस में 15 वर्षों के पृष्ठभूमि वायु प्रदूषण को पुनर्निर्मित करने वाला एक इंटरैक्टिव डैशबोर्ड (2000–2015)।',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'INERIS के कम्यून-स्तरीय संकेतकों (Zenodo) पर एक डेटा पाइपलाइन और इंटरैक्टिव डैशबोर्ड। स्क्रिप्ट डेटा डाउनलोड, साफ़ और SQLite में संग्रहीत करती हैं; डैशबोर्ड वर्ष स्लाइडर और प्रदूषक फ़िल्टर के साथ Leaflet प्रदूषण हीटमैप, तथा Plotly चार्ट दिखाता है।\nटीम-साथी William Zee के साथ बनाया गया।',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · कोर्स प्रोजेक्ट',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'स्थिर छवियों और फिर वीडियो पर CNN-आधारित चेहरा पहचान, डेटा ऑगमेंटेशन और फ़ेस अलाइनमेंट के साथ।',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'आधुनिक चेहरा पहचान पर एक कोर्स प्रोजेक्ट। केवल 218 छवियों पर प्रशिक्षित पहला मॉडल भारी ओवरफ़िट हुआ; डेटा ऑगमेंटेशन (घुमाव, ज़ूम) और आँख व होंठ की स्थिति को सामान्यीकृत करने वाले फ़ेस-अलाइनमेंट चरण को, एक पूर्व-प्रशिक्षित नेटवर्क के साथ मिलाकर, सामान्यीकरण सुधरा। लक्ष्य प्रोजेक्ट के अपने डेटासेट के वीडियो में चेहरे पहचानना था।',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · जोड़ी प्रोजेक्ट',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'ऑब्जेक्ट-ओरिएंटेड डिज़ाइन के साथ, टर्मिनल में खेली जाने वाली Python की टेक्स्ट एडवेंचर गेम।',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'टर्मिनल में खेली जाने वाली एक टेक्स्ट एडवेंचर: खिलाड़ी कमांड टाइप करके आठ कमरों के बीच चलता है। कोड छोटे एकल-ज़िम्मेदारी वर्गों (गेम, कमरा, खिलाड़ी, कमांड, क्रिया, पात्र, वस्तु) में बँटा है, इसलिए कमरा या वस्तु जोड़ना एक स्थानीय बदलाव ही रहता है।\nESIEE Paris में Anne-Colombe André के साथ बनाया गया।',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'फ़र. 2025 · टीम प्रोजेक्ट',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'एक पाककला डेटा-एनालिटिक्स प्लेटफ़ॉर्म: स्क्रैपिंग, ETL और रेसिपी डेटा पर एक डैशबोर्ड।',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'एक डेटा-इंजीनियरिंग टीम प्रोजेक्ट जो Marmiton से रेसिपी डेटा स्क्रैप करता है, एक ETL पाइपलाइन चलाता है, और परिणामों को एक एनालिटिक्स डैशबोर्ड के माध्यम से प्रस्तुत करता है। Python में बनाया गया, अन्वेषण के लिए Jupyter नोटबुक के साथ।',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -3549,9 +3957,9 @@ const hi: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Debian की CI अवसंरचना पर, AMD GPU पर वैज्ञानिक सॉफ़्टवेयर को सत्यापित करने वाले autopkgtest स्क्रिप्ट।',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Synchrotron SOLEIL इंटर्नशिप का हिस्सा: AMD GPU संगतता (pyopencl, nabu, ufo-filters, pyvkfft) की जाँच के लिए OpenCL में लिखे गए autopkgtest, जो Debian/ROCm निरंतर-एकीकरण अवसंरचना पर GitLab Salsa के माध्यम से चलते हैं। स्क्रिप्ट साफ़ वर्चुअल मशीनों पर पैकेज इंस्टॉल और अनइंस्टॉल करती हैं और GPU के बीच संगतता की रिपोर्ट देती हैं।',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -3623,8 +4031,8 @@ const hi: Dictionary = {
     title: 'अनुसंधान से नोट्स',
     subtitle: 'ऊपर दिए गए कार्य के पीछे की विधियों, गतिरोधों और निर्णयों पर लंबे लेख।',
     posts: [
-      { status: 'ड्राफ्ट — जल्द आ रहा है', title: 'फ्रेंच क्लिनिकल एनईआर सामान्य-उद्देश्य मॉडलों को क्यों तोड़ देता है', body: 'यह एक विश्लेषण है कि मानक एनईआर पाइपलाइन फ्रेंच ऑन्कोलॉजी रिपोर्टों पर कहाँ विफल होते हैं, और इसका DEMNE की संरचना के लिए क्या मतलब है।' },
-      { status: 'ड्राफ्ट — जल्द आ रहा है', title: 'चरणबद्ध एक्सट्रैक्शन बनाम एकल बड़ा मॉडल', body: 'एलएलएम को कॉल करने से पहले नियमों, एक सीआरएफ और एक फाइन-ट्यून किए गए ट्रांसफॉर्मर के माध्यम से एंटिटीज़ को रूट करने का तर्क — और गलत होने पर इसकी कीमत।' },
+      { status: 'प्रकाशित · अक्तू. 2026', title: 'फ्रेंच क्लिनिकल एनईआर सामान्य-उद्देश्य मॉडलों को क्यों तोड़ देता है', body: 'यह एक विश्लेषण है कि मानक एनईआर पाइपलाइन फ्रेंच ऑन्कोलॉजी रिपोर्टों पर कहाँ विफल होते हैं, और इसका DEMNE की संरचना के लिए क्या मतलब है।', content: `<p>कोई फ़्रेंच ऑन्कोलॉजी रिपोर्ट खोलिए और अधिकांश तैयार-मिलने वाले NER मॉडल पहली ही पंक्ति में लड़खड़ा जाते हैं। शब्दावली सघन और संक्षिप्त है (ER, PR, HER2, Ki67, FISH), स्वरूपण हर अस्पताल में बदलता है, और जो बायोमार्कर शब्दावली मायने रखती है वह उन कॉर्पस में लगभग अनुपस्थित है जिन पर ये मॉडल प्रशिक्षित हुए। सामान्य प्रतिक्रिया &mdash; उस पर एक बड़ा मॉडल दाग देना &mdash; काम तो करती है, पर महँगी, अपारदर्शी और किसी चिकित्सक या ऑडिटर के सामने उचित ठहराना कठिन है।</p><h2>हर एंटिटी को LLM की ज़रूरत नहीं</h2><p>DEMNE एक सीधे अवलोकन से शुरू होता है: इन रिपोर्टों की एंटिटियाँ समान रूप से कठिन नहीं हैं। बायोप्सी का उल्लेख कुछ स्थिर रूपों में लिखा जाता है; जबकि दवा का नाम सौ रूपों में आ सकता है। इसलिए हर चीज़ के लिए एक ही मॉडल के बजाय, DEMNE प्रत्येक एंटिटी प्रकार को मापता है और उसे सबसे हल्की पर पर्याप्त विश्वसनीय विधि की ओर भेजता है &mdash; एक नियतात्मक नियम, एक फ़ाइन-ट्यून किया transformer, या अंतिम उपाय के रूप में ही LLM।</p><p>यह माप एनोटेशन से परिकलित पाँच कॉर्पस मेट्रिक्स हैं: सतही रूप कितना टेम्पलेट-योग्य है, शब्दावली कितनी समरूप है, क्या एक छोटा कीवर्ड-समुच्चय विभेदक है, उल्लेख कितनी बार निषेध या विरोधाभास के अधीन आता है, और क्या पर्यवेक्षित मॉडल को प्रशिक्षित करने के लिए पर्याप्त लेबल डेटा है ही। एक नियतात्मक निर्णय-ग्राफ़ इन संख्याओं को एक स्तर में बदलता है, और इसके 17 थ्रेशहोल्ड एक बहु-उद्देश्यीय खोज से कैलिब्रेट किए जाते हैं, जो किसी एंटिटी को बहुत कमज़ोर विधि की ओर भेजने पर, महज़ बहुत महँगी विधि की तुलना में, दोगुना दंड देती है।</p><h2>इससे क्या मिलता है</h2><p>ऑन्कोलॉजी कैलिब्रेशन सेट (59 एंटिटी प्रकार) पर, रूटिंग विशेषज्ञ संदर्भ स्तर से 0.954 की सहमति और 0.866 के leave-one-corpus-out अनुमान के साथ मेल खाती है &mdash; किसी भी स्थिर-स्तर बेसलाइन से कहीं ऊपर (सदा-नियम 0.729, सदा-LLM 0.148)। अधिक ठोस परीक्षण बाह्य है: बिना किसी पुनः-समायोजन के AP-HP की 300 CT रिपोर्टों पर, ऐसे कैंसर स्थलों के लिए जो मॉडल ने कभी नहीं देखे, DEMNE ने 99.5% चिह्नित उल्लेखों (413 में से 411) को नियतात्मक नियमों की ओर भेजा। उन नियमों ने 0.941 का औसत F1 प्राप्त किया, जबकि यथार्थ अस्पताल बजट में उन्हीं एंटिटियों पर फ़ाइन-ट्यून किया transformer केवल 0.358 तक पहुँच पाया।</p><p>दूसरे शब्दों में: ऑन्कोलॉजी रिपोर्टिंग पर हावी मानकीकृत एंटिटियों के लिए, नियम केवल सस्ते ही नहीं थे &mdash; वे बेहतर थे, और हर नियम-निर्णय एक स्पष्ट शर्त तक अनुरेखित होता है, जो ठीक वही है जो EU AI Act के अनुच्छेद 12 और 14 माँगते हैं।</p><h2>यह कहाँ रुकता है</h2><p>मैं सीमाओं के बारे में ईमानदार रहना चाहता हूँ। संदर्भ मानक छोटा है &mdash; 92 एंटिटी प्रकार, जिनमें 59 ऑन्कोलॉजी में &mdash; इसलिए एकल-कॉर्पस स्कोर आशावादी हैं और केवल सापेक्ष तुलनाएँ ही टिकती हैं। LLM स्तर का बाह्य समूह पर आद्योपांत मूल्यांकन कभी नहीं हुआ; उसकी एकमात्र रूट की गई एंटिटी बहुत दुर्लभ थी। और कैलिब्रेशन डोमेनों के बीच स्थानांतरित नहीं होता: किसी अन्य क्लिनिकल शैली या भाषा पर सहमति 0.45&ndash;0.73 तक गिर जाती है, इसलिए थ्रेशहोल्ड दोबारा फ़िट करने पड़ते हैं। DEMNE व्यवहार्यता का प्रमाण है, कोई तैयार उत्पाद नहीं।</p><h2>यह क्यों मायने रखता है</h2><p>बात यह नहीं कि नियम transformer को हरा देते हैं। बात यह है कि &ldquo;कौन-सी विधि&rdquo; एक ऐसा प्रश्न है जिसका उत्तर पाठ के मापनीय गुणों से, एंटिटी-दर-एंटिटी दिया जा सकता है &mdash; न कि डिफ़ॉल्ट रूप से सबसे भारी मॉडल चुनकर उम्मीद लगाना। क्लिनिकल NLP के लिए &mdash; जहाँ लागत, ऑडिट-योग्यता और विश्वास एक साथ मायने रखते हैं &mdash; यह दृष्टिकोण किसी बेंचमार्क पर एक और प्रतिशत-अंक से अधिक मूल्यवान है।</p><p>कोड और पूरी विधि <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> पर है; पांडुलिपि तैयारी में है।</p>` },
+      { status: 'ड्राफ्ट — जल्द आ रहा है', title: 'चरणबद्ध एक्सट्रैक्शन बनाम एकल बड़ा मॉडल', body: 'एलएलएम को कॉल करने से पहले नियमों और एक फाइन-ट्यून किए गए ट्रांसफॉर्मर के माध्यम से एंटिटीज़ को रूट करने का तर्क — और गलत होने पर इसकी कीमत।' },
     ],
   },
   contact: {
@@ -3661,14 +4069,14 @@ const tr: Dictionary = {
     menuToggleLabel: 'Menüyü aç',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: "GPU'yu uyandırmadan ",
     h1Accent: 'klinik metinden biyobelirteç çıkarıyorum',
-    h1Post: '.',
+    h1Post: '',
     sub: "Ben Clément Longeac. DEMNE üzerinde çalışıyorum; her varlık türü için regex, CRF, transformer veya LLM'den hangisinin görev için dürüst araç olduğuna karar veren bir yönlendirme çerçevesi. İlk sonuç: klinik varlıkların %99,5'si GPU kullanılmadan çıkarıldı, 300 AP-HP notunda F1 = 0,941.",
     ctaResearch: 'Araştırmayı gör',
     ctaCV: 'Özgeçmişi indir',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, canlı şema',
+    caption: 'DEMNE — Rules → Transformer → LLM, canlı şema',
   },
   about: {
     label: '01 — Hakkımda',
@@ -3688,7 +4096,7 @@ const tr: Dictionary = {
   },
   research: {
     label: '02 — Araştırma',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Fransızca onkoloji klinik metni için hibrit bir adlandırılmış varlık tanıma hattı.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Klinik NER · Fransızca onkoloji derlemleri',
@@ -3725,11 +4133,48 @@ const tr: Dictionary = {
     title: 'Çalışmaların şimdiye kadar gerçekleştiği yerler',
     currentLabel: 'Devam ediyor',
     items: [
-      { current: true, date: '2025 — Günümüz', title: 'Araştırma Asistanı, Tremplin Recherche', org: 'ESIEE Paris', body: 'Doktora başvurularından önce Tremplin Recherche programının temel projesi olarak, Fransızca onkoloji metni için hibrit klinik NER hattı DEMNE\'nin geliştirilmesi.' },
-      { current: true, date: '2026 — Günümüz', title: 'Kurucu ve Ürün Lideri, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Beyin hasarı olan hastalara ve onların ergoterapistlerine bilişsel telafi dijital araçlarını karşılaştırmak için yapılandırılmış bir yol sunan bir platform inşa ediyorum. Sorbonne Üniversitesi\'ndeki SN@SU hackathonunda (UEROS L\'ADAPT Île-de-France\'ta ergoterapist olan Flor Sanchez-Luizard ile birlikte) bir Python/Streamlit prototipi olarak doğdu; şu anda HDS/RGPD uyumlu barındırma ve klinik eşleştirme için bir anlamsal arama motoruna sahip bir üretim yeniden yapılanmasının (FastAPI, PostgreSQL, Next.js) planlama aşamasında.' },
-      { date: '2024 — 2027', title: 'Mühendislik Öğrencisi — Veri Bilimi & Yapay Zeka', org: 'ESIEE Paris', body: 'ESIEE Paris\'in beş yıllık mühendislik programının dördüncü sınıf öğrencisi, Veri Bilimi & Yapay Zeka (DSIA) uzmanlığı.' },
-      { date: '2025', title: 'Mühendislik Stajyeri, GRADES Bölümü', org: 'Synchrotron SOLEIL', body: 'GitLab Salsa üzerinden Debian/ROCm altyapısında AMD GPU uyumluluğu için OpenCL ile autopkgtest betikleri (pyopencl, nabu, ufo-filters, pyvkfft) geliştirdi.' },
-      { date: '2022 — Günümüz', title: 'Fen Bilimleri Özel Öğretmeni', org: 'Complétude', body: 'Mühendislik eğitimimle birlikte ilkokuldan lise son sınıfa kadar yaklaşık on öğrenciye matematik ve fizik-kimya dersleri veriyorum.' },
+      {
+        date: 'May – Tem 2026',
+        title: 'Araştırma stajyeri, Klinik Veri Ambarı',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'DEMNE yönlendirme yaklaşımını hastane verisinde uyguladım ve doğruladım: Fransızca klinik raporlardan onkoloji biyobelirteçlerini (ER, PR, HER2, Ki67, FISH) çıkarmak ve denetlenebilir, dağıtıma uygun bir klinik yol tanımlamak.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Eki 2025 – May 2026',
+        title: 'Öğrenci araştırmacı, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Fransızca onkoloji metinleri için hibrit bir klinik NER hattı (kurallar / transformer / LLM) olan DEMNE’yi tasarladım; beş biçimselleştirilmiş korpus ölçütüyle yönetilir — doktora başvuruları öncesinde Tremplin Recherche izleğinin ana projesi.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Günümüz',
+        title: 'Product Lead ve geliştirici, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Beyin hasarı olan hastalara ve ergoterapistlere bilişsel telafi araçlarını yapılandırılmış biçimde karşılaştırma olanağı veren bir platform geliştiriyorum. SN@SU hackathon’unda Python/Streamlit prototipi olarak başladı (Sorbonne Université, UEROS L’ADAPT Île-de-France’da ergoterapist Flor Sanchez-Luizard ile); şimdi HDS/GDPR uyumlu barındırma ve klinik araç eşleştirmesi için anlamsal arama motoruyla üretim düzeyinde yeniden inşa (FastAPI, PostgreSQL, Next.js) planlanıyor.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Mühendislik öğrencisi — Veri Bilimi ve YZ',
+        org: 'ESIEE Paris',
+        body: 'ESIEE Paris’in beş yıllık mühendislik programının beşinci yıl öğrencisi, Veri Bilimi ve YZ (DSIA) uzmanlığı.',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Mühendis stajyer, GRADES bölümü',
+        org: 'Synchrotron SOLEIL',
+        body: 'AMD GPU uyumluluğu (pyopencl, nabu, ufo-filters, pyvkfft) için OpenCL ile autopkgtest geliştirme; GitLab Salsa üzerindeki Debian/ROCm altyapısında.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Günümüz',
+        title: 'Fen bilimleri özel öğretmeni',
+        org: 'Complétude',
+        body: 'Mühendislik eğitimimle birlikte, ilkokuldan lise son sınıfa kadar yaklaşık on öğrenciye matematik ve fizik-kimya dersleri.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -3750,56 +4195,56 @@ const tr: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Haziran 2026 · SN@SU hackathon’u',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Beyin hasarı olan kişiler ve ergoterapistleri için dijital bilişsel telafi araçları kataloğu.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep, SN@SU hackathon’unda (Sorbonne Université) başladı. Ergoterapistler ve hastalar, uygulama mağazalarını tek tek taramadan iletişim, hafıza ve planlama uygulamaları bulabilir: her araç listelenir, bozukluğa ve temaya göre sınıflandırılır ve aranabilir.\nMVP, JSON deposuyla çalışan bir Streamlit uygulaması; şu anda FastAPI, PostgreSQL ve Next.js ön yüzüyle üretim düzeyinde yeniden inşa planlanıyor.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Ara. 2025 · Ekip projesi',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Fransa’da 15 yıllık arka plan hava kirliliğini yeniden kuran etkileşimli bir panel (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'INERIS’in belediye düzeyindeki göstergeleri (Zenodo) üzerine bir veri hattı ve etkileşimli panel. Betikler veriyi indirir, temizler ve SQLite’a kaydeder; panel, yıl kaydırıcısı ve kirletici filtreleriyle bir Leaflet kirlilik ısı haritasını Plotly grafikleriyle birlikte sunar.\nTakım arkadaşı William Zee ile yapıldı.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Ders projesi',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Durağan görüntülerde ve ardından videoda CNN tabanlı yüz tanıma; veri artırma ve yüz hizalama kullanır.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Modern yüz tanıma üzerine bir ders projesi. Yalnızca 218 görüntüyle eğitilen ilk model ciddi biçimde aşırı öğrendi; veri artırma (döndürme, yakınlaştırma) ve göz ile dudak konumunu normalleştiren bir yüz hizalama adımı, önceden eğitilmiş bir ağla birleşince genellemeyi iyileştirdi. Amaç, projenin kendi veri kümesindeki videoda yüzleri saptamaktı.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · İkili proje',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Nesne yönelimli tasarıma sahip, terminalde oynanan bir Python metin macerası.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Terminalde oynanan bir metin macerası: oyuncu komutlar yazarak sekiz oda arasında dolaşır. Kod, tek sorumluluklu küçük sınıflara (oyun, oda, oyuncu, komut, eylem, karakter, nesne) bölünmüştür; böylece bir oda ya da nesne eklemek yerel bir değişiklik olarak kalır.\nESIEE Paris’te Anne-Colombe André ile yapıldı.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Şub. 2025 · Ekip projesi',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Mutfak verisi analitiği platformu: scraping, ETL ve tarif verileri üzerine bir panel.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Marmiton’dan tarif verisi toplayan, bir ETL hattı çalıştıran ve sonuçları bir analitik panel üzerinden sunan bir veri mühendisliği ekip projesi. Python ile, keşif için Jupyter not defterleriyle geliştirildi.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -3808,9 +4253,9 @@ const tr: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Debian’ın CI altyapısında, AMD GPU’larda bilimsel yazılımı doğrulayan autopkgtest betikleri.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Synchrotron SOLEIL stajının bir parçası: AMD GPU uyumluluğunu (pyopencl, nabu, ufo-filters, pyvkfft) Debian/ROCm sürekli entegrasyon altyapısında denetlemek için OpenCL ile yazılan, GitLab Salsa üzerinden çalıştırılan autopkgtest’ler. Betikler temiz sanal makinelerde paketleri kurar ve kaldırır, GPU’lar arası uyumluluğu raporlar.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -3882,8 +4327,8 @@ const tr: Dictionary = {
     title: 'Araştırmadan notlar',
     subtitle: 'Yukarıdaki çalışmanın arkasındaki yöntemler, çıkmaz sokaklar ve kararlar hakkında daha uzun yazılar.',
     posts: [
-      { status: 'Taslak — yakında', title: 'Fransızca klinik NER neden genel amaçlı modelleri bozuyor', body: 'Standart NER hatlarının Fransız onkoloji raporlarında nerede başarısız olduğuna ve bunun DEMNE\'nin yapısı için ne anlama geldiğine dair bir inceleme.' },
-      { status: 'Taslak — yakında', title: 'Aşamalı çıkarım ve tek büyük model karşılaştırması', body: 'Bir LLM\'i çağırmadan önce varlıkları kurallar, bir CRF ve ince ayarlı bir transformer üzerinden yönlendirmenin gerekçesi — ve bunu yanlış yapmanın bedeli.' },
+      { status: 'Yayımlandı · Eki 2026', title: 'Fransızca klinik NER neden genel amaçlı modelleri bozuyor', body: 'Standart NER hatlarının Fransız onkoloji raporlarında nerede başarısız olduğuna ve bunun DEMNE\'nin yapısı için ne anlama geldiğine dair bir inceleme.', content: `<p>Fransızca bir onkoloji raporunu açın; hazır NER modellerinin çoğu daha ilk cümlede tökezler. Sözcük dağarcığı yoğun ve kısaltmalıdır (ER, PR, HER2, Ki67, FISH), biçimlendirme hastaneden hastaneye değişir ve önemli biyobelirteç terminolojisi bu modellerin eğitildiği derlemlerde neredeyse hiç geçmez. Alışılmış refleks &mdash; soruna büyük bir model atmak &mdash; işe yarar ama pahalı, şeffaf olmayan ve bir klinisyen ya da denetçiye karşı savunması zor bir yoldur.</p><h2>Her varlık bir LLM gerektirmez</h2><p>DEMNE yalın bir gözlemden yola çıkar: bu raporlardaki varlıklar eşit derecede zor değildir. Bir biyopsi anması birkaç istikrarlı biçimde yazılır; bir ilaç adıysa yüz biçimde görünebilir. Bu yüzden DEMNE, her şey için tek bir model yerine, her varlık türünü ölçer ve yeterince güvenilir olan en hafif yönteme gönderir &mdash; belirlenimci bir kural, ince ayarlı bir transformer veya yalnızca son çare olarak bir LLM.</p><p>Ölçüm, açıklamalardan hesaplanan beş derlem ölçütüdür: yüzey biçiminin ne kadar şablonlaşabilir olduğu, söz dağarcığının ne kadar türdeş olduğu, küçük bir anahtar sözcük kümesinin ayırt edici olup olmadığı, anmanın ne sıklıkla olumsuzlama ya da çelişki altında olduğu ve denetimli bir model eğitmeye yetecek kadar etiketli veri bulunup bulunmadığı. Belirlenimci bir karar grafiği bu sayıları bir katmana dönüştürür ve 17 eşiği, bir varlığı fazla zayıf bir yönteme göndermeyi, yalnızca fazla pahalı bir yönteme göndermekten iki kat ağır cezalandıran çok amaçlı bir aramayla kalibre edilir.</p><h2>Ne kazandırır</h2><p>Onkoloji kalibrasyon kümesinde (59 varlık türü), yönlendirme uzman referans katmanıyla 0,954 uyum ve 0,866 leave-one-corpus-out tahminiyle örtüşür &mdash; sabit katmanlı herhangi bir temelin (her zaman-kurallar 0,729, her zaman-LLM 0,148) çok üzerinde. Daha ikna edici sınama dışsaldır: hiç yeniden ayar yapılmadan, modelin daha önce görmediği kanser bölgelerine ait 300 AP-HP BT raporuna uygulandığında, DEMNE vurgulanan anmaların %99,5’ini (413’te 411) belirlenimci kurallara yönlendirdi. Bu kurallar 0,941 ortalama F1’e ulaşırken, aynı varlıklar üzerinde gerçekçi bir hastane bütçesiyle ince ayarlanan bir transformer yalnızca 0,358’de kaldı.</p><p>Başka bir deyişle: onkoloji raporlamasına egemen standartlaşmış varlıklar için kurallar yalnızca daha ucuz değildi &mdash; daha iyiydi ve her kural kararı açık bir koşula kadar izlenebilir; bu da tam olarak EU AI Act’in 12. ve 14. maddelerinin istediği şeydir.</p><h2>Nerede durur</h2><p>Sınırlar konusunda dürüst olmak istiyorum. Referans standart küçük &mdash; 92 varlık türü, 59’u onkolojide &mdash; dolayısıyla tek derlem skorları iyimserdir ve yalnızca göreli karşılaştırmalar geçerlidir. LLM katmanı dış kohortta uçtan uca hiç değerlendirilmedi; oraya yönlendirilen tek varlık fazla nadirdi. Ayrıca kalibrasyon alanlar arası aktarılmaz: başka bir klinik türe ya da dile geçildiğinde uyum 0,45&ndash;0,73’e düşer, yani eşiklerin yeniden ayarlanması gerekir. DEMNE bir uygulanabilirlik kanıtıdır, bitmiş bir ürün değil.</p><h2>Neden önemli</h2><p>Mesele kuralların transformer’ları yenmesi değil. Mesele, &laquo;hangi yöntem&raquo; sorusunun &mdash; en ağır modeli varsayılan yapıp ummak yerine &mdash; metnin ölçülebilir özelliklerinden varlık başına yanıtlanabilmesi. Maliyetin, denetlenebilirliğin ve güvenin aynı anda önemli olduğu klinik NLP için bu çerçeve, bir ölçütte bir yüzde puanı daha kazanmaktan değerlidir.</p><p>Kod ve yöntemin tamamı <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> üzerinde; makale hazırlanıyor.</p>` },
+      { status: 'Taslak — yakında', title: 'Aşamalı çıkarım ve tek büyük model karşılaştırması', body: 'Bir LLM\'i çağırmadan önce varlıkları kurallar ve ince ayarlı bir transformer üzerinden yönlendirmenin gerekçesi — ve bunu yanlış yapmanın bedeli.' },
     ],
   },
   contact: {
@@ -3920,14 +4365,14 @@ const pl: Dictionary = {
     menuToggleLabel: 'Otwórz menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Wydobywam biomarkery z tekstu klinicznego ',
     h1Accent: 'nie budząc GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Jestem Clément Longeac. Pracuję nad DEMNE, frameworkiem routingu, który dla każdego typu jednostki decyduje, czy uczciwym narzędziem do zadania jest wyrażenie regularne, CRF, transformer czy LLM. Pierwszy wynik: 99,5% jednostek klinicznych wydobytych bez GPU, F1 = 0,941 na 300 notatkach AP-HP.',
     ctaResearch: 'Zobacz badania',
     ctaCV: 'Pobierz CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, schemat na żywo',
+    caption: 'DEMNE — Rules → Transformer → LLM, schemat na żywo',
   },
   about: {
     label: '01 — O mnie',
@@ -3947,7 +4392,7 @@ const pl: Dictionary = {
   },
   research: {
     label: '02 — Badania',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Hybrydowy pipeline rozpoznawania nazwanych encji dla francuskiego klinicznego tekstu onkologicznego.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Kliniczny NER · francuskie korpusy onkologiczne',
@@ -3984,11 +4429,48 @@ const pl: Dictionary = {
     title: 'Gdzie do tej pory odbywała się praca',
     currentLabel: 'W trakcie',
     items: [
-      { current: true, date: '2025 — obecnie', title: 'Asystent badawczy, Tremplin Recherche', org: 'ESIEE Paris', body: 'Rozwój DEMNE, hybrydowego pipeline\'u klinicznego NER dla francuskiego tekstu onkologicznego, jako głównego projektu ścieżki Tremplin Recherche przed aplikacjami doktoranckimi.' },
-      { current: true, date: '2026 — obecnie', title: 'Założyciel i Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Budowa platformy, która daje pacjentom po urazach mózgu i ich terapeutom zajęciowym ustrukturyzowany sposób porównywania cyfrowych narzędzi kompensacji poznawczej. Powstała jako prototyp Python/Streamlit na hackathonie SN@SU (Sorbona, wraz z Flor Sanchez-Luizard, terapeutką zajęciową w UEROS L\'ADAPT Île-de-France); obecnie na etapie planowania produkcyjnej przebudowy (FastAPI, PostgreSQL, Next.js) z hostingiem zgodnym z HDS/RGPD i semantyczną wyszukiwarką do dopasowywania narzędzi klinicznych.' },
-      { date: '2024 — 2027', title: 'Student inżynierii — Data Science & AI', org: 'ESIEE Paris', body: 'Student czwartego roku pięcioletniego programu inżynierskiego ESIEE Paris, specjalizacja Data Science & AI (DSIA).' },
-      { date: '2025', title: 'Stażysta inżynieryjny, dział GRADES', org: 'Synchrotron SOLEIL', body: 'Rozwój skryptów autopkgtest w OpenCL do testowania kompatybilności GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infrastrukturze Debian/ROCm za pośrednictwem GitLab Salsa.' },
-      { date: '2022 — obecnie', title: 'Korepetytor przedmiotów ścisłych', org: 'Complétude', body: 'Nauczanie matematyki i fizyki-chemii około dziesięciu uczniów, od szkoły podstawowej po ostatnią klasę liceum, równolegle ze studiami inżynierskimi.' },
+      {
+        date: 'Maj – lip 2026',
+        title: 'Stażysta badawczy, kliniczna hurtownia danych',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Zastosowałem i zwalidowałem podejście routingu DEMNE na danych szpitalnych: ekstrakcja biomarkerów onkologicznych (ER, PR, HER2, Ki67, FISH) z francuskich raportów klinicznych oraz zdefiniowanie audytowalnej, realistycznej wdrożeniowo ścieżki klinicznej.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Paź 2025 – maj 2026',
+        title: 'Student-badacz, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Zaprojektowałem DEMNE, hybrydowy kliniczny potok NER (reguły / transformer / LLM) dla francuskich tekstów onkologicznych, sterowany pięcioma sformalizowanymi metrykami korpusu — główny projekt ścieżki Tremplin Recherche przed aplikacjami doktoranckimi.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Obecnie',
+        title: 'Product Lead i deweloper, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Budowa platformy, która daje pacjentom z urazami mózgu i terapeutom zajęciowym uporządkowany sposób porównywania narzędzi kompensacji poznawczej. Powstała jako prototyp Python/Streamlit na hackathonie SN@SU (Sorbonne Université, z Flor Sanchez-Luizard, terapeutką zajęciową w UEROS L’ADAPT Île-de-France); obecnie planowana jest przebudowa produkcyjna (FastAPI, PostgreSQL, Next.js) z hostingiem zgodnym z HDS/RODO i wyszukiwarką semantyczną do dopasowywania narzędzi klinicznych.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Student inżynierii — Data Science i SI',
+        org: 'ESIEE Paris',
+        body: 'Student piątego roku pięcioletniego programu inżynierskiego ESIEE Paris, specjalność Data Science i SI (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Stażysta inżynier, dział GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Opracowanie autopkgtestów w OpenCL do sprawdzania zgodności GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) w infrastrukturze Debian/ROCm na GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Obecnie',
+        title: 'Korepetytor przedmiotów ścisłych',
+        org: 'Complétude',
+        body: 'Nauczanie matematyki oraz fizyki-chemii około dziesięciu uczniów, od szkoły podstawowej po klasę maturalną, równolegle ze studiami inżynierskimi.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -4008,56 +4490,56 @@ const pl: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Czerwiec 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Katalog cyfrowych narzędzi kompensacji poznawczej dla osób z urazami mózgu i ich terapeutów zajęciowych.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep powstał na hackathonie SN@SU (Sorbonne Université). Terapeuci zajęciowi i pacjenci znajdują aplikacje do komunikacji, pamięci i planowania bez przeszukiwania sklepów jeden po drugim: każde narzędzie jest skatalogowane, sklasyfikowane według zaburzenia i tematu oraz wyszukiwalne.\nMVP to aplikacja Streamlit oparta na magazynie JSON; obecnie planowana jest przebudowa produkcyjna z FastAPI, PostgreSQL i frontendem Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Gru. 2025 · Projekt zespołowy',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Interaktywny pulpit odtwarzający 15 lat tła zanieczyszczenia powietrza we Francji (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Potok danych i interaktywny pulpit nad wskaźnikami INERIS na poziomie gmin (Zenodo). Skrypty pobierają, czyszczą i zapisują dane w SQLite; pulpit renderuje mapę ciepła zanieczyszczeń w Leaflet z suwakiem lat i filtrami zanieczyszczeń, obok wykresów Plotly.\nStworzony z kolegą z zespołu, Williamem Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Projekt zaliczeniowy',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Rozpoznawanie twarzy oparte na CNN na zdjęciach, a następnie na wideo, z augmentacją danych i wyrównaniem twarzy.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Projekt zaliczeniowy o nowoczesnym rozpoznawaniu twarzy. Pierwszy model wytrenowany na zaledwie 218 obrazach mocno się przeuczał; augmentacja danych (obrót, zoom) oraz krok wyrównania twarzy normalizujący położenie oczu i ust, w połączeniu z siecią wstępnie wytrenowaną, poprawiły generalizację. Celem było wykrywanie twarzy w wideo z własnego zbioru danych projektu.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Projekt w parze',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Tekstowa gra przygodowa w terminalu napisana w Pythonie, o projekcie obiektowym.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Przygoda tekstowa rozgrywana w terminalu: gracz przechodzi między ośmioma pokojami, wpisując polecenia. Kod podzielono na małe klasy o jednej odpowiedzialności (gra, pokój, gracz, polecenie, akcja, postać, przedmiot), więc dodanie pokoju lub przedmiotu pozostaje zmianą lokalną.\nStworzona z Anne-Colombe André w ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Lut. 2025 · Projekt zespołowy',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Platforma analityki danych kulinarnych: scraping, ETL i pulpit nad danymi przepisów.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Zespołowy projekt inżynierii danych, który pobiera dane przepisów z Marmiton, uruchamia potok ETL i udostępnia wyniki przez pulpit analityczny. Zbudowany w Pythonie z notatnikami Jupyter do eksploracji.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -4066,9 +4548,9 @@ const pl: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Skrypty autopkgtest sprawdzające oprogramowanie naukowe na GPU AMD, w infrastrukturze CI Debiana.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Część stażu w Synchrotron SOLEIL: autopkgtesty napisane w OpenCL do sprawdzania zgodności GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) w infrastrukturze ciągłej integracji Debian/ROCm, uruchamiane przez GitLab Salsa. Skrypty instalują i odinstalowują pakiety na czystych maszynach wirtualnych i raportują zgodność między GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -4140,8 +4622,8 @@ const pl: Dictionary = {
     title: 'Notatki z badań',
     subtitle: 'Dłuższe teksty o metodach, ślepych zaułkach i decyzjach stojących za powyższą pracą.',
     posts: [
-      { status: 'Szkic — wkrótce', title: 'Dlaczego francuski kliniczny NER psuje modele ogólnego przeznaczenia', body: 'Przegląd miejsc, w których standardowe pipeline\'y NER zawodzą na francuskich raportach onkologicznych, i co to oznacza dla struktury DEMNE.' },
-      { status: 'Szkic — wkrótce', title: 'Ekstrakcja etapowa kontra jeden duży model', body: 'Argumentacja za kierowaniem encji przez reguły, CRF i dostrojony transformer, zanim w ogóle wywoła się LLM — oraz koszt pomyłki w tym podejściu.' },
+      { status: 'Opublikowano · paź 2026', title: 'Dlaczego francuski kliniczny NER psuje modele ogólnego przeznaczenia', body: 'Przegląd miejsc, w których standardowe pipeline\'y NER zawodzą na francuskich raportach onkologicznych, i co to oznacza dla struktury DEMNE.', content: `<p>Otwórz francuski raport onkologiczny, a większość gotowych modeli NER potyka się już w pierwszym zdaniu. Słownictwo jest gęste i skrótowe (ER, PR, HER2, Ki67, FISH), formatowanie zmienia się między szpitalami, a istotna terminologia biomarkerów niemal nie występuje w korpusach, na których te modele trenowano. Zwykły odruch &mdash; rzucić na to duży model &mdash; działa, ale jest kosztowny, nieprzejrzysty i trudny do obrony przed klinicystą lub audytorem.</p><h2>Nie każda encja potrzebuje LLM</h2><p>DEMNE wychodzi od prostej obserwacji: encje w tych raportach nie są jednakowo trudne. Wzmianka o biopsji zapisywana jest na kilka stabilnych sposobów; nazwa leku może pojawić się w stu formach. Dlatego zamiast jednego modelu do wszystkiego, DEMNE mierzy każdy typ encji i kieruje go do najlżejszej metody, która pozostaje wystarczająco niezawodna &mdash; reguły deterministycznej, dostrojonego transformera lub LLM tylko w ostateczności.</p><p>Ten pomiar to pięć metryk korpusu obliczanych z adnotacji: jak bardzo forma powierzchniowa jest szablonowa, jak jednorodne jest słownictwo, czy mały zbiór słów kluczowych jest dyskryminujący, jak często wzmianka występuje pod negacją lub sprzecznością oraz czy w ogóle jest dość danych etykietowanych, by wytrenować model nadzorowany. Deterministyczny graf decyzyjny zamienia te liczby w poziom, a jego 17 progów kalibruje się wyszukiwaniem wielokryterialnym, które dwukrotnie mocniej karze skierowanie encji do metody zbyt słabej niż do jedynie zbyt kosztownej.</p><h2>Co to daje</h2><p>Na onkologicznym zbiorze kalibracyjnym (59 typów encji) routing zgadza się z eksperckim poziomem odniesienia ze zgodnością 0,954 i oszacowaniem leave-one-corpus-out 0,866 &mdash; znacznie powyżej dowolnej bazy o stałym poziomie (zawsze-reguły osiąga 0,729, zawsze-LLM 0,148). Bardziej przekonujący jest test zewnętrzny: zastosowany bez dostrajania do 300 raportów TK z AP-HP, dla nigdy niewidzianych lokalizacji nowotworu, DEMNE skierował 99,5 % wyróżnionych wzmianek (411 z 413) do reguł deterministycznych. Reguły te osiągnęły średnie F1 0,941, podczas gdy transformer dostrojony na tych samych encjach przy realistycznym budżecie szpitalnym dotarł tylko do 0,358.</p><p>Innymi słowy: dla standaryzowanych encji dominujących w raportowaniu onkologicznym reguły były nie tylko tańsze &mdash; były lepsze, a każda decyzja reguły daje się prześledzić do jawnego warunku, czego właśnie wymagają artykuły 12 i 14 EU AI Act.</p><h2>Gdzie się zatrzymuje</h2><p>Chcę być szczery co do ograniczeń. Standard odniesienia jest mały &mdash; 92 typy encji, 59 z nich w onkologii &mdash; więc wyniki na jednym korpusie są optymistyczne i ważne są tylko porównania względne. Poziom LLM nigdy nie został oceniony od początku do końca na kohorcie zewnętrznej; jedyna skierowana tam encja była zbyt rzadka. A kalibracja nie przenosi się między domenami: w innym gatunku klinicznym lub języku zgodność spada do 0,45&ndash;0,73, więc progi trzeba dopasować na nowo. DEMNE to dowód wykonalności, nie gotowy produkt.</p><h2>Dlaczego to ważne</h2><p>Rzecz nie w tym, że reguły pokonują transformery. Rzecz w tym, że &bdquo;którą metodę&rdquo; można rozstrzygnąć encja po encji, na podstawie mierzalnych właściwości tekstu, zamiast domyślnie wybierać najcięższy model i mieć nadzieję. Dla klinicznego NLP &mdash; gdzie koszt, audytowalność i zaufanie liczą się jednocześnie &mdash; takie ujęcie jest warte więcej niż kolejny punkt procentowy na benchmarku.</p><p>Kod i pełna metoda są na <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskrypt jest w przygotowaniu.</p>` },
+      { status: 'Szkic — wkrótce', title: 'Ekstrakcja etapowa kontra jeden duży model', body: 'Argumentacja za kierowaniem encji przez reguły i dostrojony transformer, zanim w ogóle wywoła się LLM — oraz koszt pomyłki w tym podejściu.' },
     ],
   },
   contact: {
@@ -4178,14 +4660,14 @@ const vi: Dictionary = {
     menuToggleLabel: 'Mở menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Trích xuất dấu ấn sinh học từ văn bản lâm sàng ',
     h1Accent: 'mà không cần đánh thức GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Tôi là Clément Longeac. Tôi đang phát triển DEMNE, một framework định tuyến quyết định — cho từng loại thực thể — liệu regex, CRF, transformer, hay LLM mới là công cụ trung thực cho công việc. Kết quả đầu tiên: 99,5% thực thể lâm sàng được trích xuất không cần GPU, F1 = 0,941 trên 300 ghi chú AP-HP.',
     ctaResearch: 'Xem nghiên cứu',
     ctaCV: 'Tải CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, sơ đồ trực tiếp',
+    caption: 'DEMNE — Rules → Transformer → LLM, sơ đồ trực tiếp',
   },
   about: {
     label: '01 — Giới thiệu',
@@ -4205,7 +4687,7 @@ const vi: Dictionary = {
   },
   research: {
     label: '02 — Nghiên cứu',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Một pipeline nhận dạng thực thể có tên lai dành cho văn bản lâm sàng ung bướu tiếng Pháp.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'NER lâm sàng · kho ngữ liệu ung bướu tiếng Pháp',
@@ -4242,11 +4724,48 @@ const vi: Dictionary = {
     title: 'Công việc đã diễn ra ở đâu cho đến nay',
     currentLabel: 'Đang diễn ra',
     items: [
-      { current: true, date: '2025 — Hiện tại', title: 'Trợ lý nghiên cứu, Tremplin Recherche', org: 'ESIEE Paris', body: 'Phát triển DEMNE, một pipeline NER lâm sàng lai cho văn bản ung bướu tiếng Pháp, là dự án cốt lõi của chương trình Tremplin Recherche trước khi nộp hồ sơ tiến sĩ.' },
-      { current: true, date: '2026 — Hiện tại', title: 'Nhà sáng lập kiêm Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Xây dựng một nền tảng mang lại cho bệnh nhân chấn thương não và các nhà trị liệu nghề nghiệp của họ một cách có cấu trúc để so sánh các công cụ số hỗ trợ bù đắp nhận thức. Ra đời như một bản mẫu Python/Streamlit tại hackathon SN@SU (Đại học Sorbonne, cùng với Flor Sanchez-Luizard, nhà trị liệu nghề nghiệp tại UEROS L\'ADAPT Île-de-France); hiện đang trong giai đoạn lên kế hoạch xây dựng lại phiên bản sản xuất (FastAPI, PostgreSQL, Next.js) với dịch vụ lưu trữ tuân thủ HDS/RGPD và một công cụ tìm kiếm ngữ nghĩa để ghép nối công cụ lâm sàng.' },
-      { date: '2024 — 2027', title: 'Sinh viên kỹ thuật — Khoa học Dữ liệu & AI', org: 'ESIEE Paris', body: 'Sinh viên năm thứ tư của chương trình kỹ thuật năm năm tại ESIEE Paris, chuyên ngành Khoa học Dữ liệu & AI (DSIA).' },
-      { date: '2025', title: 'Thực tập sinh kỹ thuật, bộ phận GRADES', org: 'Synchrotron SOLEIL', body: 'Phát triển các script autopkgtest bằng OpenCL để kiểm tra khả năng tương thích GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) trên hạ tầng Debian/ROCm thông qua GitLab Salsa.' },
-      { date: '2022 — Hiện tại', title: 'Gia sư khoa học tự nhiên', org: 'Complétude', body: 'Dạy toán và lý-hóa cho khoảng mười học sinh, từ tiểu học đến lớp cuối trung học phổ thông, song song với việc học kỹ thuật của tôi.' },
+      {
+        date: 'Th.5 – Th.7 2026',
+        title: 'Thực tập sinh nghiên cứu, Kho dữ liệu lâm sàng',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Áp dụng và kiểm chứng phương pháp định tuyến của DEMNE trên dữ liệu bệnh viện: trích xuất các dấu ấn sinh học ung thư (ER, PR, HER2, Ki67, FISH) từ báo cáo lâm sàng tiếng Pháp, và xác định một lộ trình lâm sàng có thể kiểm toán, sát với triển khai thực tế.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Th.10 2025 – Th.5 2026',
+        title: 'Nghiên cứu viên sinh viên, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Thiết kế DEMNE, một pipeline NER lâm sàng lai (quy tắc / transformer / LLM) cho văn bản ung thư học tiếng Pháp, dẫn dắt bởi năm chỉ số kho ngữ liệu đã hình thức hóa — dự án cốt lõi của lộ trình Tremplin Recherche trước khi nộp hồ sơ tiến sĩ.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Hiện tại',
+        title: 'Product Lead kiêm lập trình viên, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Xây dựng một nền tảng cho phép bệnh nhân tổn thương não và nhà trị liệu nghề nghiệp so sánh công cụ bù trừ nhận thức một cách có cấu trúc. Khởi đầu là nguyên mẫu Python/Streamlit tại hackathon SN@SU (Sorbonne Université, cùng Flor Sanchez-Luizard, nhà trị liệu nghề nghiệp tại UEROS L’ADAPT Île-de-France); hiện đang phác thảo việc tái dựng cấp sản xuất (FastAPI, PostgreSQL, Next.js) với lưu trữ tuân thủ HDS/GDPR và một công cụ tìm kiếm ngữ nghĩa để khớp công cụ lâm sàng.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Sinh viên kỹ thuật — Khoa học dữ liệu & AI',
+        org: 'ESIEE Paris',
+        body: 'Sinh viên năm thứ năm của chương trình kỹ thuật năm năm tại ESIEE Paris, chuyên ngành Khoa học dữ liệu & AI (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Thực tập sinh kỹ thuật, bộ phận GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Phát triển autopkgtest bằng OpenCL để kiểm tra khả năng tương thích GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) trên hạ tầng Debian/ROCm tại GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Hiện tại',
+        title: 'Gia sư các môn khoa học',
+        org: 'Complétude',
+        body: 'Dạy toán và lý-hóa cho khoảng mười học sinh, từ tiểu học đến lớp cuối trung học phổ thông, song song với việc học kỹ thuật.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -4267,56 +4786,56 @@ const vi: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Tháng 6 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Danh mục công cụ bù trừ nhận thức kỹ thuật số cho người bị tổn thương não và các nhà trị liệu nghề nghiệp của họ.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep khởi đầu tại hackathon SN@SU (Sorbonne Université). Nhà trị liệu nghề nghiệp và bệnh nhân có thể tìm ứng dụng cho giao tiếp, trí nhớ và lập kế hoạch mà không phải lục từng kho ứng dụng: mỗi công cụ được liệt kê, phân loại theo rối loạn và chủ đề, và có thể tìm kiếm.\nMVP là một ứng dụng Streamlit dựa trên kho JSON; hiện đang phác thảo việc tái dựng cấp sản xuất với FastAPI, PostgreSQL và frontend Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Th. 12 2025 · Dự án nhóm',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Bảng điều khiển tương tác tái dựng 15 năm ô nhiễm không khí nền trên khắp nước Pháp (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Một pipeline dữ liệu và bảng điều khiển tương tác trên các chỉ số cấp xã của INERIS (Zenodo). Các script tải về, làm sạch và lưu dữ liệu vào SQLite; bảng điều khiển hiển thị bản đồ nhiệt ô nhiễm bằng Leaflet với thanh trượt năm và bộ lọc chất ô nhiễm, cùng các biểu đồ Plotly.\nThực hiện cùng đồng đội William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Dự án môn học',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Nhận diện khuôn mặt dựa trên CNN trên ảnh tĩnh rồi đến video, dùng tăng cường dữ liệu và căn chỉnh khuôn mặt.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Một dự án môn học về nhận diện khuôn mặt hiện đại. Mô hình đầu tiên huấn luyện chỉ trên 218 ảnh bị overfit nặng; tăng cường dữ liệu (xoay, phóng to) và bước căn chỉnh khuôn mặt chuẩn hóa vị trí mắt và môi, kết hợp với một mạng tiền huấn luyện, đã cải thiện khả năng tổng quát hóa. Mục tiêu là phát hiện khuôn mặt trong video từ tập dữ liệu của chính dự án.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Dự án cặp đôi',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Một trò chơi phiêu lưu bằng chữ chạy trên terminal, viết bằng Python, thiết kế hướng đối tượng.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Một cuộc phiêu lưu bằng chữ chơi trong terminal: người chơi di chuyển giữa tám căn phòng bằng cách gõ lệnh. Mã được chia thành các lớp nhỏ trách nhiệm đơn (trò chơi, phòng, người chơi, lệnh, hành động, nhân vật, vật phẩm), nên thêm một phòng hay vật phẩm vẫn là thay đổi cục bộ.\nThực hiện cùng Anne-Colombe André tại ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Th. 2 2025 · Dự án nhóm',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Một nền tảng phân tích dữ liệu ẩm thực: scraping, ETL và một bảng điều khiển trên dữ liệu công thức.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Một dự án nhóm kỹ thuật dữ liệu: scraping dữ liệu công thức từ Marmiton, chạy một pipeline ETL và trình bày kết quả qua một bảng điều khiển phân tích. Xây dựng bằng Python với notebook Jupyter để khám phá.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -4325,9 +4844,9 @@ const vi: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Các script autopkgtest kiểm định phần mềm khoa học trên GPU AMD, trên hạ tầng CI của Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Một phần của kỳ thực tập tại Synchrotron SOLEIL: các autopkgtest viết bằng OpenCL để kiểm tra khả năng tương thích GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) trên hạ tầng tích hợp liên tục Debian/ROCm, chạy qua GitLab Salsa. Các script cài đặt và gỡ bỏ gói trên máy ảo sạch và báo cáo khả năng tương thích giữa các GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -4400,8 +4919,8 @@ const vi: Dictionary = {
     title: 'Ghi chú từ nghiên cứu',
     subtitle: 'Các bài viết dài hơn về phương pháp, ngõ cụt và quyết định đằng sau công việc nêu trên.',
     posts: [
-      { status: 'Bản nháp — sắp ra mắt', title: 'Vì sao NER lâm sàng tiếng Pháp làm hỏng các mô hình tổng quát', body: 'Một góc nhìn về nơi các pipeline NER tiêu chuẩn thất bại trên báo cáo ung bướu tiếng Pháp, và điều đó có ý nghĩa gì đối với cấu trúc của DEMNE.' },
-      { status: 'Bản nháp — sắp ra mắt', title: 'Trích xuất theo giai đoạn so với một mô hình lớn duy nhất', body: 'Lập luận cho việc định tuyến thực thể qua các quy tắc, một CRF và một transformer đã tinh chỉnh trước khi gọi đến LLM — và cái giá phải trả nếu làm sai.' },
+      { status: 'Đã đăng · Th.10 2026', title: 'Vì sao NER lâm sàng tiếng Pháp làm hỏng các mô hình tổng quát', body: 'Một góc nhìn về nơi các pipeline NER tiêu chuẩn thất bại trên báo cáo ung bướu tiếng Pháp, và điều đó có ý nghĩa gì đối với cấu trúc của DEMNE.', content: `<p>Mở một báo cáo ung thư học tiếng Pháp, phần lớn các mô hình NER có sẵn vấp ngay ở câu đầu tiên. Từ vựng dày đặc và viết tắt (ER, PR, HER2, Ki67, FISH), định dạng thay đổi giữa các bệnh viện, và thuật ngữ dấu ấn sinh học quan trọng gần như vắng bóng trong các kho ngữ liệu mà các mô hình này được huấn luyện. Phản xạ thường thấy &mdash; ném một mô hình lớn vào bài toán &mdash; thì hiệu quả, nhưng tốn kém, mờ đục và khó biện minh trước một bác sĩ lâm sàng hay kiểm toán viên.</p><h2>Không phải thực thể nào cũng cần LLM</h2><p>DEMNE khởi đi từ một quan sát thẳng thắn: các thực thể trong những báo cáo này không khó như nhau. Một đề cập sinh thiết được viết theo vài cách ổn định; còn tên thuốc có thể xuất hiện dưới trăm hình thức. Vì vậy, thay vì một mô hình cho mọi thứ, DEMNE đo lường từng loại thực thể và gửi nó tới phương pháp nhẹ nhất mà vẫn đủ tin cậy &mdash; một quy tắc tất định, một transformer đã tinh chỉnh, hoặc một LLM chỉ như phương án cuối cùng.</p><p>Phép đo là năm chỉ số kho ngữ liệu tính từ phần chú thích: hình thức bề mặt có khuôn mẫu đến đâu, từ vựng đồng nhất đến đâu, một tập từ khóa nhỏ có tính phân biệt hay không, đề cập rơi vào phủ định hoặc mâu thuẫn thường xuyên ra sao, và liệu có đủ dữ liệu gán nhãn để huấn luyện một mô hình có giám sát hay không. Một đồ thị quyết định tất định biến những con số ấy thành một tầng, và 17 ngưỡng của nó được hiệu chỉnh bằng một tìm kiếm đa mục tiêu, phạt nặng gấp đôi việc gửi một thực thể tới phương pháp quá yếu so với việc gửi tới một phương pháp chỉ quá tốn kém.</p><h2>Nó mang lại điều gì</h2><p>Trên tập hiệu chỉnh ung thư học (59 loại thực thể), việc định tuyến khớp với tầng tham chiếu của chuyên gia với độ đồng thuận 0,954 và ước lượng leave-one-corpus-out 0,866 &mdash; cao hơn hẳn mọi baseline tầng cố định (luôn-quy-tắc đạt 0,729, luôn-LLM 0,148). Phép thử thuyết phục hơn là ở bên ngoài: áp dụng mà không tinh chỉnh lại trên 300 báo cáo CT của AP-HP, ở những vị trí ung thư mô hình chưa từng thấy, DEMNE đã định tuyến 99,5 % đề cập được đánh dấu (411 trên 413) tới các quy tắc tất định. Các quy tắc ấy đạt F1 trung bình 0,941, trong khi một transformer tinh chỉnh trên cùng các thực thể, trong một ngân sách bệnh viện thực tế, chỉ dừng ở 0,358.</p><p>Nói cách khác: với những thực thể chuẩn hóa chiếm phần lớn trong báo cáo ung thư học, các quy tắc không chỉ rẻ hơn &mdash; chúng còn tốt hơn, và mỗi quyết định quy tắc đều truy ngược được tới một điều kiện tường minh, đúng điều mà Điều 12 và 14 của EU AI Act yêu cầu.</p><h2>Nó dừng ở đâu</h2><p>Tôi muốn trung thực về các giới hạn. Chuẩn tham chiếu nhỏ &mdash; 92 loại thực thể, 59 trong số đó thuộc ung thư học &mdash; nên điểm số trên một kho ngữ liệu là lạc quan và chỉ các so sánh tương đối mới đứng vững. Tầng LLM chưa bao giờ được đánh giá đầu-cuối trên nhóm bên ngoài; thực thể duy nhất được định tuyến tới đó quá hiếm. Và việc hiệu chỉnh không chuyển giao giữa các miền: chuyển sang một thể loại lâm sàng hay ngôn ngữ khác, độ đồng thuận rơi xuống 0,45&ndash;0,73, nên các ngưỡng phải được tinh chỉnh lại. DEMNE là một bằng chứng khả thi, không phải một sản phẩm hoàn chỉnh.</p><h2>Vì sao điều này quan trọng</h2><p>Vấn đề không phải quy tắc thắng transformer. Vấn đề là &laquo;dùng phương pháp nào&raquo; là một câu hỏi có thể trả lời theo từng thực thể, dựa trên các thuộc tính đo được của văn bản, thay vì mặc định chọn mô hình nặng nhất rồi hy vọng. Với NLP lâm sàng &mdash; nơi chi phí, khả năng kiểm toán và niềm tin cùng quan trọng &mdash; cách đặt vấn đề này đáng giá hơn một điểm phần trăm nữa trên một benchmark.</p><p>Mã nguồn và phương pháp đầy đủ có trên <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; bản thảo đang được chuẩn bị.</p>` },
+      { status: 'Bản nháp — sắp ra mắt', title: 'Trích xuất theo giai đoạn so với một mô hình lớn duy nhất', body: 'Lập luận cho việc định tuyến thực thể qua các quy tắc và một transformer đã tinh chỉnh trước khi gọi đến LLM — và cái giá phải trả nếu làm sai.' },
     ],
   },
   contact: {
@@ -4438,14 +4957,14 @@ const id: Dictionary = {
     menuToggleLabel: 'Buka menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Mengekstrak biomarker dari teks klinis ',
     h1Accent: 'tanpa membangunkan GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Saya Clément Longeac. Saya sedang mengerjakan DEMNE, kerangka kerja routing yang memutuskan — untuk setiap jenis entitas — apakah regex, CRF, transformer, atau LLM adalah alat yang jujur untuk tugas tersebut. Hasil pertama: 99,5% entitas klinis diekstrak tanpa GPU, F1 = 0,941 pada 300 catatan AP-HP.',
     ctaResearch: 'Lihat riset',
     ctaCV: 'Unduh CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, skema langsung',
+    caption: 'DEMNE — Rules → Transformer → LLM, skema langsung',
   },
   about: {
     label: '01 — Tentang saya',
@@ -4465,7 +4984,7 @@ const id: Dictionary = {
   },
   research: {
     label: '02 — Riset',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Pipeline pengenalan entitas bernama hybrid untuk teks klinis onkologi berbahasa Prancis.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'NER klinis · korpus onkologi Prancis',
@@ -4502,11 +5021,48 @@ const id: Dictionary = {
     title: 'Di mana pekerjaan ini telah berlangsung sejauh ini',
     currentLabel: 'Sedang berlangsung',
     items: [
-      { current: true, date: '2025 — Sekarang', title: 'Asisten Riset, Tremplin Recherche', org: 'ESIEE Paris', body: 'Mengembangkan DEMNE, pipeline NER klinis hybrid untuk teks onkologi Prancis, sebagai proyek inti jalur Tremplin Recherche menjelang pendaftaran program PhD.' },
-      { current: true, date: '2026 — Sekarang', title: 'Pendiri & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Membangun platform yang memberi pasien cedera otak dan terapis okupasi mereka cara terstruktur untuk membandingkan alat digital kompensasi kognitif. Lahir sebagai prototipe Python/Streamlit di hackathon SN@SU (Universitas Sorbonne, bersama Flor Sanchez-Luizard, terapis okupasi di UEROS L\'ADAPT Île-de-France); kini dalam tahap perencanaan pembangunan ulang versi produksi (FastAPI, PostgreSQL, Next.js) dengan hosting yang sesuai HDS/RGPD dan mesin pencari semantik untuk pencocokan klinis.' },
-      { date: '2024 — 2027', title: 'Mahasiswa Teknik — Data Science & AI', org: 'ESIEE Paris', body: 'Mahasiswa tahun keempat program teknik lima tahun ESIEE Paris, spesialisasi Data Science & AI (DSIA).' },
-      { date: '2025', title: 'Magang Teknik, Divisi GRADES', org: 'Synchrotron SOLEIL', body: 'Mengembangkan skrip autopkgtest dalam OpenCL untuk kompatibilitas GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) pada infrastruktur Debian/ROCm melalui GitLab Salsa.' },
-      { date: '2022 — Sekarang', title: 'Guru Les Sains', org: 'Complétude', body: 'Mengajar matematika dan fisika-kimia kepada sekitar sepuluh siswa, dari sekolah dasar hingga kelas terakhir SMA, sejalan dengan studi teknik saya.' },
+      {
+        date: 'Mei – Jul 2026',
+        title: 'Magang riset, Gudang Data Klinis',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Menerapkan dan memvalidasi pendekatan perutean DEMNE pada data rumah sakit: mengekstraksi biomarker onkologi (ER, PR, HER2, Ki67, FISH) dari laporan klinis Prancis, dan mendefinisikan jalur klinis yang dapat diaudit serta realistis untuk penerapan.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Okt 2025 – Mei 2026',
+        title: 'Peneliti mahasiswa, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Merancang DEMNE, sebuah pipeline NER klinis hibrida (aturan / transformer / LLM) untuk teks onkologi Prancis, dipandu oleh lima metrik korpus yang diformalkan — proyek inti jalur Tremplin Recherche menjelang lamaran doktoral.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Sekarang',
+        title: 'Product Lead & pengembang, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Membangun platform yang memberi pasien cedera otak dan terapis okupasi cara terstruktur untuk membandingkan alat kompensasi kognitif. Dimulai sebagai purwarupa Python/Streamlit di hackathon SN@SU (Sorbonne Université, bersama Flor Sanchez-Luizard, terapis okupasi di UEROS L’ADAPT Île-de-France); kini merancang pembangunan ulang tingkat produksi (FastAPI, PostgreSQL, Next.js) dengan hosting patuh HDS/GDPR dan mesin pencari semantik untuk pencocokan alat klinis.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Mahasiswa teknik — Ilmu Data & AI',
+        org: 'ESIEE Paris',
+        body: 'Mahasiswa tahun kelima program teknik lima tahun di ESIEE Paris, spesialisasi Ilmu Data & AI (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Magang teknik, divisi GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Mengembangkan autopkgtest dengan OpenCL untuk kompatibilitas GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) di infrastruktur Debian/ROCm pada GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Sekarang',
+        title: 'Tutor sains (STEM)',
+        org: 'Complétude',
+        body: 'Mengajar matematika dan fisika-kimia kepada sekitar sepuluh siswa, dari sekolah dasar hingga kelas akhir SMA, seiring studi teknik saya.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -4526,56 +5082,56 @@ const id: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Juni 2026 · Hackathon SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Katalog alat kompensasi kognitif digital bagi penyandang cedera otak dan terapis okupasi mereka.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep bermula di hackathon SN@SU (Sorbonne Université). Terapis okupasi dan pasien dapat menemukan aplikasi untuk komunikasi, memori, dan perencanaan tanpa menelusuri toko aplikasi satu per satu: setiap alat terdaftar, diklasifikasikan menurut gangguan dan tema, serta dapat dicari.\nMVP-nya adalah aplikasi Streamlit dengan penyimpanan JSON; kini sedang dirancang pembangunan ulang tingkat produksi dengan FastAPI, PostgreSQL, dan frontend Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Des. 2025 · Proyek tim',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Dasbor interaktif yang merekonstruksi 15 tahun polusi udara latar di Prancis (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Pipeline data dan dasbor interaktif atas indikator tingkat komune INERIS (Zenodo). Skrip mengunduh, membersihkan, dan menyimpan data di SQLite; dasbor menampilkan peta panas polusi Leaflet dengan penggeser tahun dan filter polutan, bersama grafik Plotly.\nDibuat bersama rekan tim William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Proyek mata kuliah',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Pengenalan wajah berbasis CNN pada citra diam lalu video, memakai augmentasi data dan penyelarasan wajah.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Proyek mata kuliah tentang pengenalan wajah modern. Model pertama yang dilatih hanya dengan 218 citra sangat overfit; augmentasi data (rotasi, zoom) dan langkah penyelarasan wajah yang menormalkan posisi mata dan bibir, dipadukan dengan jaringan terlatih, memperbaiki generalisasi. Tujuannya mendeteksi wajah pada video dari dataset milik proyek itu sendiri.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Proyek berpasangan',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Gim petualangan teks di terminal dengan Python, berdesain berorientasi objek.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Petualangan teks yang dimainkan di terminal: pemain berpindah antara delapan ruangan dengan mengetik perintah. Kode dibagi menjadi kelas-kelas kecil bertanggung jawab tunggal (game, ruangan, pemain, perintah, aksi, karakter, item), sehingga menambah ruangan atau item tetap perubahan lokal.\nDibuat bersama Anne-Colombe André di ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Feb. 2025 · Proyek tim',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Platform analitik data kuliner: scraping, ETL, dan dasbor atas data resep.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Proyek tim rekayasa data yang melakukan scraping data resep dari Marmiton, menjalankan pipeline ETL, dan menyajikan hasilnya lewat dasbor analitik. Dibangun dengan Python dan notebook Jupyter untuk eksplorasi.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -4584,9 +5140,9 @@ const id: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Skrip autopkgtest yang memvalidasi perangkat lunak ilmiah pada GPU AMD, di infrastruktur CI Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Bagian dari magang di Synchrotron SOLEIL: autopkgtest yang ditulis dalam OpenCL untuk memeriksa kompatibilitas GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) di infrastruktur integrasi berkelanjutan Debian/ROCm, dijalankan lewat GitLab Salsa. Skrip memasang dan mencopot paket pada mesin virtual bersih serta melaporkan kompatibilitas antar-GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -4658,8 +5214,8 @@ const id: Dictionary = {
     title: 'Catatan dari riset',
     subtitle: 'Tulisan yang lebih panjang tentang metode, jalan buntu, dan keputusan di balik pekerjaan di atas.',
     posts: [
-      { status: 'Draf — segera hadir', title: 'Mengapa NER klinis Prancis merusak model tujuan umum', body: 'Penjelasan tentang di mana pipeline NER standar gagal pada laporan onkologi Prancis, dan apa artinya bagi struktur DEMNE.' },
-      { status: 'Draf — segera hadir', title: 'Ekstraksi bertahap vs. satu model besar', body: 'Argumen untuk merutekan entitas melalui aturan, CRF, dan transformer yang di-fine-tune sebelum memanggil LLM sama sekali — dan biaya yang harus dibayar jika salah.' },
+      { status: 'Terbit · Okt 2026', title: 'Mengapa NER klinis Prancis merusak model tujuan umum', body: 'Penjelasan tentang di mana pipeline NER standar gagal pada laporan onkologi Prancis, dan apa artinya bagi struktur DEMNE.', content: `<p>Buka sebuah laporan onkologi berbahasa Prancis, dan sebagian besar model NER siap pakai tersandung sejak kalimat pertama. Kosakatanya padat dan penuh singkatan (ER, PR, HER2, Ki67, FISH), formatnya berganti dari satu rumah sakit ke rumah sakit lain, dan terminologi biomarker yang penting nyaris absen dari korpus tempat model-model ini dilatih. Refleks yang biasa &mdash; melemparkan model besar ke masalah ini &mdash; memang berhasil, tetapi mahal, tidak transparan, dan sulit dipertanggungjawabkan di hadapan klinisi atau auditor.</p><h2>Tak setiap entitas butuh LLM</h2><p>DEMNE berangkat dari pengamatan lugas: entitas dalam laporan ini tidak sama sulitnya. Sebutan biopsi ditulis dalam segelintir bentuk yang stabil; sedangkan nama obat bisa muncul dalam seratus bentuk. Jadi, alih-alih satu model untuk segalanya, DEMNE mengukur setiap tipe entitas dan mengarahkannya ke metode paling ringan yang tetap cukup andal &mdash; aturan deterministik, transformer yang disetel, atau LLM hanya sebagai pilihan terakhir.</p><p>Pengukuran itu berupa lima metrik korpus yang dihitung dari anotasi: seberapa berpola bentuk permukaannya, seberapa homogen kosakatanya, apakah himpunan kata kunci kecil bersifat diskriminatif, seberapa sering sebutan berada di bawah negasi atau kontradiksi, dan apakah ada cukup data berlabel untuk melatih model terbimbing. Sebuah graf keputusan deterministik mengubah angka-angka itu menjadi jenjang, dan 17 ambangnya dikalibrasi dengan pencarian multi-tujuan yang menghukum dua kali lebih berat pengiriman entitas ke metode yang terlalu lemah ketimbang ke metode yang sekadar terlalu mahal.</p><h2>Apa manfaatnya</h2><p>Pada set kalibrasi onkologi (59 tipe entitas), peruteannya sepakat dengan jenjang rujukan pakar dengan konkordansi 0,954 dan estimasi leave-one-corpus-out 0,866 &mdash; jauh di atas baseline berjenjang tetap mana pun (selalu-aturan mencapai 0,729, selalu-LLM 0,148). Uji yang lebih meyakinkan bersifat eksternal: diterapkan tanpa penyetelan ulang pada 300 laporan CT AP-HP, untuk lokasi kanker yang belum pernah dilihat model, DEMNE merutekan 99,5 % sebutan yang ditandai (411 dari 413) ke aturan deterministik. Aturan-aturan itu mencapai F1 rata-rata 0,941, sementara transformer yang disetel pada entitas yang sama dalam anggaran rumah sakit realistis hanya mencapai 0,358.</p><p>Dengan kata lain: untuk entitas terstandar yang mendominasi pelaporan onkologi, aturan bukan hanya lebih murah &mdash; aturan lebih baik, dan setiap keputusan aturan dapat dilacak hingga sebuah syarat eksplisit, persis yang diminta Pasal 12 dan 14 EU AI Act.</p><h2>Di mana ia berhenti</h2><p>Saya ingin jujur soal batasannya. Standar rujukan itu kecil &mdash; 92 tipe entitas, 59 di antaranya onkologi &mdash; sehingga skor pada satu korpus bersifat optimistis dan hanya perbandingan relatif yang berlaku. Jenjang LLM tidak pernah dievaluasi menyeluruh pada kohort eksternal; satu-satunya entitas yang dirutekan ke sana terlalu langka. Lagi pula kalibrasi tidak berpindah antar-domain: beralih ke genre klinis atau bahasa lain membuat konkordansi turun ke 0,45&ndash;0,73, sehingga ambangnya harus disetel ulang. DEMNE adalah bukti kelayakan, bukan produk jadi.</p><h2>Mengapa ini penting</h2><p>Intinya bukan bahwa aturan mengalahkan transformer. Intinya, &laquo;metode mana&raquo; adalah pertanyaan yang bisa dijawab per entitas, dari sifat teks yang terukur, alih-alih menetapkan model terberat sebagai bawaan lalu berharap. Untuk NLP klinis &mdash; tempat biaya, keteraudiktan, dan kepercayaan sama-sama penting &mdash; kerangka ini lebih berharga daripada satu poin persentase tambahan pada sebuah tolok ukur.</p><p>Kode dan metode lengkapnya ada di <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskripnya sedang disiapkan.</p>` },
+      { status: 'Draf — segera hadir', title: 'Ekstraksi bertahap vs. satu model besar', body: 'Argumen untuk merutekan entitas melalui aturan dan transformer yang di-fine-tune sebelum memanggil LLM sama sekali — dan biaya yang harus dibayar jika salah.' },
     ],
   },
   contact: {
@@ -4696,14 +5252,14 @@ const sv: Dictionary = {
     menuToggleLabel: 'Öppna menyn',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Extraherar biomarkörer från klinisk text ',
     h1Accent: 'utan att väcka GPU:n',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Jag är Clément Longeac. Jag arbetar med DEMNE, ett routningsramverk som för varje entitetstyp avgör om ett reguljärt uttryck, en CRF, en transformer eller en LLM är det ärliga verktyget för uppgiften. Första resultatet: 99,5 % av de kliniska entiteterna extraherade utan GPU, F1 = 0,941 på 300 AP-HP-anteckningar.',
     ctaResearch: 'Se forskningen',
     ctaCV: 'Ladda ner CV',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, schema i realtid',
+    caption: 'DEMNE — Rules → Transformer → LLM, schema i realtid',
   },
   about: {
     label: '01 — Om mig',
@@ -4723,7 +5279,7 @@ const sv: Dictionary = {
   },
   research: {
     label: '02 — Forskning',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'En hybrid pipeline för namngiven entitetsigenkänning för fransk onkologisk klinisk text.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Klinisk NER · franska onkologikorpusar',
@@ -4760,11 +5316,48 @@ const sv: Dictionary = {
     title: 'Var arbetet har ägt rum hittills',
     currentLabel: 'Pågående',
     items: [
-      { current: true, date: '2025 — Nuvarande', title: 'Forskningsassistent, Tremplin Recherche', org: 'ESIEE Paris', body: 'Utveckling av DEMNE, en hybrid klinisk NER-pipeline för fransk onkologitext, som huvudprojekt inom Tremplin Recherche-spåret inför doktorandansökningar.' },
-      { current: true, date: '2026 — Nuvarande', title: 'Grundare & Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Bygger en plattform som ger hjärnskadade patienter och deras arbetsterapeuter ett strukturerat sätt att jämföra digitala verktyg för kognitiv kompensation. Föddes som en Python/Streamlit-prototyp på SN@SU-hackathonet (Sorbonneuniversitetet, tillsammans med Flor Sanchez-Luizard, arbetsterapeut vid UEROS L\'ADAPT Île-de-France); nu i planeringsfasen för en produktionsombyggnad (FastAPI, PostgreSQL, Next.js) med HDS/RGPD-kompatibel hosting och en semantisk sökmotor för klinisk matchning.' },
-      { date: '2024 — 2027', title: 'Ingenjörsstudent — Data Science & AI', org: 'ESIEE Paris', body: 'Fjärdeårsstudent i ESIEE Paris femåriga ingenjörsprogram, inriktning Data Science & AI (DSIA).' },
-      { date: '2025', title: 'Ingenjörspraktikant, GRADES-avdelningen', org: 'Synchrotron SOLEIL', body: 'Utveckling av autopkgtest-skript i OpenCL för AMD GPU-kompatibilitet (pyopencl, nabu, ufo-filters, pyvkfft) på Debian/ROCm-infrastruktur via GitLab Salsa.' },
-      { date: '2022 — Nuvarande', title: 'NO-lärare (privatundervisning)', org: 'Complétude', body: 'Undervisar i matematik och fysik-kemi för ett tiotal elever, från lågstadiet till sista året på gymnasiet, parallellt med mina ingenjörsstudier.' },
+      {
+        date: 'Maj – jul 2026',
+        title: 'Forskningspraktikant, kliniskt datalager',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Tillämpade och validerade DEMNE:s dirigeringsansats på sjukhusdata: extraktion av onkologiska biomarkörer (ER, PR, HER2, Ki67, FISH) ur franska kliniska rapporter, och definition av en granskningsbar, driftsnära klinisk väg.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Okt 2025 – maj 2026',
+        title: 'Studentforskare, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Utformade DEMNE, en hybrid klinisk NER-pipeline (regler / transformer / LLM) för fransk onkologisk text, driven av fem formaliserade korpusmått — kärnprojektet i Tremplin Recherche-spåret inför doktorandansökningar.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Nu',
+        title: 'Product Lead & utvecklare, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Bygger en plattform som ger personer med hjärnskador och arbetsterapeuter ett strukturerat sätt att jämföra verktyg för kognitiv kompensation. Började som en Python/Streamlit-prototyp på SN@SU-hackathonet (Sorbonne Université, med Flor Sanchez-Luizard, arbetsterapeut vid UEROS L’ADAPT Île-de-France); nu avgränsas en produktionsombyggnad (FastAPI, PostgreSQL, Next.js) med HDS/GDPR-förenlig hosting och en semantisk sökmotor för matchning av kliniska verktyg.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Ingenjörsstudent — Data Science & AI',
+        org: 'ESIEE Paris',
+        body: 'Femteårsstudent på ESIEE Paris femåriga ingenjörsprogram, inriktning Data Science & AI (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Ingenjörspraktikant, GRADES-avdelningen',
+        org: 'Synchrotron SOLEIL',
+        body: 'Utvecklade autopkgtester med OpenCL för AMD-GPU-kompatibilitet (pyopencl, nabu, ufo-filters, pyvkfft) över Debian/ROCm-infrastrukturen på GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Nu',
+        title: 'Läxhjälpare i NO/matematik',
+        org: 'Complétude',
+        body: 'Undervisar omkring tio elever i matematik och fysik-kemi, från lågstadiet till sista gymnasieåret, parallellt med ingenjörsstudierna.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -4784,56 +5377,56 @@ const sv: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Juni 2026 · SN@SU-hackathon',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'En katalog över digitala verktyg för kognitiv kompensation för personer med hjärnskador och deras arbetsterapeuter.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep började på SN@SU-hackathonet (Sorbonne Université). Arbetsterapeuter och patienter kan hitta appar för kommunikation, minne och planering utan att söka igenom appbutikerna en i taget: varje verktyg är listat, klassat efter störning och tema, och sökbart.\nMVP:n är en Streamlit-applikation med ett JSON-lager; nu avgränsas en produktionsombyggnad med FastAPI, PostgreSQL och en Next.js-frontend.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Dec. 2025 · Grupprojekt',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'En interaktiv panel som rekonstruerar 15 år av bakgrundsluftföroreningar i Frankrike (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'En datapipeline och interaktiv panel över INERIS-indikatorer på kommunnivå (Zenodo). Skript laddar ned, rensar och lagrar data i SQLite; panelen visar en Leaflet-värmekarta över föroreningar med årsreglage och föroreningsfilter, jämte Plotly-diagram.\nGjord med lagkamraten William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Kursprojekt',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'CNN-baserad ansiktsigenkänning på stillbilder och sedan video, med dataaugmentering och ansiktsinriktning.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Ett kursprojekt om modern ansiktsigenkänning. En första modell tränad på bara 218 bilder överanpassade kraftigt; dataaugmentering (rotation, zoom) och ett ansiktsinriktningssteg som normaliserar ögon- och läppositioner, i kombination med ett förtränat nätverk, förbättrade generaliseringen. Målet var att upptäcka ansikten i video från projektets egen datamängd.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Parprojekt',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Ett textäventyr för terminalen i Python, med objektorienterad design.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Ett textäventyr som spelas i terminalen: spelaren rör sig mellan åtta rum genom att skriva kommandon. Koden är uppdelad i små klasser med ett enda ansvar (spel, rum, spelare, kommando, handling, karaktär, föremål), så att lägga till ett rum eller föremål förblir en lokal ändring.\nGjord med Anne-Colombe André på ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Feb. 2025 · Grupprojekt',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'En plattform för kulinarisk dataanalys: scraping, ETL och en panel över receptdata.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Ett grupprojekt i data engineering som skrapar receptdata från Marmiton, kör en ETL-pipeline och exponerar resultaten via en analyspanel. Byggt i Python med Jupyter-notebooks för utforskning.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -4842,9 +5435,9 @@ const sv: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'autopkgtest-skript som validerar vetenskaplig programvara på AMD-GPU:er, på Debians CI-infrastruktur.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'En del av praktiken vid Synchrotron SOLEIL: autopkgtester skrivna i OpenCL för att kontrollera AMD-GPU-kompatibilitet (pyopencl, nabu, ufo-filters, pyvkfft) över Debian/ROCm-infrastrukturen för kontinuerlig integration, körda via GitLab Salsa. Skripten installerar och avinstallerar paket på rena virtuella maskiner och rapporterar kompatibilitet mellan GPU:er.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -4916,8 +5509,8 @@ const sv: Dictionary = {
     title: 'Anteckningar från forskningen',
     subtitle: 'Längre texter om metoder, återvändsgränder och beslut bakom arbetet ovan.',
     posts: [
-      { status: 'Utkast — kommer snart', title: 'Varför fransk klinisk NER slår ut generella modeller', body: 'En genomgång av var standard-NER-pipelines misslyckas på franska onkologirapporter, och vad det innebär för DEMNE:s struktur.' },
-      { status: 'Utkast — kommer snart', title: 'Stegvis extraktion kontra en enda stor modell', body: 'Argumentet för att dirigera entiteter genom regler, ett CRF och en finjusterad transformer innan man alls anropar en LLM — och vad det kostar att göra fel.' },
+      { status: 'Publicerad · okt. 2026', title: 'Varför fransk klinisk NER slår ut generella modeller', body: 'En genomgång av var standard-NER-pipelines misslyckas på franska onkologirapporter, och vad det innebär för DEMNE:s struktur.', content: `<p>Öppna en fransk onkologisk rapport, så snubblar de flesta färdiga NER-modeller redan i första meningen. Ordförrådet är tätt och förkortat (ER, PR, HER2, Ki67, FISH), formateringen skiftar mellan sjukhus, och den biomarkörterminologi som betyder något saknas nästan helt i de korpusar modellerna tränats på. Den vanliga reflexen &mdash; att kasta en stor modell på problemet &mdash; fungerar, men är dyr, ogenomskinlig och svår att försvara inför en kliniker eller en granskare.</p><h2>Alla entiteter behöver inte en LLM</h2><p>DEMNE utgår från en krass iakttagelse: entiteterna i dessa rapporter är inte lika svåra. En biopsiomnämning skrivs på en handfull stabila sätt; ett läkemedelsnamn kan dyka upp i hundra former. Så i stället för en modell för allt mäter DEMNE varje entitetstyp och skickar den till den lättaste metod som är tillräckligt tillförlitlig &mdash; en deterministisk regel, en finjusterad transformer, eller en LLM endast som sista utväg.</p><p>Mätningen består av fem korpusmått beräknade ur annoteringarna: hur mallbar ytformen är, hur homogent ordförrådet är, om en liten nyckelordsmängd är diskriminerande, hur ofta omnämnandet ligger under negation eller motsägelse, och om det alls finns tillräckligt med märkt data för att träna en övervakad modell. En deterministisk beslutsgraf gör dessa tal till en nivå, och dess 17 tröskelvärden kalibreras med en flermålssökning som bestraffar att skicka en entitet till en alltför svag metod dubbelt så hårt som till en bara alltför dyr.</p><h2>Vad det ger</h2><p>På den onkologiska kalibreringsmängden (59 entitetstyper) stämmer dirigeringen med expertreferensnivån med en konkordans på 0,954 och en leave-one-corpus-out-skattning på 0,866 &mdash; långt över varje baslinje med fast nivå (alltid-regler når 0,729, alltid-LLM 0,148). Det mer övertygande testet är externt: tillämpad utan omjustering på 300 DT-rapporter från AP-HP, för cancerlokaler modellen aldrig sett, dirigerade DEMNE 99,5 % av de markerade omnämnandena (411 av 413) till deterministiska regler. Dessa regler nådde ett medel-F1 på 0,941, medan en transformer finjusterad på samma entiteter inom en realistisk sjukhusbudget stannade på 0,358.</p><p>Med andra ord: för de standardiserade entiteter som dominerar onkologisk rapportering var regler inte bara billigare &mdash; de var bättre, och varje regelbeslut går att spåra till ett explicit villkor, precis vad artiklarna 12 och 14 i EU AI Act kräver.</p><h2>Var det stannar</h2><p>Jag vill vara ärlig om gränserna. Referensstandarden är liten &mdash; 92 entitetstyper, 59 av dem inom onkologi &mdash; så poäng på en enda korpus är optimistiska och bara relativa jämförelser håller. LLM-nivån utvärderades aldrig från början till slut på den externa kohorten; dess enda dirigerade entitet var för sällsynt. Och kalibreringen överförs inte mellan domäner: byter man klinisk genre eller språk faller konkordansen till 0,45&ndash;0,73, så trösklarna måste justeras om. DEMNE är ett genomförbarhetsbevis, inte en färdig produkt.</p><h2>Varför det spelar roll</h2><p>Poängen är inte att regler slår transformrar. Poängen är att &bdquo;vilken metod&ldquo; är en fråga man kan besvara per entitet, utifrån mätbara egenskaper hos texten, i stället för att som standard välja den tyngsta modellen och hoppas. För klinisk NLP &mdash; där kostnad, granskbarhet och tillit betyder något samtidigt &mdash; är den infallsvinkeln värd mer än ännu en procentenhet på ett riktmärke.</p><p>Koden och hela metoden finns på <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskriptet är under arbete.</p>` },
+      { status: 'Utkast — kommer snart', title: 'Stegvis extraktion kontra en enda stor modell', body: 'Argumentet för att dirigera entiteter genom regler och en finjusterad transformer innan man alls anropar en LLM — och vad det kostar att göra fel.' },
     ],
   },
   contact: {
@@ -4954,14 +5547,14 @@ const uk: Dictionary = {
     menuToggleLabel: 'Відкрити меню',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'Видобуваю біомаркери з клінічного тексту ',
     h1Accent: 'не пробуджуючи GPU',
-    h1Post: '.',
+    h1Post: '',
     sub: 'Я Clément Longeac. Я працюю над DEMNE — фреймворком маршрутизації, який для кожного типу сутності вирішує, чи є чесним інструментом для завдання регулярний вираз, CRF, трансформер або LLM. Перший результат: 99,5% клінічних сутностей видобуто без GPU, F1 = 0,941 на 300 нотатках AP-HP.',
     ctaResearch: 'Переглянути дослідження',
     ctaCV: 'Завантажити резюме',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM, схема в реальному часі',
+    caption: 'DEMNE — Rules → Transformer → LLM, схема в реальному часі',
   },
   about: {
     label: '01 — Про мене',
@@ -4981,7 +5574,7 @@ const uk: Dictionary = {
   },
   research: {
     label: '02 — Дослідження',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'Гібридний конвеєр розпізнавання іменованих сутностей для французького онкологічного клінічного тексту.',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'Клінічний NER · французькі онкологічні корпуси',
@@ -5018,11 +5611,48 @@ const uk: Dictionary = {
     title: 'Де досі відбувалася робота',
     currentLabel: 'Триває',
     items: [
-      { current: true, date: '2025 — дотепер', title: 'Науковий асистент, Tremplin Recherche', org: 'ESIEE Paris', body: 'Розробка DEMNE, гібридного конвеєра клінічного NER для французького онкологічного тексту, як основного проєкту програми Tremplin Recherche перед подачею заявок на докторантуру.' },
-      { current: true, date: '2026 — дотепер', title: 'Засновник і Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'Створення платформи, яка дає пацієнтам із черепно-мозковими травмами та їхнім ерготерапевтам структурований спосіб порівнювати цифрові інструменти когнітивної компенсації. Народився як прототип на Python/Streamlit на хакатоні SN@SU (Сорбонський університет, разом із Flor Sanchez-Luizard, ерготерапевткою в UEROS L\'ADAPT Іль-де-Франс); зараз на етапі планування виробничої перебудови (FastAPI, PostgreSQL, Next.js) з хостингом, що відповідає HDS/RGPD, і семантичним пошуковим механізмом для клінічного зіставлення.' },
-      { date: '2024 — 2027', title: 'Студент-інженер — Data Science & AI', org: 'ESIEE Paris', body: 'Студент четвертого курсу п\'ятирічної інженерної програми ESIEE Paris, спеціалізація Data Science & AI (DSIA).' },
-      { date: '2025', title: 'Інженер-стажист, відділ GRADES', org: 'Synchrotron SOLEIL', body: 'Розробка скриптів autopkgtest на OpenCL для перевірки сумісності з GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) на інфраструктурі Debian/ROCm через GitLab Salsa.' },
-      { date: '2022 — дотепер', title: 'Репетитор з точних наук', org: 'Complétude', body: 'Викладання математики та фізики-хімії приблизно десятьом учням, від початкової школи до випускного класу ліцею, паралельно з інженерним навчанням.' },
+      {
+        date: 'Трав. – лип. 2026',
+        title: 'Стажер-дослідник, клінічне сховище даних',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'Застосував і валідував підхід маршрутизації DEMNE на лікарняних даних: вилучення онкологічних біомаркерів (ER, PR, HER2, Ki67, FISH) із французьких клінічних звітів і визначення аудитованого, реалістичного для впровадження клінічного шляху.',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'Жовт. 2025 – трав. 2026',
+        title: 'Студент-дослідник, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'Спроєктував DEMNE — гібридний клінічний NER-конвеєр (правила / transformer / LLM) для французьких онкологічних текстів, керований п’ятьма формалізованими метриками корпусів; ключовий проєкт треку Tremplin Recherche перед подачею на PhD.',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – Дотепер',
+        title: 'Product Lead і розробник, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'Створення платформи, що дає пацієнтам із травмами мозку й ерготерапевтам структурований спосіб порівнювати інструменти когнітивної компенсації. Починалася як прототип на Python/Streamlit на хакатоні SN@SU (Sorbonne Université, разом із Flor Sanchez-Luizard, ерготерапевткою в UEROS L’ADAPT Île-de-France); зараз окреслюється продакшн-перебудова (FastAPI, PostgreSQL, Next.js) із хостингом, сумісним із HDS/GDPR, і семантичним пошуковим рушієм для добору клінічних інструментів.',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'Студент-інженер — Data Science та ШІ',
+        org: 'ESIEE Paris',
+        body: 'Студент п’ятого курсу п’ятирічної інженерної програми ESIEE Paris, спеціалізація Data Science та ШІ (DSIA).',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'Інженер-стажер, відділ GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'Розробка autopkgtests на OpenCL для перевірки сумісності GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) в інфраструктурі Debian/ROCm на GitLab Salsa.',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – Дотепер',
+        title: 'Репетитор із точних наук',
+        org: 'Complétude',
+        body: 'Викладання математики та фізики-хімії приблизно десятьом учням, від початкової школи до випускного класу, паралельно з інженерним навчанням.',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -5043,56 +5673,56 @@ const uk: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'Червень 2026 · Хакатон SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'Каталог цифрових інструментів когнітивної компенсації для людей із травмами мозку та їхніх ерготерапевтів.',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep розпочався на хакатоні SN@SU (Sorbonne Université). Ерготерапевти та пацієнти знаходять застосунки для спілкування, пам’яті й планування, не переглядаючи крамниці застосунків по одній: кожен інструмент внесено до каталогу, класифіковано за розладом і темою та доступно для пошуку.\nMVP — це застосунок на Streamlit зі сховищем JSON; наразі окреслюється продакшн-перебудова з FastAPI, PostgreSQL і фронтендом на Next.js.',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'Груд. 2025 · Командний проєкт',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'Інтерактивна панель, що реконструює 15 років фонового забруднення повітря у Франції (2000–2015).',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'Конвеєр даних та інтерактивна панель за показниками INERIS на рівні комун (Zenodo). Скрипти завантажують, очищають і зберігають дані в SQLite; панель показує теплову карту забруднення на Leaflet із повзунком року та фільтрами забруднювачів, поряд із графіками Plotly.\nСтворено з товаришем по команді William Zee.',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · Навчальний проєкт',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'Розпізнавання облич на основі CNN на статичних зображеннях, а потім на відео, з аугментацією даних і вирівнюванням обличчя.',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'Навчальний проєкт із сучасного розпізнавання облич. Перша модель, навчена лише на 218 зображеннях, сильно перенавчалася; аугментація даних (поворот, масштабування) і крок вирівнювання обличчя, що нормалізує положення очей і губ, у поєднанні з попередньо навченою мережею покращили узагальнення. Мета — виявляти обличчя на відео з власного набору даних проєкту.',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · Парний проєкт',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'Текстова пригодницька гра для термінала на Python з об’єктно-орієнтованим дизайном.',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'Текстова пригода в терміналі: гравець переходить між вісьмома кімнатами, вводячи команди. Код поділено на невеликі класи з єдиною відповідальністю (гра, кімната, гравець, команда, дія, персонаж, предмет), тож додавання кімнати чи предмета лишається локальною зміною.\nСтворено з Anne-Colombe André в ESIEE Paris.',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'Лют. 2025 · Командний проєкт',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'Платформа аналітики кулінарних даних: скрапінг, ETL і панель за даними рецептів.',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'Командний проєкт з інженерії даних, що скрапить дані рецептів із Marmiton, запускає ETL-конвеєр і подає результати через аналітичну панель. Створено на Python із ноутбуками Jupyter для дослідження.',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -5101,9 +5731,9 @@ const uk: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'Скрипти autopkgtest, що перевіряють наукове ПЗ на GPU AMD в CI-інфраструктурі Debian.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'Частина стажування в Synchrotron SOLEIL: autopkgtests на OpenCL для перевірки сумісності GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) в інфраструктурі безперервної інтеграції Debian/ROCm, запущені через GitLab Salsa. Скрипти встановлюють і видаляють пакети на чистих віртуальних машинах і звітують про сумісність між GPU.',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -5175,8 +5805,8 @@ const uk: Dictionary = {
     title: 'Нотатки з дослідження',
     subtitle: 'Розлогіші матеріали про методи, глухі кути та рішення, що стоять за роботою вище.',
     posts: [
-      { status: 'Чернетка — незабаром', title: 'Чому французький клінічний NER ламає універсальні моделі', body: 'Огляд того, де стандартні конвеєри NER зазнають невдачі на французьких онкологічних звітах, і що це означає для структури DEMNE.' },
-      { status: 'Чернетка — незабаром', title: 'Поетапне вилучення проти однієї великої моделі', body: 'Аргументація на користь маршрутизації сутностей через правила, CRF та донавчений трансформер, перш ніж взагалі викликати LLM — і якою є ціна помилки в цьому.' },
+      { status: 'Опубліковано · жовт. 2026', title: 'Чому французький клінічний NER ламає універсальні моделі', body: 'Огляд того, де стандартні конвеєри NER зазнають невдачі на французьких онкологічних звітах, і що це означає для структури DEMNE.', content: `<p>Відкрийте французький онкологічний звіт &mdash; і більшість готових NER-моделей спотикаються вже на першому реченні. Лексика щільна й скорочена (ER, PR, HER2, Ki67, FISH), форматування змінюється від лікарні до лікарні, а важлива термінологія біомаркерів майже відсутня в корпусах, на яких ці моделі навчалися. Звичний рефлекс &mdash; кинути на задачу велику модель &mdash; працює, але він дорогий, непрозорий і важкий для обґрунтування перед клініцистом чи аудитором.</p><h2>Не кожній сутності потрібен LLM</h2><p>DEMNE виходить із простого спостереження: сутності в цих звітах не однаково складні. Згадка про біопсію пишеться кількома сталими способами; назва ж препарату може траплятися в сотні форм. Тож замість однієї моделі на все DEMNE вимірює кожен тип сутності й спрямовує його до найлегшого достатньо надійного методу &mdash; детермінованого правила, доналаштованого transformer або LLM лише як крайній засіб.</p><p>Вимірювання &mdash; це п’ять корпусних метрик, обчислених з анотацій: наскільки шаблонною є поверхнева форма, наскільки однорідна лексика, чи є невеликий набір ключових слів розрізнювальним, як часто згадка опиняється під запереченням чи суперечністю, і чи є взагалі достатньо розмічених даних, щоб навчити кероване модель. Детермінований граф рішень перетворює ці числа на рівень, а його 17 порогів калібрують багатокритеріальним пошуком, що вдвічі суворіше карає відправлення сутності до заслабкого методу, ніж до просто задорогого.</p><h2>Що це дає</h2><p>На онкологічному калібрувальному наборі (59 типів сутностей) маршрутизація збігається з експертним еталонним рівнем із узгодженістю 0,954 та оцінкою leave-one-corpus-out 0,866 &mdash; значно вище за будь-яку базову стратегію з фіксованим рівнем (завжди-правила дає 0,729, завжди-LLM 0,148). Переконливіший тест &mdash; зовнішній: застосований без переналаштування до 300 КТ-звітів AP-HP для раніше не бачених локалізацій раку, DEMNE спрямував 99,5 % виділених згадок (411 із 413) до детермінованих правил. Ці правила досягли середнього F1 0,941, тоді як transformer, доналаштований на тих самих сутностях за реалістичного лікарняного бюджету, дійшов лише до 0,358.</p><p>Інакше кажучи: для стандартизованих сутностей, що домінують в онкологічній звітності, правила були не лише дешевшими &mdash; вони були кращими, і кожне рішення правила простежується до явної умови, саме цього й вимагають статті 12 і 14 EU AI Act.</p><h2>Де він зупиняється</h2><p>Хочу бути чесним щодо меж. Еталонний стандарт малий &mdash; 92 типи сутностей, 59 із них в онкології &mdash; тож оцінки на одному корпусі оптимістичні, і чинними є лише відносні порівняння. Рівень LLM ніколи не оцінювався наскрізно на зовнішній когорті; його єдина спрямована сутність була надто рідкісною. А калібрування не переноситься між доменами: на іншому клінічному жанрі чи мові узгодженість падає до 0,45&ndash;0,73, тож пороги доводиться переналаштовувати. DEMNE &mdash; це доказ здійсненності, а не завершений продукт.</p><h2>Чому це важливо</h2><p>Ідеться не про те, що правила перемагають transformer’и. Ідеться про те, що &laquo;який метод&raquo; &mdash; це питання, на яке можна відповісти для кожної сутності, виходячи з вимірних властивостей тексту, а не обирати за замовчуванням найважчу модель і сподіватися. Для клінічного NLP &mdash; де вартість, аудитованість і довіра важливі водночас &mdash; таке формулювання варте більше, ніж іще один відсотковий пункт на бенчмарку.</p><p>Код і повний метод &mdash; на <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; рукопис готується.</p>` },
+      { status: 'Чернетка — незабаром', title: 'Поетапне вилучення проти однієї великої моделі', body: 'Аргументація на користь маршрутизації сутностей через правила та донавчений трансформер, перш ніж взагалі викликати LLM — і якою є ціна помилки в цьому.' },
     ],
   },
   contact: {
@@ -5213,14 +5843,14 @@ const th: Dictionary = {
     menuToggleLabel: 'เปิดเมนู',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA / Tremplin Recherche · en révision @ Artificial Intelligence in Medicine',
+    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
     h1Pre: 'สกัดไบโอมาร์กเกอร์จากข้อความทางคลินิก ',
     h1Accent: 'โดยไม่ต้องปลุก GPU',
     h1Post: '',
     sub: 'ผมชื่อ Clément Longeac ผมกำลังพัฒนา DEMNE ซึ่งเป็นเฟรมเวิร์กสำหรับจัดเส้นทางที่ตัดสินใจ — สำหรับเอนทิตีแต่ละประเภท — ว่า regex, CRF, transformer หรือ LLM คือเครื่องมือที่ซื่อตรงที่สุดสำหรับงานนั้น ผลลัพธ์แรก: สกัดเอนทิตีทางคลินิกได้ 99.5% โดยไม่ใช้ GPU ด้วยค่า F1 = 0.941 จากบันทึก AP-HP จำนวน 300 รายการ',
     ctaResearch: 'ดูงานวิจัย',
     ctaCV: 'ดาวน์โหลดเรซูเม่',
-    caption: 'DEMNE — Rules → CRF → Transformer → LLM แผนผังแบบสด',
+    caption: 'DEMNE — Rules → Transformer → LLM แผนผังแบบสด',
   },
   about: {
     label: '01 — เกี่ยวกับฉัน',
@@ -5240,7 +5870,7 @@ const th: Dictionary = {
   },
   research: {
     label: '02 — งานวิจัย',
-    title: 'DEMNE / DuraXeLL',
+    title: 'DEMNE',
     subtitle: 'ไปป์ไลน์การรู้จำเอนทิตีที่มีชื่อแบบไฮบริดสำหรับข้อความทางคลินิกด้านมะเร็งวิทยาภาษาฝรั่งเศส',
     h3: 'Determination of Extraction Methods for Named Entities',
     tagline: 'NER ทางคลินิก · คลังข้อมูลมะเร็งวิทยาภาษาฝรั่งเศส',
@@ -5277,11 +5907,48 @@ const th: Dictionary = {
     title: 'สถานที่ที่งานได้ดำเนินมาจนถึงตอนนี้',
     currentLabel: 'กำลังดำเนินการ',
     items: [
-      { current: true, date: '2025 — ปัจจุบัน', title: 'ผู้ช่วยวิจัย, Tremplin Recherche', org: 'ESIEE Paris', body: 'พัฒนา DEMNE ไปป์ไลน์ NER ทางคลินิกแบบไฮบริดสำหรับข้อความมะเร็งวิทยาภาษาฝรั่งเศส ในฐานะโครงการหลักของหลักสูตร Tremplin Recherche ก่อนการสมัครปริญญาเอก' },
-      { current: true, date: '2026 — ปัจจุบัน', title: 'ผู้ก่อตั้งและ Product Lead, NeuroStep', org: 'Junior Entreprise ESIEE Paris', body: 'สร้างแพลตฟอร์มที่ช่วยให้ผู้ป่วยสมองบาดเจ็บและนักกิจกรรมบำบัดของพวกเขามีวิธีที่เป็นระบบในการเปรียบเทียบเครื่องมือดิจิทัลเพื่อชดเชยความบกพร่องทางปัญญา เริ่มต้นจากต้นแบบ Python/Streamlit ในงานแฮกกาธอน SN@SU (มหาวิทยาลัยซอร์บอนน์ ร่วมกับ Flor Sanchez-Luizard นักกิจกรรมบำบัดที่ UEROS L\'ADAPT อีล-เดอ-ฟร็องส์) ปัจจุบันอยู่ในขั้นตอนวางแผนการสร้างใหม่ในเวอร์ชันโปรดักชัน (FastAPI, PostgreSQL, Next.js) พร้อมโฮสติ้งที่สอดคล้องกับ HDS/RGPD และเอนจินค้นหาเชิงความหมายสำหรับการจับคู่เครื่องมือทางคลินิก' },
-      { date: '2024 — 2027', title: 'นักศึกษาวิศวกรรม — Data Science & AI', org: 'ESIEE Paris', body: 'นักศึกษาชั้นปีที่ 4 ในหลักสูตรวิศวกรรมห้าปีของ ESIEE Paris สาขา Data Science & AI (DSIA)' },
-      { date: '2025', title: 'นักศึกษาฝึกงานด้านวิศวกรรม, ฝ่าย GRADES', org: 'Synchrotron SOLEIL', body: 'พัฒนาสคริปต์ autopkgtest ด้วย OpenCL เพื่อทดสอบความเข้ากันได้ของ GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) บนโครงสร้างพื้นฐาน Debian/ROCm ผ่าน GitLab Salsa' },
-      { date: '2022 — ปัจจุบัน', title: 'ติวเตอร์วิชาวิทยาศาสตร์', org: 'Complétude', body: 'สอนคณิตศาสตร์และฟิสิกส์-เคมีให้กับนักเรียนประมาณสิบคน ตั้งแต่ระดับประถมศึกษาจนถึงมัธยมปลายปีสุดท้าย ควบคู่ไปกับการเรียนวิศวกรรมของผม' },
+      {
+        date: 'พ.ค. – ก.ค. 2026',
+        title: 'นักวิจัยฝึกงาน, คลังข้อมูลคลินิก',
+        org: 'AP-HP (Assistance Publique – Hôpitaux de Paris)',
+        body: 'ประยุกต์และตรวจสอบแนวทางการกำหนดเส้นทางของ DEMNE บนข้อมูลโรงพยาบาล: สกัดตัวบ่งชี้ทางชีวภาพด้านมะเร็ง (ER, PR, HER2, Ki67, FISH) จากรายงานคลินิกภาษาฝรั่งเศส และกำหนดเส้นทางทางคลินิกที่ตรวจสอบย้อนหลังได้และสมจริงต่อการนำไปใช้งาน',
+        skills: ['Clinical NLP', 'EDS-NLP', 'BRAT / CoNLL', 'Python', 'DrBERT'],
+      },
+      {
+        date: 'ต.ค. 2025 – พ.ค. 2026',
+        title: 'นักวิจัยนักศึกษา, Tremplin Recherche',
+        org: 'ESIEE Paris · LBA (Aix-Marseille) · AP-HP',
+        body: 'ออกแบบ DEMNE ไปป์ไลน์ NER ทางคลินิกแบบผสม (กฎ / transformer / LLM) สำหรับข้อความมะเร็งวิทยาภาษาฝรั่งเศส ขับเคลื่อนด้วยห้าเมตริกคลังข้อมูลที่ถูกจัดรูปแบบอย่างเป็นทางการ — โครงการหลักของเส้นทาง Tremplin Recherche ก่อนการสมัครปริญญาเอก',
+        skills: ['Python', 'Hugging Face', 'DrBERT', 'pycrfsuite', 'eco2ai', 'BRAT / CoNLL', 'Optuna'],
+      },
+      {
+        current: true, date: '2026 – ปัจจุบัน',
+        title: 'Product Lead และนักพัฒนา, NeuroStep',
+        org: 'Junior Entreprise ESIEE Paris',
+        body: 'สร้างแพลตฟอร์มที่ให้ผู้ป่วยบาดเจ็บทางสมองและนักกิจกรรมบำบัดเปรียบเทียบเครื่องมือชดเชยการรู้คิดได้อย่างเป็นระบบ เริ่มต้นเป็นต้นแบบ Python/Streamlit ที่แฮกกาธอน SN@SU (Sorbonne Université ร่วมกับ Flor Sanchez-Luizard นักกิจกรรมบำบัดที่ UEROS L’ADAPT Île-de-France) ขณะนี้กำลังกำหนดขอบเขตการสร้างใหม่ระดับโปรดักชัน (FastAPI, PostgreSQL, Next.js) ด้วยโฮสติงที่สอดคล้องกับ HDS/GDPR และเครื่องมือค้นหาเชิงความหมายสำหรับการจับคู่เครื่องมือทางคลินิก',
+        skills: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL', 'Next.js'],
+      },
+      {
+        date: '2024 – 2027',
+        title: 'นักศึกษาวิศวกรรม — วิทยาการข้อมูลและ AI',
+        org: 'ESIEE Paris',
+        body: 'นักศึกษาชั้นปีที่ห้าของหลักสูตรวิศวกรรมห้าปีที่ ESIEE Paris เชี่ยวชาญด้านวิทยาการข้อมูลและ AI (DSIA)',
+        skills: ['Machine Learning', 'Deep Learning', 'Data Science', 'C / C++'],
+      },
+      {
+        date: '2025',
+        title: 'วิศวกรฝึกงาน, ฝ่าย GRADES',
+        org: 'Synchrotron SOLEIL',
+        body: 'พัฒนา autopkgtest ด้วย OpenCL เพื่อตรวจสอบความเข้ากันได้ของ GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) บนโครงสร้างพื้นฐาน Debian/ROCm บน GitLab Salsa',
+        skills: ['OpenCL', 'Python', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+      },
+      {
+        date: '2022 – ปัจจุบัน',
+        title: 'ติวเตอร์สายวิทย์-คณิต',
+        org: 'Complétude',
+        body: 'สอนคณิตศาสตร์และฟิสิกส์-เคมีแก่นักเรียนราวสิบคน ตั้งแต่ระดับประถมจนถึงชั้นมัธยมปลายปีสุดท้าย ควบคู่กับการเรียนวิศวกรรม',
+        skills: ['Mathematics', 'Physics', 'Pedagogy'],
+      },
     ],
   },
   publications: {
@@ -5301,56 +5968,56 @@ const th: Dictionary = {
     more: 'Learn more →',
     items: [
       {
-        date: 'June 2026 · SN@SU hackathon',
+        date: 'มิถุนายน 2026 · แฮกกาธอน SN@SU',
         title: 'NeuroStep',
         description:
-          'A catalog of digital cognitive-compensation tools for people with brain injuries and their occupational therapists.',
+          'แคตตาล็อกเครื่องมือชดเชยการรู้คิดแบบดิจิทัลสำหรับผู้ที่มีการบาดเจ็บทางสมองและนักกิจกรรมบำบัดของพวกเขา',
         longBody:
-          'NeuroStep started at the SN@SU hackathon (Sorbonne Université). Occupational therapists and patients can find apps for communication, memory and planning without searching app stores one by one: each tool is listed, classified by disorder and theme, and searchable.\nThe MVP is a Streamlit application backed by a JSON store, now scoping a production rebuild with FastAPI, PostgreSQL and a Next.js frontend.',
+          'NeuroStep เริ่มต้นที่แฮกกาธอน SN@SU (Sorbonne Université) นักกิจกรรมบำบัดและผู้ป่วยสามารถค้นหาแอปสำหรับการสื่อสาร ความจำ และการวางแผน โดยไม่ต้องไล่ค้นหาในสโตร์ทีละแห่ง เครื่องมือแต่ละตัวถูกจัดรายการ จำแนกตามความผิดปกติและหัวข้อ และค้นหาได้\nตัว MVP เป็นแอปพลิเคชัน Streamlit ที่มีที่เก็บข้อมูลแบบ JSON ขณะนี้กำลังกำหนดขอบเขตการสร้างใหม่ระดับโปรดักชันด้วย FastAPI, PostgreSQL และฟรอนต์เอนด์ Next.js',
         tags: ['Python', 'Streamlit', 'FastAPI', 'PostgreSQL'],
         url: 'https://github.com/longeacc/NeuroStep',
         image: '/images/projects/neurostep.jpg',
       },
       {
-        date: 'Dec. 2025 · Team project',
+        date: 'ธ.ค. 2025 · โปรเจกต์ทีม',
         title: 'Air Quality Dashboard',
         description:
-          'An interactive dashboard reconstructing 15 years of background air pollution across France (2000–2015).',
+          'แดชบอร์ดเชิงโต้ตอบที่สร้างภาพมลพิษทางอากาศพื้นหลัง 15 ปีทั่วฝรั่งเศสขึ้นใหม่ (2000–2015)',
         longBody:
-          'A data pipeline and interactive dashboard over INERIS commune-level indicators (Zenodo). Scripts download, clean and store the data in SQLite; the dashboard renders a Leaflet pollution heatmap with a year slider and pollutant filters, alongside Plotly charts.\nBuilt with teammate William Zee.',
+          'ไปป์ไลน์ข้อมูลและแดชบอร์ดเชิงโต้ตอบบนตัวชี้วัดระดับเทศบาลของ INERIS (Zenodo) สคริปต์ดาวน์โหลด ทำความสะอาด และจัดเก็บข้อมูลใน SQLite แดชบอร์ดแสดงแผนที่ความร้อนมลพิษด้วย Leaflet พร้อมแถบเลื่อนปีและตัวกรองมลพิษ ควบคู่กับกราฟ Plotly\nจัดทำร่วมกับเพื่อนร่วมทีม William Zee',
         tags: ['Python', 'SQLite', 'Plotly', 'Leaflet', 'pandas'],
         url: 'https://github.com/longeacc/DATA_Science_PROJECT_AirQuality_France',
         image: '/images/projects/air-quality.jpg',
       },
       {
-        date: '2025 · Course project',
+        date: '2025 · โปรเจกต์รายวิชา',
         title: 'Face Recognition with Deep Learning',
         description:
-          'CNN-based face recognition on still images then video, using data augmentation and face alignment.',
+          'การรู้จำใบหน้าด้วย CNN บนภาพนิ่งแล้วจึงเป็นวิดีโอ โดยใช้การเพิ่มข้อมูลและการจัดแนวใบหน้า',
         longBody:
-          'A course project on modern face recognition. A first model trained on only 218 images overfit heavily; data augmentation (rotation, zoom) and a face-alignment step that normalizes eye and lip positions, combined with a pre-trained network, improved generalization. The goal was to detect faces in video from the project’s own dataset.',
+          'โปรเจกต์รายวิชาเกี่ยวกับการรู้จำใบหน้าสมัยใหม่ โมเดลแรกที่ฝึกด้วยภาพเพียง 218 ภาพเกิดโอเวอร์ฟิตอย่างหนัก การเพิ่มข้อมูล (การหมุน การซูม) และขั้นตอนการจัดแนวใบหน้าที่ปรับตำแหน่งตาและริมฝีปากให้เป็นมาตรฐาน เมื่อรวมกับเครือข่ายที่ฝึกมาก่อน ช่วยให้การวางนัยทั่วไปดีขึ้น เป้าหมายคือการตรวจจับใบหน้าในวิดีโอจากชุดข้อมูลของโปรเจกต์เอง',
         tags: ['Python', 'TensorFlow', 'CNN', 'Data augmentation'],
         url: 'https://github.com/longeacc/IA-and-Deep-Learning---Modern-face-recognition-with-deep-learning-project-',
         image: '/images/projects/face.svg',
       },
       {
-        date: '2025 · Pair project',
+        date: '2025 · โปรเจกต์คู่',
         title: 'TBA — Text Adventure Game',
         description:
-          'A terminal text-adventure game in Python, with an object-oriented design.',
+          'เกมผจญภัยแบบข้อความบนเทอร์มินัลที่เขียนด้วย Python ด้วยการออกแบบเชิงวัตถุ',
         longBody:
-          'A text adventure played in the terminal: the player moves between eight rooms by typing commands. The code is split into small single-responsibility classes (game, room, player, command, action, character, item), so adding a room or an item stays a local change.\nBuilt with Anne-Colombe André at ESIEE Paris.',
+          'การผจญภัยแบบข้อความที่เล่นในเทอร์มินัล ผู้เล่นเคลื่อนที่ระหว่างแปดห้องด้วยการพิมพ์คำสั่ง โค้ดถูกแบ่งเป็นคลาสเล็ก ๆ ที่มีความรับผิดชอบเดียว (เกม ห้อง ผู้เล่น คำสั่ง การกระทำ ตัวละคร ไอเท็ม) ดังนั้นการเพิ่มห้องหรือไอเท็มจึงยังเป็นการเปลี่ยนแปลงเฉพาะจุด\nจัดทำร่วมกับ Anne-Colombe André ที่ ESIEE Paris',
         tags: ['Python', 'OOP'],
         url: 'https://github.com/longeacc/TBA-Projet-Anne-Colombe-ANDRE-Clement-LONGEAC',
         image: '/images/projects/tba.svg',
       },
       {
-        date: 'Feb. 2025 · Team project',
+        date: 'ก.พ. 2025 · โปรเจกต์ทีม',
         title: 'Marmiton Data Intelligence',
         description:
-          'A culinary data-analytics platform: scraping, ETL and a dashboard over recipe data.',
+          'แพลตฟอร์มวิเคราะห์ข้อมูลด้านอาหาร: การสแครป, ETL และแดชบอร์ดบนข้อมูลสูตรอาหาร',
         longBody:
-          'A data-engineering team project that scrapes recipe data from Marmiton, runs an ETL pipeline, and exposes the results through an analytics dashboard. Built in Python with Jupyter notebooks for exploration.',
+          'โปรเจกต์ทีมด้านวิศวกรรมข้อมูลที่สแครปข้อมูลสูตรอาหารจาก Marmiton รันไปป์ไลน์ ETL และนำเสนอผลผ่านแดชบอร์ดวิเคราะห์ พัฒนาด้วย Python พร้อมโน้ตบุ๊ก Jupyter สำหรับการสำรวจ',
         tags: ['Python', 'Scraping', 'ETL', 'Jupyter'],
         url: 'https://github.com/william-zee/Projet_Data_Engineering',
         image: '/images/projects/marmiton.svg',
@@ -5359,9 +6026,9 @@ const th: Dictionary = {
         date: '2025 · Synchrotron SOLEIL',
         title: 'Debian ROCm CI',
         description:
-          'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
+          'สคริปต์ autopkgtest ที่ตรวจสอบซอฟต์แวร์วิทยาศาสตร์บน GPU ของ AMD บนโครงสร้างพื้นฐาน CI ของ Debian',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
+          'ส่วนหนึ่งของการฝึกงานที่ Synchrotron SOLEIL: autopkgtest ที่เขียนด้วย OpenCL เพื่อตรวจสอบความเข้ากันได้ของ GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) บนโครงสร้างพื้นฐานการบูรณาการต่อเนื่อง Debian/ROCm รันผ่าน GitLab Salsa สคริปต์ติดตั้งและถอนการติดตั้งแพ็กเกจบนเครื่องเสมือนที่สะอาด และรายงานความเข้ากันได้ระหว่าง GPU',
         tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
         image: '/images/projects/debian.svg',
@@ -5433,8 +6100,8 @@ const th: Dictionary = {
     title: 'บันทึกจากงานวิจัย',
     subtitle: 'บทความเชิงลึกเกี่ยวกับวิธีการ ทางตัน และการตัดสินใจเบื้องหลังงานข้างต้น',
     posts: [
-      { status: 'ฉบับร่าง — เร็วๆ นี้', title: 'ทำไม NER ทางคลินิกภาษาฝรั่งเศสจึงทำให้โมเดลทั่วไปล้มเหลว', body: 'ภาพรวมของจุดที่ไปป์ไลน์ NER มาตรฐานล้มเหลวในรายงานมะเร็งวิทยาภาษาฝรั่งเศส และความหมายของสิ่งนี้ต่อโครงสร้างของ DEMNE' },
-      { status: 'ฉบับร่าง — เร็วๆ นี้', title: 'การสกัดแบบขั้นตอนเทียบกับโมเดลขนาดใหญ่เดี่ยว', body: 'เหตุผลในการส่งเอนทิตีผ่านกฎเกณฑ์ CRF และ Transformer ที่ปรับแต่งแล้ว ก่อนที่จะเรียกใช้ LLM เลย — และต้นทุนของความผิดพลาดในเรื่องนี้' },
+      { status: 'เผยแพร่ · ต.ค. 2026', title: 'ทำไม NER ทางคลินิกภาษาฝรั่งเศสจึงทำให้โมเดลทั่วไปล้มเหลว', body: 'ภาพรวมของจุดที่ไปป์ไลน์ NER มาตรฐานล้มเหลวในรายงานมะเร็งวิทยาภาษาฝรั่งเศส และความหมายของสิ่งนี้ต่อโครงสร้างของ DEMNE', content: `<p>เปิดรายงานมะเร็งวิทยาภาษาฝรั่งเศสขึ้นมา โมเดล NER สำเร็จรูปส่วนใหญ่สะดุดตั้งแต่ประโยคแรก คำศัพท์หนาแน่นและใช้ตัวย่อ (ER, PR, HER2, Ki67, FISH) รูปแบบการจัดพิมพ์เปลี่ยนไปในแต่ละโรงพยาบาล และคำศัพท์ตัวบ่งชี้ทางชีวภาพที่สำคัญแทบไม่ปรากฏในคลังข้อมูลที่ใช้ฝึกโมเดลเหล่านี้ ปฏิกิริยาที่คุ้นเคย&mdash;&mdash;โยนโมเดลขนาดใหญ่เข้าใส่&mdash;&mdash;ก็ได้ผล แต่มีต้นทุนสูง ไม่โปร่งใส และยากจะอธิบายต่อแพทย์หรือผู้ตรวจสอบ</p><h2>ไม่ใช่ทุกเอนทิตีที่ต้องใช้ LLM</h2><p>DEMNE เริ่มจากข้อสังเกตตรงไปตรงมา: เอนทิตีในรายงานเหล่านี้ยากไม่เท่ากัน การกล่าวถึงการตัดชิ้นเนื้อเขียนได้ไม่กี่รูปแบบที่คงที่ ขณะที่ชื่อยาอาจปรากฏได้นับร้อยรูปแบบ ดังนั้นแทนที่จะใช้โมเดลเดียวกับทุกอย่าง DEMNE วัดเอนทิตีแต่ละประเภทแล้วส่งไปยังวิธีที่เบาที่สุดเท่าที่ยังเชื่อถือได้&mdash;&mdash;กฎเชิงกำหนด, transformer ที่ปรับละเอียด, หรือ LLM เป็นทางเลือกสุดท้ายเท่านั้น</p><p>การวัดคือห้าเมตริกคลังข้อมูลที่คำนวณจากคำอธิบายประกอบ: รูปผิวมีความเป็นแม่แบบเพียงใด คำศัพท์เป็นเอกพันธ์เพียงใด ชุดคำสำคัญเล็ก ๆ จำแนกได้หรือไม่ การกล่าวถึงอยู่ภายใต้การปฏิเสธหรือความขัดแย้งบ่อยเพียงใด และมีข้อมูลที่ติดป้ายกำกับเพียงพอจะฝึกโมเดลแบบมีผู้สอนหรือไม่ กราฟการตัดสินใจเชิงกำหนดจะแปลงตัวเลขเหล่านี้เป็นชั้น และ 17 ค่าขีดแบ่งของมันถูกปรับเทียบด้วยการค้นหาแบบหลายวัตถุประสงค์ ซึ่งลงโทษการส่งเอนทิตีไปยังวิธีที่อ่อนเกินไปหนักเป็นสองเท่าของการส่งไปยังวิธีที่เพียงแค่แพงเกินไป</p><h2>มันให้อะไร</h2><p>บนชุดปรับเทียบด้านมะเร็งวิทยา (เอนทิตี 59 ประเภท) การกำหนดเส้นทางสอดคล้องกับชั้นอ้างอิงของผู้เชี่ยวชาญด้วยความสอดคล้อง 0.954 และค่าประมาณแบบ leave-one-corpus-out ที่ 0.866&mdash;&mdash;สูงกว่าเส้นฐานชั้นคงที่ใด ๆ มาก (ใช้กฎเสมอได้ 0.729, ใช้ LLM เสมอได้ 0.148) การทดสอบที่น่าเชื่อถือกว่าคือการทดสอบภายนอก: เมื่อนำไปใช้โดยไม่ปรับจูนใหม่กับรายงาน CT ของ AP-HP จำนวน 300 ฉบับ ในตำแหน่งมะเร็งที่โมเดลไม่เคยเห็น DEMNE กำหนดเส้นทาง 99.5% ของการกล่าวถึงที่ถูกเน้น (411 จาก 413) ไปยังกฎเชิงกำหนด กฎเหล่านั้นได้ค่า F1 เฉลี่ย 0.941 ขณะที่ transformer ที่ปรับละเอียดบนเอนทิตีเดียวกันภายใต้งบประมาณโรงพยาบาลที่สมจริงทำได้เพียง 0.358</p><p>กล่าวอีกนัยหนึ่ง: สำหรับเอนทิตีมาตรฐานที่ครองรายงานมะเร็งวิทยา กฎไม่เพียงถูกกว่า&mdash;&mdash;แต่ยังดีกว่า และทุกการตัดสินใจของกฎสามารถสืบย้อนไปถึงเงื่อนไขที่ชัดเจน ซึ่งเป็นสิ่งที่มาตรา 12 และ 14 ของ EU AI Act เรียกร้องพอดี</p><h2>มันหยุดตรงไหน</h2><p>ผมอยากซื่อตรงเรื่องข้อจำกัด มาตรฐานอ้างอิงมีขนาดเล็ก&mdash;&mdash;เอนทิตี 92 ประเภท โดย 59 ประเภทอยู่ในมะเร็งวิทยา&mdash;&mdash;ดังนั้นคะแนนบนคลังข้อมูลเดียวจึงมองโลกในแง่ดีเกินไป และมีเพียงการเปรียบเทียบเชิงสัมพัทธ์เท่านั้นที่ยืนได้ ชั้น LLM ไม่เคยถูกประเมินแบบครบวงจรบนกลุ่มภายนอก เอนทิตีเดียวที่ถูกส่งไปนั้นหายากเกินไป และการปรับเทียบไม่ถ่ายโอนข้ามโดเมน: เมื่อย้ายไปยังประเภทคลินิกหรือภาษาอื่น ความสอดคล้องลดลงเหลือ 0.45&ndash;0.73 จึงต้องปรับค่าขีดแบ่งใหม่ DEMNE เป็นข้อพิสูจน์ความเป็นไปได้ ไม่ใช่ผลิตภัณฑ์สำเร็จรูป</p><h2>ทำไมจึงสำคัญ</h2><p>ประเด็นไม่ได้อยู่ที่กฎเอาชนะ transformer แต่อยู่ที่ &ldquo;จะใช้วิธีใด&rdquo; เป็นคำถามที่ตอบได้เป็นรายเอนทิตี จากคุณสมบัติของข้อความที่วัดได้ แทนที่จะเลือกโมเดลที่หนักที่สุดเป็นค่าตั้งต้นแล้วหวังผล สำหรับ NLP ทางคลินิก&mdash;&mdash;ที่ต้นทุน การตรวจสอบย้อนหลัง และความไว้วางใจสำคัญพร้อมกัน&mdash;&mdash;กรอบคิดนี้มีค่ามากกว่าการได้เปอร์เซ็นต์เพิ่มอีกจุดหนึ่งบนเกณฑ์มาตรฐาน</p><p>โค้ดและวิธีการฉบับเต็มอยู่ที่ <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> ส่วนต้นฉบับบทความกำลังอยู่ระหว่างการจัดทำ</p>` },
+      { status: 'ฉบับร่าง — เร็วๆ นี้', title: 'การสกัดแบบขั้นตอนเทียบกับโมเดลขนาดใหญ่เดี่ยว', body: 'เหตุผลในการส่งเอนทิตีผ่านกฎเกณฑ์และ Transformer ที่ปรับแต่งแล้ว ก่อนที่จะเรียกใช้ LLM เลย — และต้นทุนของความผิดพลาดในเรื่องนี้' },
     ],
   },
   contact: {

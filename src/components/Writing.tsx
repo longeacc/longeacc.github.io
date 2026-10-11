@@ -7,6 +7,13 @@ export default function Writing({ dict, lang }: { dict: Dictionary; lang: Lang }
   const { writing } = dict;
   const home = pathForLang(lang);
 
+  // only show posts that are actually published (have full content)
+  const published = writing.posts
+    .map((post, i) => ({ post, i }))
+    .filter((x) => x.post.content);
+
+  if (published.length === 0) return null;
+
   return (
     <section id="writing">
       <div className="wrap">
@@ -17,7 +24,7 @@ export default function Writing({ dict, lang }: { dict: Dictionary; lang: Lang }
         </div>
 
         <div className="writing-grid">
-          {writing.posts.map((post, i) => (
+          {published.map(({ post, i }) => (
             <Link
               key={post.title}
               href={`${home}blog/${slugForPost(lang, i)}/`}
