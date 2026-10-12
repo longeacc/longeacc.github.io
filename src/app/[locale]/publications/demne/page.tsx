@@ -5,7 +5,7 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import DemneResults from '@/components/DemneResults';
 import { dictionaries } from '@/lib/dictionaries';
-import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
+import { LANG_CODES, isLang, pathForLang, hreflangLanguages } from '@/lib/languages';
 
 export function generateStaticParams() {
   return LANG_CODES.map((locale) => ({ locale }));
@@ -20,10 +20,29 @@ export async function generateMetadata({
   if (!isLang(locale)) return {};
   const dict = dictionaries[locale];
   const url = `https://clement-longeac.com${pathForLang(locale)}publications/demne/`;
+  const title = `${dict.publications.entryTitle} — Clément Longeac`;
   return {
-    title: `${dict.publications.entryTitle} — Clément Longeac`,
+    title,
     description: dict.publications.description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: hreflangLanguages(() => 'publications/demne/'),
+    },
+    openGraph: {
+      title,
+      description: dict.publications.description,
+      url,
+      siteName: 'Clément Longeac',
+      locale: dict.htmlLang,
+      type: 'article',
+      images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: dict.publications.entryTitle }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: dict.publications.description,
+      images: ['/images/og-image.png'],
+    },
   };
 }
 

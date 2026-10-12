@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { dictionaries } from '@/lib/dictionaries';
-import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
-import { postIndexForSlug, slugsForLang, tagsForPost } from '@/lib/blog';
+import { LANG_CODES, isLang, pathForLang, hreflangLanguages } from '@/lib/languages';
+import { postIndexForSlug, slugForPost, slugsForLang, tagsForPost } from '@/lib/blog';
 
 export function generateStaticParams() {
   return LANG_CODES.flatMap((locale) =>
@@ -25,10 +25,29 @@ export async function generateMetadata({
   const post = dict.writing.posts[postIndex];
   if (!post) return {};
   const url = `https://clement-longeac.com${pathForLang(locale)}blog/${slug}/`;
+  const title = `${post.title} — Clément Longeac`;
   return {
-    title: `${post.title} — Clément Longeac`,
+    title,
     description: post.body,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: hreflangLanguages((code) => `blog/${slugForPost(code, postIndex)}/`),
+    },
+    openGraph: {
+      title,
+      description: post.body,
+      url,
+      siteName: 'Clément Longeac',
+      locale: dict.htmlLang,
+      type: 'article',
+      images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: post.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: post.body,
+      images: ['/images/og-image.png'],
+    },
   };
 }
 

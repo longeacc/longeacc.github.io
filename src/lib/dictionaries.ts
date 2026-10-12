@@ -24,6 +24,7 @@ export type Project = {
   url: string;
   image?: string;
   demo?: string;
+  report?: string;
 };
 export type StackCategory = { title: string; lines: string[][] };
 export type LanguageSkill = { flag: string; level: string };
@@ -138,6 +139,7 @@ export type Dictionary = {
     email: string;
     github: string;
     linkedin: string;
+    bookCall: string;
   };
   footer: {
     copyright: string;
@@ -165,7 +167,7 @@ const en: Dictionary = {
     menuToggleLabel: 'Toggle menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Open to a 6-month research internship · Clinical NLP & Biomedical AI · from Feb 2027',
     h1Pre: 'Extracting biomarkers from clinical text ',
     h1Accent: 'without waking the GPU',
     h1Post: '',
@@ -370,10 +372,11 @@ const en: Dictionary = {
         description:
           'autopkgtest scripts validating scientific software on AMD GPUs, on Debian’s CI infrastructure.',
         longBody:
-          'Part of the Synchrotron SOLEIL internship: autopkgtests written in OpenCL to check AMD GPU compatibility (pyopencl, nabu, ufo-filters, pyvkfft) across the Debian/ROCm continuous-integration infrastructure, run through GitLab Salsa. The scripts install and uninstall packages on clean virtual machines and report compatibility across GPUs.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'A 4-month internship in the Div/Exp GRADES division at Synchrotron SOLEIL, supervised by Emmanuel Farhi and Frédéric-Emmanuel Picca. The aim was to reduce the scientific-computing stack’s dependence on NVIDIA/CUDA by testing whether Debian scientific packages run on AMD GPUs through ROCm.\nI wrote OpenCL autopkgtests and validated the builds in a podman+ROCm container (via sbuild), then upstreamed them to Debian’s GitLab Salsa. ROCm autotests were added for PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx and sasmodels; packages with no OpenCL code (genx, examl) or stuck on an unfinished Python 2→3 migration (pysph) were ruled out. It is a first set of building blocks helping the wider Debian scientific community move from NVIDIA to AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -386,7 +389,7 @@ const en: Dictionary = {
         title: 'Clinical NLP & Biomedical AI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -449,10 +452,9 @@ const en: Dictionary = {
         content: `<p>Pull up a French oncology report and most off-the-shelf NER models stumble within the first sentence. The vocabulary is dense and abbreviated (ER, PR, HER2, Ki67, FISH), the formatting shifts from one hospital to the next, and the biomarker terminology that matters is almost absent from the corpora these models were trained on. The usual reflex &mdash; throw a large model at it &mdash; works, but it is expensive, opaque, and hard to defend to a clinician or an auditor.</p><h2>Not every entity needs an LLM</h2><p>DEMNE starts from a blunt observation: the entities in these reports are not equally hard. A biopsy mention is written in a handful of stable ways; a drug name can appear in a hundred. So instead of one model for everything, DEMNE measures each entity type and sends it to the lightest method that is reliable enough &mdash; a deterministic rule, a fine-tuned transformer, or an LLM only as a last resort.</p><p>The measurement is five corpus metrics computed from the annotations: how templateable the surface form is, how homogeneous the vocabulary is, whether a small keyword set is discriminative, how often the mention sits under negation or contradiction, and whether there is enough labelled data to train a supervised model at all. A deterministic decision graph turns those numbers into a tier, and its 17 thresholds are calibrated with a multi-objective search that penalises sending an entity to a method that is too weak twice as hard as sending it to one that is merely too expensive.</p><h2>What it buys</h2><p>On the oncology calibration set (59 entity types), the routing agrees with the expert reference tier with a concordance of 0.954 and a leave-one-corpus-out estimate of 0.866 &mdash; well above any fixed-tier baseline (always-rules reaches 0.729, always-LLM 0.148). The more convincing test is external: applied without any retuning to 300 AP-HP CT-scan reports from cancer sites the model had never seen, DEMNE routed 99.5% of highlighted mentions (411 of 413) to deterministic rules. Those rules reached a mean F1 of 0.941, while a transformer fine-tuned on the same entities under a realistic hospital budget managed only 0.358.</p><p>In other words: for the standardized entities that dominate oncology reporting, rules were not just cheaper &mdash; they were better, and every rule decision traces back to an explicit condition, which is exactly what Articles 12 and 14 of the EU AI Act ask for.</p><h2>Where it stops</h2><p>I want to be honest about the limits. The reference standard is small &mdash; 92 entity types, 59 of them in oncology &mdash; so single-corpus scores are optimistic and only relative comparisons hold. The LLM tier was never evaluated end to end on the external cohort; its one routed entity was too rare. And the calibration does not transfer across domains: move to a different clinical genre or language and concordance drops to 0.45&ndash;0.73, so the thresholds have to be refit. DEMNE is a proof of feasibility, not a finished product.</p><h2>Why it matters</h2><p>The point is not that rules beat transformers. It is that &ldquo;which method&rdquo; is a question you can answer per entity, from measurable properties of the text, instead of defaulting to the heaviest model and hoping. For clinical NLP &mdash; where cost, auditability and trust all matter at once &mdash; that framing is worth more than another percentage point on a benchmark.</p><p>The code and the full method are on <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; the manuscript is in preparation.</p>`,
       },
       {
-        status: 'Draft — coming soon',
+        status: 'Published · Oct 2026',
         title: 'Staged extraction vs. a single large model',
-        body: 'The case for routing entities through rules and a fine-tuned transformer before ever calling an LLM — and what it costs to get wrong.',
-      },
+        body: 'The case for routing entities through rules and a fine-tuned transformer before ever calling an LLM — and what it costs to get wrong.', content: `<p>Hand a hard NLP problem to a team today and the reflex is to reach for the biggest model available and let it sort everything out. On French clinical text that reflex is expensive, slow, and hard to audit &mdash; and, it turns out, not even the most accurate. DEMNE makes the opposite bet: send each entity type to the lightest tool that can handle it, and escalate only when the text truly demands it.</p><h2>A staircase, not a hammer</h2><p>The pipeline has three tiers. Deterministic rules &mdash; regex and curated lexicons &mdash; take the entities written in a few stable ways: dates, dosages, standard biomarker abbreviations. A transformer fine-tuned on French oncology text handles the entities that need real semantic and domain understanding. An LLM sits at the top, reserved for the genuinely ambiguous cases that survive both earlier stages. Nothing climbs higher than it has to.</p><h2>Why not just the LLM?</h2><p>Because one big model pays the LLM’s price on every entity, including the ones a regex would have nailed instantly. It is slower, it needs a GPU budget most hospitals do not have, and every decision is a black box you still have to defend to a clinician or an auditor. And on the routing task itself the always-LLM baseline was the worst performer, agreeing with the expert tier only 0.148 of the time. The heaviest tool is not automatically the most reliable.</p><h2>The cost of routing wrong</h2><p>Staged extraction only pays off if the routing is good, so that is where DEMNE spends its care. Five metrics measured from the annotations feed a deterministic decision graph whose 17 thresholds are calibrated by a multi-objective search. The objective is deliberately asymmetric: sending an entity to a method that is too weak is penalised twice as hard as sending it to one that is merely too expensive &mdash; because a missed extraction in a clinical report costs more than a wasted GPU second.</p><h2>What the numbers say</h2><p>On the oncology calibration set the routing matches the expert reference tier 0.954 of the time, against 0.729 for always-rules and 0.148 for always-LLM. Applied untouched to 300 unseen AP-HP reports, it routed 99.5% of mentions to deterministic rules, which reached a mean F1 of 0.941 &mdash; where a transformer fine-tuned under a realistic hospital budget managed 0.358. For the standardized entities that dominate these reports, the cheap tier was also the accurate one.</p><h2>When a single model is the right answer</h2><p>Staging is not free: it adds a routing layer to build, measure and maintain, and the thresholds must be recalibrated for each new domain. If the text is uniform, the entities are all equally hard, or there is budget and audit tolerance for one large model, the staircase is just overhead. The claim here is narrow &mdash; when cost, latency and traceability matter at once, as they do in clinical NLP, deciding per entity beats defaulting to the heaviest model and hoping.</p><p>The code and the full method are on <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; the manuscript is in preparation.</p>` },
     ],
   },
   contact: {
@@ -462,6 +464,7 @@ const en: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Book a call',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -489,7 +492,7 @@ const fr: Dictionary = {
     menuToggleLabel: 'Ouvrir le menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · En recherche d\'un stage de recherche, février 2027',
+    kicker: 'ESIEE Paris · En recherche d’un stage recherche de 6 mois · NLP clinique & IA biomédicale · dès févr. 2027',
     h1Pre: 'Extraire des biomarqueurs depuis du texte clinique ',
     h1Accent: 'sans réveiller le GPU',
     h1Post: '',
@@ -696,10 +699,11 @@ const fr: Dictionary = {
         description:
           "Scripts autopkgtest validant des logiciels scientifiques sur GPU AMD, sur l'infrastructure CI de Debian.",
         longBody:
-          "Dans le cadre du stage au Synchrotron SOLEIL : des autopkgtests écrits en OpenCL pour vérifier la compatibilité GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sur l'infrastructure d'intégration continue Debian/ROCm, via GitLab Salsa. Les scripts installent et désinstallent les paquets sur des machines virtuelles propres et rapportent la compatibilité selon les GPU.",
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Stage de 4 mois dans la division Div/Exp GRADES du Synchrotron SOLEIL, encadré par Emmanuel Farhi et Frédéric-Emmanuel Picca. L’objectif : réduire la dépendance de la chaîne de calcul scientifique à NVIDIA/CUDA en testant si les paquets scientifiques Debian tournent sur GPU AMD via ROCm.\nJ’ai écrit des autopkgtests OpenCL et validé les builds dans un conteneur podman+ROCm (via sbuild), puis je les ai intégrés en amont sur le GitLab Salsa de Debian. Des autotests ROCm ont été ajoutés pour PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx et sasmodels ; les paquets sans code OpenCL (genx, examl) ou bloqués sur une migration Python 2→3 inachevée (pysph) ont été écartés. C’est un premier jeu de briques qui aide toute la communauté scientifique Debian à passer de NVIDIA à AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -713,7 +717,7 @@ const fr: Dictionary = {
         title: 'NLP clinique & IA biomédicale',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -776,10 +780,9 @@ const fr: Dictionary = {
         content: `<p>Ouvrez un compte rendu d'oncologie fran&ccedil;ais et la plupart des mod&egrave;les de NER pr&ecirc;ts &agrave; l'emploi tr&eacute;buchent d&egrave;s la premi&egrave;re phrase. Le vocabulaire est dense et abr&eacute;g&eacute; (ER, PR, HER2, Ki67, FISH), la mise en forme change d'un h&ocirc;pital &agrave; l'autre, et la terminologie des biomarqueurs qui compte est presque absente des corpus sur lesquels ces mod&egrave;les ont &eacute;t&eacute; entra&icirc;n&eacute;s. Le r&eacute;flexe habituel &mdash; y jeter un gros mod&egrave;le &mdash; fonctionne, mais il est co&ucirc;teux, opaque et difficile &agrave; justifier devant un clinicien ou un auditeur.</p><h2>Toute entit&eacute; n'a pas besoin d'un LLM</h2><p>DEMNE part d'un constat simple&nbsp;: les entit&eacute;s de ces comptes rendus ne sont pas &eacute;galement difficiles. Une mention de biopsie s'&eacute;crit de quelques fa&ccedil;ons stables&nbsp;; un nom de m&eacute;dicament peut appara&icirc;tre sous cent formes. Plut&ocirc;t qu'un mod&egrave;le unique pour tout, DEMNE mesure chaque type d'entit&eacute; et l'envoie vers la m&eacute;thode la plus l&eacute;g&egrave;re qui reste fiable &mdash; une r&egrave;gle d&eacute;terministe, un transformer affin&eacute;, ou un LLM seulement en dernier recours.</p><p>La mesure, ce sont cinq m&eacute;triques de corpus calcul&eacute;es &agrave; partir des annotations&nbsp;: &agrave; quel point la forme de surface est r&eacute;guli&egrave;re, &agrave; quel point le vocabulaire est homog&egrave;ne, si un petit jeu de mots-cl&eacute;s est discriminant, &agrave; quelle fr&eacute;quence la mention appara&icirc;t sous n&eacute;gation ou contradiction, et s'il existe assez de donn&eacute;es annot&eacute;es pour entra&icirc;ner un mod&egrave;le supervis&eacute;. Un graphe de d&eacute;cision d&eacute;terministe transforme ces chiffres en niveau, et ses 17 seuils sont calibr&eacute;s par une recherche multi-objectif qui p&eacute;nalise deux fois plus le fait d'envoyer une entit&eacute; vers une m&eacute;thode trop faible que vers une m&eacute;thode seulement trop co&ucirc;teuse.</p><h2>Ce que &ccedil;a apporte</h2><p>Sur le jeu de calibration oncologie (59 types d'entit&eacute;s), le routage retrouve le niveau de r&eacute;f&eacute;rence des experts avec une concordance de 0,954, et de 0,866 en leave-one-corpus-out &mdash; bien au-dessus de tout pipeline &agrave; niveau fixe (toujours-r&egrave;gles atteint 0,729, toujours-LLM 0,148). Le test le plus convaincant est externe&nbsp;: appliqu&eacute; sans r&eacute;glage &agrave; 300 comptes rendus de scanner de l'AP-HP, sur des localisations canc&eacute;reuses jamais vues, DEMNE a rout&eacute; 99,5&nbsp;% des mentions (411 sur 413) vers des r&egrave;gles d&eacute;terministes. Ces r&egrave;gles ont atteint un F1 moyen de 0,941, l&agrave; o&ugrave; un transformer affin&eacute; sur les m&ecirc;mes entit&eacute;s, dans un budget hospitalier r&eacute;aliste, plafonnait &agrave; 0,358.</p><p>Autrement dit&nbsp;: pour les entit&eacute;s standardis&eacute;es qui dominent le compte rendu oncologique, les r&egrave;gles n'&eacute;taient pas seulement moins ch&egrave;res &mdash; elles &eacute;taient meilleures, et chaque d&eacute;cision de r&egrave;gle se trace jusqu'&agrave; une condition explicite, ce que demandent justement les articles 12 et 14 de l'EU AI Act.</p><h2>O&ugrave; &ccedil;a s'arr&ecirc;te</h2><p>Je veux &ecirc;tre honn&ecirc;te sur les limites. Le standard de r&eacute;f&eacute;rence est petit &mdash; 92 types d'entit&eacute;s, 59 en oncologie &mdash; donc les scores sur un seul corpus sont optimistes et seules les comparaisons relatives tiennent. Le niveau LLM n'a jamais &eacute;t&eacute; &eacute;valu&eacute; de bout en bout sur la cohorte externe&nbsp;; sa seule entit&eacute; rout&eacute;e &eacute;tait trop rare. Et la calibration ne se transf&egrave;re pas entre domaines&nbsp;: sur un autre genre clinique ou une autre langue, la concordance tombe &agrave; 0,45&ndash;0,73, et les seuils doivent &ecirc;tre r&eacute;ajust&eacute;s. DEMNE est une preuve de faisabilit&eacute;, pas un produit fini.</p><h2>Pourquoi &ccedil;a compte</h2><p>Le propos n'est pas que les r&egrave;gles battent les transformers. C'est que &laquo;&nbsp;quelle m&eacute;thode&nbsp;&raquo; est une question qu'on peut trancher entit&eacute; par entit&eacute;, &agrave; partir de propri&eacute;t&eacute;s mesurables du texte, au lieu de choisir par d&eacute;faut le mod&egrave;le le plus lourd en esp&eacute;rant. Pour le NLP clinique &mdash; o&ugrave; le co&ucirc;t, l'auditabilit&eacute; et la confiance comptent en m&ecirc;me temps &mdash; ce cadrage vaut plus qu'un point de pourcentage de plus sur un benchmark.</p><p>Le code et la m&eacute;thode compl&egrave;te sont sur <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>&nbsp;; le manuscrit est en pr&eacute;paration.</p>`,
       },
       {
-        status: 'Brouillon — à venir',
+        status: 'Publié · oct. 2026',
         title: 'Extraction en étages vs un seul grand modèle',
-        body: "L'argumentaire pour router les entités à travers des règles puis un transformer affiné avant tout appel à un LLM — et ce que ça coûte de se tromper.",
-      },
+        body: "L'argumentaire pour router les entités à travers des règles puis un transformer affiné avant tout appel à un LLM — et ce que ça coûte de se tromper.", content: `<p>Confiez un problème de NLP difficile à une équipe aujourd’hui, et le réflexe est de sortir le plus gros modèle disponible et de le laisser tout démêler. Sur du texte clinique français, ce réflexe est coûteux, lent et difficile à auditer &mdash; et, au final, même pas le plus précis. DEMNE fait le pari inverse : envoyer chaque type d’entité vers l’outil le plus léger capable de la traiter, et n’escalader que lorsque le texte l’exige vraiment.</p><h2>Un escalier, pas un marteau</h2><p>Le pipeline a trois niveaux. Des règles déterministes &mdash; regex et lexiques choisis &mdash; prennent les entités écrites de quelques façons stables : dates, posologies, abréviations standard de biomarqueurs. Un transformer affiné sur du texte oncologique français traite les entités qui demandent une réelle compréhension sémantique et de domaine. Un LLM se trouve au sommet, réservé aux cas vraiment ambigus qui survivent aux deux étapes précédentes. Rien ne monte plus haut que nécessaire.</p><h2>Pourquoi pas uniquement le LLM ?</h2><p>Parce qu’un seul gros modèle paie le prix du LLM sur chaque entité, y compris celles qu’une regex aurait réglées instantanément. Il est plus lent, il réclame un budget GPU que la plupart des hôpitaux n’ont pas, et chaque décision est une boîte noire qu’il faut quand même justifier devant un clinicien ou un auditeur. Et sur la tâche de routage elle-même, le niveau toujours-LLM était le plus mauvais, retrouvant le niveau expert seulement 0,148 du temps. L’outil le plus lourd n’est pas automatiquement le plus fiable.</p><h2>Le coût d’un mauvais routage</h2><p>L’extraction par étapes ne paie que si le routage est bon ; c’est donc là que DEMNE met son soin. Cinq métriques mesurées à partir des annotations alimentent un graphe de décision déterministe dont les 17 seuils sont calibrés par une recherche multi-objectif. L’objectif est volontairement asymétrique : envoyer une entité vers une méthode trop faible est pénalisé deux fois plus fort que vers une méthode seulement trop coûteuse &mdash; car une extraction manquée dans un compte rendu clinique coûte plus cher qu’une seconde de GPU gaspillée.</p><h2>Ce que disent les chiffres</h2><p>Sur le jeu de calibration oncologie, le routage retrouve le niveau de référence des experts 0,954 du temps, contre 0,729 pour toujours-règles et 0,148 pour toujours-LLM. Appliqué tel quel à 300 comptes rendus AP-HP jamais vus, il a routé 99,5 % des mentions vers des règles déterministes, qui ont atteint un F1 moyen de 0,941 &mdash; là où un transformer affiné dans un budget hospitalier réaliste plafonnait à 0,358. Pour les entités standardisées qui dominent ces comptes rendus, le niveau le moins cher était aussi le plus juste.</p><h2>Quand un modèle unique est la bonne réponse</h2><p>Le découpage en étages n’est pas gratuit : il ajoute une couche de routage à construire, mesurer et maintenir, et les seuils doivent être recalibrés pour chaque nouveau domaine. Si le texte est uniforme, si les entités sont toutes aussi difficiles, ou si l’on a le budget et la tolérance d’audit pour un seul gros modèle, l’escalier n’est que du surcoût. Le propos ici est étroit &mdash; quand le coût, la latence et la traçabilité comptent en même temps, comme en NLP clinique, décider entité par entité vaut mieux que choisir par défaut le modèle le plus lourd en espérant.</p><p>Le code et la méthode complète sont sur <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>&nbsp;; le manuscrit est en préparation.</p>` },
     ],
   },
   contact: {
@@ -789,6 +792,7 @@ const fr: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Réserver un appel',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -816,11 +820,11 @@ const es: Dictionary = {
     menuToggleLabel: 'Abrir el menú',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Busco unas prácticas de investigación de 6 meses · PLN clínico e IA biomédica · desde feb. 2027',
     h1Pre: 'Extrayendo biomarcadores de texto clínico ',
     h1Accent: 'sin despertar la GPU',
     h1Post: '',
-    sub: 'Soy Clément Longeac. Estoy trabajando en DEMNE, un framework de enrutamiento que decide — para cada tipo de entidad — si una expresión regular, un CRF, un transformer o un LLM es la herramienta honesta para la tarea. Primer resultado: 99,5 % de las entidades clínicas extraídas sin GPU, F1 = 0,941 sobre 300 notas de AP-HP.',
+    sub: "Soy Clément Longeac. Construyo DEMNE, un framework de enrutamiento que elige, para cada tipo de entidad, el método más ligero que sigue siendo fiable: reglas, un transformer o un LLM. En una cohorte de AP-HP nunca vista, enruta el 99,5 % de las menciones hacia reglas auditables con un F1 de 0,941, allí donde un transformer afinado alcanza 0,358.",
     ctaResearch: 'Ver la investigación',
     ctaCV: 'Descargar el CV',
     caption: 'DEMNE — Rules → Transformer → LLM, esquema en vivo',
@@ -861,7 +865,7 @@ const es: Dictionary = {
       title: 'Alineación regulatoria — EU AI Act',
       body: 'La extracción de entidades clínicas sobre historiales de pacientes entra de lleno en la categoría de alto riesgo de la EU AI Act. El diseño por etapas de DEMNE tiene en cuenta los artículos 12 y 14 desde el inicio, no como un añadido posterior.',
       articles: [
-        { code: 'Art. 12', label: 'Registro de actividad', desc: 'Cada decisión de extracción es trazable hasta la etapa (reglas, CRF, transformer o LLM) y la puntuación de confianza que la produjo, permitiendo un registro automático para auditoría.' },
+        { code: 'Art. 12', label: 'Registro de actividad', desc: 'Cada decisión de extracción es trazable hasta la etapa (reglas, transformer o LLM) y la puntuación de confianza que la produjo, permitiendo un registro automático para auditoría.' },
         { code: 'Art. 14', label: 'Supervisión humana', desc: 'Las salidas del arbitraje por LLM se marcan para revisión clínica en lugar de aceptarse silenciosamente, manteniendo a un humano en el bucle en los casos ambiguos.' },
       ],
     },
@@ -1002,10 +1006,11 @@ const es: Dictionary = {
         description:
           'Scripts autopkgtest que validan software científico en GPU AMD, sobre la infraestructura de CI de Debian.',
         longBody:
-          'Parte de las prácticas en el Synchrotron SOLEIL: autopkgtests escritos en OpenCL para comprobar la compatibilidad de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) en la infraestructura de integración continua Debian/ROCm, ejecutados a través de GitLab Salsa. Los scripts instalan y desinstalan paquetes en máquinas virtuales limpias e informan de la compatibilidad entre GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Prácticas de 4 meses en la división Div/Exp GRADES del Synchrotron SOLEIL, bajo la dirección de Emmanuel Farhi y Frédéric-Emmanuel Picca. El objetivo: reducir la dependencia de la cadena de cálculo científico respecto a NVIDIA/CUDA probando si los paquetes científicos de Debian funcionan en GPU AMD mediante ROCm.\nEscribí autopkgtests en OpenCL y validé las compilaciones en un contenedor podman+ROCm (vía sbuild), y luego las integré en el GitLab Salsa de Debian. Se añadieron autotests ROCm para PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx y sasmodels; se descartaron los paquetes sin código OpenCL (genx, examl) o bloqueados en una migración de Python 2→3 inconclusa (pysph). Es un primer conjunto de piezas que ayuda a toda la comunidad científica de Debian a pasar de NVIDIA a AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -1019,7 +1024,7 @@ const es: Dictionary = {
         title: 'PLN clínico e IA biomédica',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -1076,7 +1081,7 @@ const es: Dictionary = {
     subtitle: 'Artículos más extensos sobre los métodos, callejones sin salida y decisiones detrás del trabajo anterior.',
     posts: [
       { status: 'Publicado · oct. 2026', title: 'Por qué el NER clínico francés rompe los modelos genéricos', body: 'Un recorrido por los puntos donde los pipelines NER estándar fallan en los informes de oncología franceses, y lo que eso implica para la estructura de DEMNE.', content: `<p>Abra un informe de oncología en francés y la mayoría de los modelos de NER listos para usar tropiezan en la primera frase. El vocabulario es denso y abreviado (ER, PR, HER2, Ki67, FISH), el formato cambia de un hospital a otro, y la terminología de biomarcadores que importa casi no aparece en los corpus con los que se entrenaron esos modelos. El reflejo habitual &mdash; lanzarle un modelo grande &mdash; funciona, pero es costoso, opaco y difícil de justificar ante un clínico o un auditor.</p><h2>No toda entidad necesita un LLM</h2><p>DEMNE parte de una observación simple: las entidades de estos informes no son igual de difíciles. Una mención de biopsia se escribe de unas pocas formas estables; un nombre de fármaco puede aparecer de cien maneras. Así que, en lugar de un único modelo para todo, DEMNE mide cada tipo de entidad y la envía al método más ligero que resulte fiable &mdash; una regla determinista, un transformer afinado o un LLM solo como último recurso.</p><p>La medida son cinco métricas de corpus calculadas a partir de las anotaciones: cuán regular es la forma de superficie, cuán homogéneo es el vocabulario, si un pequeño conjunto de palabras clave es discriminante, con qué frecuencia la mención está bajo negación o contradicción, y si existen suficientes datos anotados para entrenar un modelo supervisado. Un grafo de decisión determinista convierte esos números en un nivel, y sus 17 umbrales se calibran con una búsqueda multiobjetivo que penaliza el doble enviar una entidad a un método demasiado débil que a uno meramente demasiado costoso.</p><h2>Lo que aporta</h2><p>En el conjunto de calibración de oncología (59 tipos de entidad), el enrutamiento coincide con el nivel de referencia de los expertos con una concordancia de 0,954 y una estimación leave-one-corpus-out de 0,866 &mdash; muy por encima de cualquier baseline de nivel fijo (siempre-reglas alcanza 0,729, siempre-LLM 0,148). La prueba más convincente es externa: aplicado sin reajuste a 300 informes de TC de la AP-HP, en localizaciones cancerosas que el modelo nunca había visto, DEMNE enrutó el 99,5 % de las menciones (411 de 413) hacia reglas deterministas. Esas reglas alcanzaron un F1 medio de 0,941, mientras que un transformer afinado sobre las mismas entidades, con un presupuesto hospitalario realista, se quedó en 0,358.</p><p>Dicho de otro modo: para las entidades estandarizadas que dominan el informe oncológico, las reglas no solo eran más baratas &mdash; eran mejores, y cada decisión de regla se rastrea hasta una condición explícita, que es justo lo que piden los artículos 12 y 14 de la EU AI Act.</p><h2>Dónde se detiene</h2><p>Quiero ser honesto sobre los límites. El estándar de referencia es pequeño &mdash; 92 tipos de entidad, 59 de ellos en oncología &mdash; así que las puntuaciones sobre un solo corpus son optimistas y solo valen las comparaciones relativas. El nivel LLM nunca se evaluó de principio a fin en la cohorte externa; su única entidad enrutada era demasiado rara. Y la calibración no se transfiere entre dominios: en otro género clínico u otro idioma la concordancia cae a 0,45&ndash;0,73, por lo que los umbrales deben reajustarse. DEMNE es una prueba de viabilidad, no un producto terminado.</p><h2>Por qué importa</h2><p>La cuestión no es que las reglas ganen a los transformers. Es que &laquo;qué método&raquo; es una pregunta que se puede responder entidad por entidad, a partir de propiedades medibles del texto, en vez de recurrir por defecto al modelo más pesado y confiar. Para el PLN clínico &mdash; donde el coste, la auditabilidad y la confianza importan a la vez &mdash; ese enfoque vale más que un punto porcentual en un benchmark.</p><p>El código y el método completo están en <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; el manuscrito está en preparación.</p>` },
-      { status: 'Borrador — próximamente', title: 'Extracción por etapas frente a un único modelo grande', body: 'El argumento para enrutar entidades a través de reglas y un transformer afinado antes de llamar a un LLM — y lo que cuesta equivocarse.' },
+      { status: 'Publicado · oct. 2026', title: 'Extracción por etapas frente a un único modelo grande', body: 'El argumento para enrutar entidades a través de reglas y un transformer afinado antes de llamar a un LLM — y lo que cuesta equivocarse.', content: `<p>Si hoy le pasas un problema difícil de PLN a un equipo, el reflejo es echar mano del modelo más grande disponible y dejar que lo resuelva todo. En texto clínico francés ese reflejo es costoso, lento y difícil de auditar &mdash; y, al final, ni siquiera el más preciso. DEMNE hace la apuesta contraria: enviar cada tipo de entidad a la herramienta más ligera capaz de manejarla, y escalar solo cuando el texto lo exige de verdad.</p><h2>Una escalera, no un martillo</h2><p>El pipeline tiene tres niveles. Reglas deterministas &mdash; regex y léxicos curados &mdash; se encargan de las entidades escritas de unas pocas formas estables: fechas, dosis, abreviaturas estándar de biomarcadores. Un transformer afinado en texto oncológico francés trata las entidades que requieren verdadera comprensión semántica y de dominio. Un LLM está en la cima, reservado a los casos realmente ambiguos que sobreviven a las dos etapas anteriores. Nada sube más alto de lo necesario.</p><h2>¿Por qué no solo el LLM?</h2><p>Porque un único modelo grande paga el precio del LLM en cada entidad, incluidas las que una regex habría resuelto al instante. Es más lento, necesita un presupuesto de GPU que la mayoría de los hospitales no tiene, y cada decisión es una caja negra que igualmente hay que justificar ante un clínico o un auditor. Y en la propia tarea de enrutamiento, el baseline siempre-LLM fue el peor, coincidiendo con el nivel experto solo 0,148 de las veces. La herramienta más pesada no es automáticamente la más fiable.</p><h2>El coste de enrutar mal</h2><p>La extracción por etapas solo compensa si el enrutamiento es bueno, así que ahí es donde DEMNE pone su cuidado. Cinco métricas medidas a partir de las anotaciones alimentan un grafo de decisión determinista cuyos 17 umbrales se calibran con una búsqueda multiobjetivo. El objetivo es deliberadamente asimétrico: enviar una entidad a un método demasiado débil se penaliza el doble que enviarla a uno meramente demasiado costoso &mdash; porque una extracción perdida en un informe clínico cuesta más que un segundo de GPU desperdiciado.</p><h2>Lo que dicen los números</h2><p>En el conjunto de calibración de oncología, el enrutamiento coincide con el nivel de referencia de los expertos 0,954 de las veces, frente a 0,729 de siempre-reglas y 0,148 de siempre-LLM. Aplicado sin tocar a 300 informes de AP-HP nunca vistos, enrutó el 99,5 % de las menciones a reglas deterministas, que alcanzaron un F1 medio de 0,941 &mdash; donde un transformer afinado con un presupuesto hospitalario realista se quedó en 0,358. Para las entidades estandarizadas que dominan estos informes, el nivel más barato era también el más preciso.</p><h2>Cuándo un único modelo es la respuesta correcta</h2><p>La estratificación no es gratis: añade una capa de enrutamiento que construir, medir y mantener, y los umbrales deben recalibrarse para cada nuevo dominio. Si el texto es uniforme, las entidades son todas igual de difíciles, o hay presupuesto y tolerancia de auditoría para un único modelo grande, la escalera es solo sobrecarga. La afirmación aquí es estrecha &mdash; cuando el coste, la latencia y la trazabilidad importan a la vez, como en el PLN clínico, decidir entidad por entidad supera a recurrir por defecto al modelo más pesado y confiar.</p><p>El código y el método completo están en <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; el manuscrito está en preparación.</p>` },
     ],
   },
   contact: {
@@ -1086,6 +1091,7 @@ const es: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Reservar una llamada',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -1113,11 +1119,11 @@ const de: Dictionary = {
     menuToggleLabel: 'Menü öffnen',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Suche ein 6-monatiges Forschungspraktikum · Klinische NLP & biomedizinische KI · ab Feb. 2027',
     h1Pre: 'Biomarker aus klinischem Text extrahieren ',
     h1Accent: 'ohne die GPU zu wecken',
     h1Post: '',
-    sub: 'Ich bin Clément Longeac. Ich arbeite an DEMNE, einem Routing-Framework, das für jeden Entitätstyp entscheidet, ob eine Regex, ein CRF, ein Transformer oder ein LLM das ehrliche Werkzeug für die Aufgabe ist. Erstes Ergebnis: 99,5 % der klinischen Entitäten ohne GPU extrahiert, F1 = 0,941 bei 300 AP-HP-Notizen.',
+    sub: "Ich bin Clément Longeac. Ich entwickle DEMNE, ein Routing-Framework, das pro Entitätstyp die leichteste Methode wählt, die zuverlässig bleibt — Regeln, einen Transformer oder ein LLM. Auf einer ungesehenen AP-HP-Kohorte leitet es 99,5 % der Erwähnungen an auditierbare Regeln mit einem F1 von 0,941, wo ein feinabgestimmter Transformer nur 0,358 erreicht.",
     ctaResearch: 'Zur Forschung',
     ctaCV: 'Lebenslauf herunterladen',
     caption: 'DEMNE — Rules → Transformer → LLM, Live-Schema',
@@ -1158,7 +1164,7 @@ const de: Dictionary = {
       title: 'Regulatorische Ausrichtung — EU AI Act',
       body: 'Die klinische Entitätsextraktion aus Patientenakten fällt eindeutig in die Hochrisikokategorie des EU AI Act. Das gestufte Design von DEMNE berücksichtigt Artikel 12 und 14 von Anfang an, nicht nachträglich.',
       articles: [
-        { code: 'Art. 12', label: 'Aufzeichnungspflichten', desc: 'Jede Extraktionsentscheidung ist bis zur Stufe (Regeln, CRF, Transformer oder LLM) und dem Konfidenzwert zurückverfolgbar, was eine automatische Audit-Protokollierung ermöglicht.' },
+        { code: 'Art. 12', label: 'Aufzeichnungspflichten', desc: 'Jede Extraktionsentscheidung ist bis zur Stufe (Regeln, Transformer oder LLM) und dem Konfidenzwert zurückverfolgbar, was eine automatische Audit-Protokollierung ermöglicht.' },
         { code: 'Art. 14', label: 'Menschliche Aufsicht', desc: 'Ausgaben der LLM-Arbitrierung werden zur klinischen Überprüfung markiert statt stillschweigend akzeptiert, sodass bei mehrdeutigen Fällen ein Mensch eingebunden bleibt.' },
       ],
     },
@@ -1299,10 +1305,11 @@ const de: Dictionary = {
         description:
           'autopkgtest-Skripte, die wissenschaftliche Software auf AMD-GPUs validieren, auf Debians CI-Infrastruktur.',
         longBody:
-          'Teil des Praktikums am Synchrotron SOLEIL: autopkgtests in OpenCL zur Prüfung der AMD-GPU-Kompatibilität (pyopencl, nabu, ufo-filters, pyvkfft) über die Debian/ROCm-Continuous-Integration-Infrastruktur, ausgeführt über GitLab Salsa. Die Skripte installieren und deinstallieren Pakete auf sauberen virtuellen Maschinen und melden die Kompatibilität über GPUs hinweg.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Viermonatiges Praktikum in der Abteilung Div/Exp GRADES am Synchrotron SOLEIL, betreut von Emmanuel Farhi und Frédéric-Emmanuel Picca. Ziel: die Abhängigkeit des wissenschaftlichen Rechen-Stacks von NVIDIA/CUDA verringern, indem geprüft wird, ob Debian-Wissenschaftspakete über ROCm auf AMD-GPUs laufen.\nIch schrieb OpenCL-autopkgtests und validierte die Builds in einem podman+ROCm-Container (per sbuild) und brachte sie dann in Debians GitLab Salsa ein. ROCm-Autotests wurden für PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx und sasmodels ergänzt; Pakete ohne OpenCL-Code (genx, examl) oder mit unfertiger Python-2→3-Migration (pysph) wurden ausgeschlossen. Es ist ein erster Satz von Bausteinen, der der gesamten wissenschaftlichen Debian-Gemeinschaft den Wechsel von NVIDIA zu AMD erleichtert.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -1315,7 +1322,7 @@ const de: Dictionary = {
         title: 'Klinisches NLP & biomedizinische KI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -1372,7 +1379,7 @@ const de: Dictionary = {
     subtitle: 'Längere Beiträge zu Methoden, Sackgassen und Entscheidungen hinter der obigen Arbeit.',
     posts: [
       { status: 'Veröffentlicht · Okt. 2026', title: 'Warum französisches klinisches NER generische Modelle scheitern lässt', body: 'Ein Überblick darüber, wo Standard-NER-Pipelines bei französischen Onkologieberichten versagen, und was das für die Struktur von DEMNE bedeutet.', content: `<p>Öffnen Sie einen französischen onkologischen Bericht, und die meisten gebrauchsfertigen NER-Modelle stolpern schon im ersten Satz. Das Vokabular ist dicht und abgekürzt (ER, PR, HER2, Ki67, FISH), die Formatierung wechselt von Klinik zu Klinik, und die entscheidende Biomarker-Terminologie fehlt in den Korpora, auf denen diese Modelle trainiert wurden, fast völlig. Der übliche Reflex &mdash; ein großes Modell darauf werfen &mdash; funktioniert, ist aber teuer, intransparent und vor einem Kliniker oder Prüfer schwer zu rechtfertigen.</p><h2>Nicht jede Entität braucht ein LLM</h2><p>DEMNE geht von einer schlichten Beobachtung aus: Die Entitäten in diesen Berichten sind nicht gleich schwer. Eine Biopsie-Erwähnung wird auf wenige stabile Arten geschrieben; ein Medikamentenname kann in hundert Formen auftreten. Statt eines Modells für alles misst DEMNE daher jeden Entitätstyp und schickt ihn an die leichteste Methode, die zuverlässig genug ist &mdash; eine deterministische Regel, einen feinabgestimmten Transformer oder ein LLM nur als letztes Mittel.</p><p>Die Messung besteht aus fünf Korpusmetriken, die aus den Annotationen berechnet werden: wie schablonenhaft die Oberflächenform ist, wie homogen das Vokabular ist, ob ein kleiner Schlüsselwortsatz diskriminierend ist, wie oft die Erwähnung unter Negation oder Widerspruch steht, und ob überhaupt genug annotierte Daten für ein überwachtes Modell vorhanden sind. Ein deterministischer Entscheidungsgraph macht aus diesen Zahlen eine Stufe, und seine 17 Schwellenwerte werden mit einer multikriteriellen Suche kalibriert, die das Senden einer Entität an eine zu schwache Methode doppelt so stark bestraft wie an eine bloß zu teure.</p><h2>Was es bringt</h2><p>Auf dem onkologischen Kalibrierungssatz (59 Entitätstypen) stimmt das Routing mit der Experten-Referenzstufe mit einer Konkordanz von 0,954 überein, bei einer Leave-one-corpus-out-Schätzung von 0,866 &mdash; deutlich über jeder Baseline mit fester Stufe (immer-Regeln erreicht 0,729, immer-LLM 0,148). Der überzeugendere Test ist extern: ohne Nachjustierung auf 300 AP-HP-CT-Berichte aus zuvor ungesehenen Krebslokalisationen angewandt, leitete DEMNE 99,5 % der markierten Erwähnungen (411 von 413) an deterministische Regeln. Diese Regeln erreichten einen mittleren F1 von 0,941, während ein auf denselben Entitäten unter realistischem Klinikbudget feinabgestimmter Transformer nur 0,358 schaffte.</p><p>Mit anderen Worten: Für die standardisierten Entitäten, die die onkologische Berichterstattung dominieren, waren Regeln nicht nur billiger &mdash; sie waren besser, und jede Regelentscheidung lässt sich auf eine explizite Bedingung zurückführen, genau das, was die Artikel 12 und 14 der EU AI Act verlangen.</p><h2>Wo es endet</h2><p>Ich will bei den Grenzen ehrlich sein. Der Referenzstandard ist klein &mdash; 92 Entitätstypen, 59 davon in der Onkologie &mdash; daher sind Einzelkorpus-Werte optimistisch und nur relative Vergleiche tragen. Die LLM-Stufe wurde auf der externen Kohorte nie durchgängig evaluiert; ihre eine geroutete Entität war zu selten. Und die Kalibrierung überträgt sich nicht zwischen Domänen: In einem anderen klinischen Genre oder einer anderen Sprache fällt die Konkordanz auf 0,45&ndash;0,73, sodass die Schwellen neu angepasst werden müssen. DEMNE ist ein Machbarkeitsnachweis, kein fertiges Produkt.</p><h2>Warum es zählt</h2><p>Der Punkt ist nicht, dass Regeln Transformer schlagen. Es ist, dass &bdquo;welche Methode&ldquo; eine Frage ist, die man pro Entität beantworten kann &mdash; aus messbaren Eigenschaften des Textes, statt standardmäßig das schwerste Modell zu wählen und zu hoffen. Für die klinische NLP &mdash; wo Kosten, Prüfbarkeit und Vertrauen zugleich zählen &mdash; ist diese Rahmung mehr wert als ein weiterer Prozentpunkt auf einem Benchmark.</p><p>Der Code und die vollständige Methode sind auf <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; das Manuskript ist in Vorbereitung.</p>` },
-      { status: 'Entwurf — demnächst', title: 'Gestufte Extraktion vs. ein einzelnes großes Modell', body: 'Das Argument dafür, Entitäten durch Regeln und einen feinabgestimmten Transformer zu leiten, bevor überhaupt ein LLM aufgerufen wird — und was ein Fehler dabei kostet.' },
+      { status: 'Veröffentlicht · Okt. 2026', title: 'Gestufte Extraktion vs. ein einzelnes großes Modell', body: 'Das Argument dafür, Entitäten durch Regeln und einen feinabgestimmten Transformer zu leiten, bevor überhaupt ein LLM aufgerufen wird — und was ein Fehler dabei kostet.', content: `<p>Gibt man heute ein schwieriges NLP-Problem an ein Team, ist der Reflex, zum größten verfügbaren Modell zu greifen und es alles regeln zu lassen. Auf französischem klinischem Text ist dieser Reflex teuer, langsam und schwer prüfbar &mdash; und, wie sich zeigt, nicht einmal der genaueste. DEMNE setzt auf das Gegenteil: jeden Entitätstyp an das leichteste Werkzeug schicken, das ihn bewältigt, und nur eskalieren, wenn der Text es wirklich verlangt.</p><h2>Eine Treppe, kein Hammer</h2><p>Die Pipeline hat drei Stufen. Deterministische Regeln &mdash; Regex und kuratierte Lexika &mdash; übernehmen die Entitäten, die auf wenige stabile Arten geschrieben werden: Daten, Dosierungen, gängige Biomarker-Abkürzungen. Ein auf französischem onkologischem Text feinabgestimmter Transformer bearbeitet die Entitäten, die echtes semantisches und fachliches Verständnis brauchen. Ein LLM steht an der Spitze, reserviert für die wirklich mehrdeutigen Fälle, die beide früheren Stufen überleben. Nichts steigt höher, als es muss.</p><h2>Warum nicht einfach das LLM?</h2><p>Weil ein einziges großes Modell den Preis des LLM für jede Entität zahlt, auch für die, die eine Regex sofort erledigt hätte. Es ist langsamer, braucht ein GPU-Budget, das die meisten Kliniken nicht haben, und jede Entscheidung ist eine Blackbox, die man trotzdem vor einem Kliniker oder Prüfer rechtfertigen muss. Und bei der Routing-Aufgabe selbst war die Immer-LLM-Baseline die schwächste und stimmte nur zu 0,148 mit der Expertenstufe überein. Das schwerste Werkzeug ist nicht automatisch das zuverlässigste.</p><h2>Was falsches Routing kostet</h2><p>Gestufte Extraktion lohnt sich nur, wenn das Routing gut ist &mdash; also investiert DEMNE genau dort seine Sorgfalt. Fünf aus den Annotationen gemessene Metriken speisen einen deterministischen Entscheidungsgraphen, dessen 17 Schwellen durch eine multikriterielle Suche kalibriert werden. Das Ziel ist bewusst asymmetrisch: eine Entität an eine zu schwache Methode zu schicken wird doppelt so stark bestraft wie an eine bloß zu teure &mdash; denn eine verpasste Extraktion in einem klinischen Bericht kostet mehr als eine verschwendete GPU-Sekunde.</p><h2>Was die Zahlen sagen</h2><p>Auf dem onkologischen Kalibrierungssatz trifft das Routing die Experten-Referenzstufe zu 0,954, gegenüber 0,729 bei Immer-Regeln und 0,148 bei Immer-LLM. Unverändert auf 300 ungesehene AP-HP-Berichte angewandt, leitete es 99,5 % der Erwähnungen an deterministische Regeln, die einen mittleren F1 von 0,941 erreichten &mdash; wo ein unter realistischem Klinikbudget feinabgestimmter Transformer nur 0,358 schaffte. Für die standardisierten Entitäten, die diese Berichte dominieren, war die billige Stufe auch die genaue.</p><h2>Wann ein einzelnes Modell die richtige Antwort ist</h2><p>Staging ist nicht umsonst: Es fügt eine Routing-Schicht hinzu, die gebaut, gemessen und gepflegt werden muss, und die Schwellen müssen für jede neue Domäne neu kalibriert werden. Ist der Text einheitlich, sind alle Entitäten gleich schwer, oder gibt es Budget und Prüf-Toleranz für ein großes Modell, ist die Treppe nur Overhead. Die Aussage hier ist eng &mdash; wenn Kosten, Latenz und Nachvollziehbarkeit zugleich zählen, wie in der klinischen NLP, schlägt die Entscheidung pro Entität das reflexhafte Wählen des schwersten Modells.</p><p>Der Code und die vollständige Methode sind auf <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; das Manuskript ist in Vorbereitung.</p>` },
     ],
   },
   contact: {
@@ -1382,6 +1389,7 @@ const de: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Gespräch buchen',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -1409,11 +1417,11 @@ const it: Dictionary = {
     menuToggleLabel: 'Apri il menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Cerco un tirocinio di ricerca di 6 mesi · NLP clinico e IA biomedica · da feb. 2027',
     h1Pre: 'Estraggo biomarcatori da testo clinico ',
     h1Accent: 'senza svegliare la GPU',
     h1Post: '',
-    sub: 'Sono Clément Longeac. Sto lavorando a DEMNE, un framework di routing che decide — per ogni tipo di entità — se una regex, un CRF, un transformer o un LLM sia lo strumento onesto per il compito. Primo risultato: 99,5% delle entità cliniche estratte senza GPU, F1 = 0,941 su 300 note AP-HP.',
+    sub: "Sono Clément Longeac. Sviluppo DEMNE, un framework di routing che sceglie, per ogni tipo di entità, il metodo più leggero che resti affidabile: regole, un transformer o un LLM. Su una coorte AP-HP mai vista, instrada il 99,5 % delle menzioni verso regole auditabili con un F1 di 0,941, là dove un transformer affinato arriva a 0,358.",
     ctaResearch: 'Vedi la ricerca',
     ctaCV: 'Scarica il CV',
     caption: 'DEMNE — Rules → Transformer → LLM, schema dal vivo',
@@ -1454,7 +1462,7 @@ const it: Dictionary = {
       title: 'Allineamento normativo — EU AI Act',
       body: 'L\'estrazione di entità cliniche dai fascicoli dei pazienti rientra pienamente nella categoria ad alto rischio dell\'EU AI Act. Il design a stadi di DEMNE tiene conto degli articoli 12 e 14 fin dall\'inizio, non come aggiunta successiva.',
       articles: [
-        { code: 'Art. 12', label: 'Conservazione dei registri', desc: 'Ogni decisione di estrazione è tracciabile fino allo stadio (regole, CRF, transformer o LLM) e al punteggio di confidenza che l\'ha prodotta, consentendo una registrazione automatica per l\'audit.' },
+        { code: 'Art. 12', label: 'Conservazione dei registri', desc: 'Ogni decisione di estrazione è tracciabile fino allo stadio (regole, transformer o LLM) e al punteggio di confidenza che l\'ha prodotta, consentendo una registrazione automatica per l\'audit.' },
         { code: 'Art. 14', label: 'Supervisione umana', desc: 'Gli output dell\'arbitraggio LLM vengono segnalati per la revisione clinica anziché accettati silenziosamente, mantenendo un essere umano nel ciclo sui casi ambigui.' },
       ],
     },
@@ -1595,10 +1603,11 @@ const it: Dictionary = {
         description:
           'Script autopkgtest che validano software scientifico su GPU AMD, sull’infrastruttura CI di Debian.',
         longBody:
-          'Parte del tirocinio al Synchrotron SOLEIL: autopkgtest scritti in OpenCL per verificare la compatibilità delle GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) sull’infrastruttura di integrazione continua Debian/ROCm, eseguiti tramite GitLab Salsa. Gli script installano e disinstallano pacchetti su macchine virtuali pulite e riportano la compatibilità tra le GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Tirocinio di 4 mesi nella divisione Div/Exp GRADES del Synchrotron SOLEIL, sotto la guida di Emmanuel Farhi e Frédéric-Emmanuel Picca. L’obiettivo: ridurre la dipendenza dello stack di calcolo scientifico da NVIDIA/CUDA verificando se i pacchetti scientifici Debian girano su GPU AMD tramite ROCm.\nHo scritto autopkgtest in OpenCL e validato le build in un container podman+ROCm (via sbuild), poi le ho integrate a monte sul GitLab Salsa di Debian. Sono stati aggiunti autotest ROCm per PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx e sasmodels; i pacchetti senza codice OpenCL (genx, examl) o bloccati su una migrazione Python 2→3 incompleta (pysph) sono stati esclusi. È un primo insieme di mattoni che aiuta l’intera comunità scientifica Debian a passare da NVIDIA ad AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -1612,7 +1621,7 @@ const it: Dictionary = {
         title: 'NLP clinico e IA biomedica',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -1669,7 +1678,7 @@ const it: Dictionary = {
     subtitle: 'Approfondimenti sui metodi, i vicoli ciechi e le decisioni dietro al lavoro sopra descritto.',
     posts: [
       { status: 'Pubblicato · ott. 2026', title: 'Perché il NER clinico francese manda in crisi i modelli generici', body: 'Una panoramica di dove le pipeline NER standard falliscono sui referti di oncologia francesi, e cosa questo implica per la struttura di DEMNE.', content: `<p>Aprite un referto oncologico francese e la maggior parte dei modelli NER pronti all’uso inciampa già nella prima frase. Il vocabolario è denso e abbreviato (ER, PR, HER2, Ki67, FISH), la formattazione cambia da un ospedale all’altro, e la terminologia dei biomarcatori che conta è quasi assente dai corpora su cui questi modelli sono stati addestrati. Il riflesso abituale &mdash; lanciarci contro un modello grande &mdash; funziona, ma è costoso, opaco e difficile da giustificare davanti a un clinico o a un revisore.</p><h2>Non ogni entità ha bisogno di un LLM</h2><p>DEMNE parte da un’osservazione netta: le entità di questi referti non sono ugualmente difficili. Una menzione di biopsia si scrive in poche forme stabili; un nome di farmaco può comparire in cento modi. Così, invece di un unico modello per tutto, DEMNE misura ogni tipo di entità e la indirizza al metodo più leggero che resti affidabile &mdash; una regola deterministica, un transformer affinato o un LLM solo come ultima risorsa.</p><p>La misura sono cinque metriche di corpus calcolate dalle annotazioni: quanto la forma di superficie è regolare, quanto il vocabolario è omogeneo, se un piccolo insieme di parole chiave è discriminante, con quale frequenza la menzione cade sotto negazione o contraddizione, e se esistono abbastanza dati annotati per addestrare un modello supervisionato. Un grafo decisionale deterministico trasforma quei numeri in un livello, e le sue 17 soglie sono calibrate con una ricerca multi-obiettivo che penalizza il doppio inviare un’entità a un metodo troppo debole rispetto a uno solo troppo costoso.</p><h2>Cosa porta</h2><p>Sul set di calibrazione oncologico (59 tipi di entità), l’instradamento concorda con il livello di riferimento degli esperti con una concordanza di 0,954 e una stima leave-one-corpus-out di 0,866 &mdash; ben oltre qualsiasi baseline a livello fisso (sempre-regole raggiunge 0,729, sempre-LLM 0,148). La prova più convincente è esterna: applicato senza ritaratura a 300 referti TC dell’AP-HP, su sedi tumorali mai viste, DEMNE ha instradato il 99,5 % delle menzioni (411 su 413) verso regole deterministiche. Quelle regole hanno raggiunto un F1 medio di 0,941, mentre un transformer affinato sulle stesse entità, con un budget ospedaliero realistico, si è fermato a 0,358.</p><p>In altre parole: per le entità standardizzate che dominano la refertazione oncologica, le regole non erano solo più economiche &mdash; erano migliori, e ogni decisione di regola si traccia fino a una condizione esplicita, esattamente ciò che chiedono gli articoli 12 e 14 dell’EU AI Act.</p><h2>Dove si ferma</h2><p>Voglio essere onesto sui limiti. Lo standard di riferimento è piccolo &mdash; 92 tipi di entità, 59 in oncologia &mdash; perciò i punteggi su un singolo corpus sono ottimistici e valgono solo i confronti relativi. Il livello LLM non è mai stato valutato end-to-end sulla coorte esterna; la sua unica entità instradata era troppo rara. E la calibrazione non si trasferisce tra domini: in un altro genere clinico o in un’altra lingua la concordanza scende a 0,45&ndash;0,73, quindi le soglie vanno ritarate. DEMNE è una prova di fattibilità, non un prodotto finito.</p><h2>Perché conta</h2><p>Il punto non è che le regole battono i transformer. È che &laquo;quale metodo&raquo; è una domanda a cui si può rispondere entità per entità, a partire da proprietà misurabili del testo, invece di scegliere per default il modello più pesante e sperare. Per l’NLP clinico &mdash; dove costo, auditabilità e fiducia contano insieme &mdash; questa impostazione vale più di un altro punto percentuale su un benchmark.</p><p>Il codice e il metodo completo sono su <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; il manoscritto è in preparazione.</p>` },
-      { status: 'Bozza — in arrivo', title: 'Estrazione a stadi contro un unico grande modello', body: 'L\'argomentazione per instradare le entità attraverso regole e un transformer affinato prima di chiamare un LLM — e cosa costa sbagliare.' },
+      { status: 'Pubblicato · ott. 2026', title: 'Estrazione a stadi contro un unico grande modello', body: 'L\'argomentazione per instradare le entità attraverso regole e un transformer affinato prima di chiamare un LLM — e cosa costa sbagliare.', content: `<p>Affida oggi un problema di NLP difficile a un team e il riflesso è prendere il modello più grande disponibile e lasciargli sistemare tutto. Sul testo clinico francese quel riflesso è costoso, lento e difficile da verificare &mdash; e, alla fine, nemmeno il più preciso. DEMNE fa la scommessa opposta: inviare ogni tipo di entità allo strumento più leggero in grado di gestirla, ed escalare solo quando il testo lo richiede davvero.</p><h2>Una scala, non un martello</h2><p>La pipeline ha tre livelli. Regole deterministiche &mdash; regex e lessici curati &mdash; prendono le entità scritte in poche forme stabili: date, dosaggi, abbreviazioni standard dei biomarcatori. Un transformer affinato su testo oncologico francese tratta le entità che richiedono una reale comprensione semantica e di dominio. Un LLM sta in cima, riservato ai casi davvero ambigui che sopravvivono a entrambe le fasi precedenti. Nulla sale più in alto del necessario.</p><h2>Perché non solo il LLM?</h2><p>Perché un unico modello grande paga il prezzo del LLM su ogni entità, comprese quelle che una regex avrebbe risolto all’istante. È più lento, richiede un budget GPU che la maggior parte degli ospedali non ha, e ogni decisione è una scatola nera che va comunque giustificata davanti a un clinico o a un revisore. E sul compito di instradamento stesso, la baseline sempre-LLM è stata la peggiore, concordando con il livello esperto solo 0,148 delle volte. Lo strumento più pesante non è automaticamente il più affidabile.</p><h2>Il costo di un instradamento sbagliato</h2><p>L’estrazione a stadi conviene solo se l’instradamento è buono, quindi è lì che DEMNE pone la sua cura. Cinque metriche misurate dalle annotazioni alimentano un grafo decisionale deterministico i cui 17 soglie sono calibrate con una ricerca multi-obiettivo. L’obiettivo è volutamente asimmetrico: inviare un’entità a un metodo troppo debole è penalizzato il doppio rispetto a uno solo troppo costoso &mdash; perché un’estrazione mancata in un referto clinico costa più di un secondo di GPU sprecato.</p><h2>Cosa dicono i numeri</h2><p>Sul set di calibrazione oncologico l’instradamento coincide con il livello di riferimento degli esperti 0,954 delle volte, contro 0,729 di sempre-regole e 0,148 di sempre-LLM. Applicato intatto a 300 referti AP-HP mai visti, ha instradato il 99,5 % delle menzioni verso regole deterministiche, che hanno raggiunto un F1 medio di 0,941 &mdash; dove un transformer affinato con un budget ospedaliero realistico si è fermato a 0,358. Per le entità standardizzate che dominano questi referti, il livello più economico era anche il più preciso.</p><h2>Quando un modello unico è la risposta giusta</h2><p>La suddivisione in stadi non è gratis: aggiunge un livello di instradamento da costruire, misurare e mantenere, e le soglie vanno ricalibrate per ogni nuovo dominio. Se il testo è uniforme, le entità sono tutte ugualmente difficili, o c’è budget e tolleranza di audit per un unico modello grande, la scala è solo overhead. La tesi qui è stretta &mdash; quando costo, latenza e tracciabilità contano insieme, come nell’NLP clinico, decidere entità per entità batte lo scegliere di default il modello più pesante e sperare.</p><p>Il codice e il metodo completo sono su <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; il manoscritto è in preparazione.</p>` },
     ],
   },
   contact: {
@@ -1679,6 +1688,7 @@ const it: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Prenota una call',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -1706,11 +1716,11 @@ const pt: Dictionary = {
     menuToggleLabel: 'Abrir menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Procuro um estágio de investigação de 6 meses · PLN clínico e IA biomédica · a partir de fev. 2027',
     h1Pre: 'Extraindo biomarcadores de texto clínico ',
     h1Accent: 'sem acordar a GPU',
     h1Post: '',
-    sub: 'Sou Clément Longeac. Estou trabalhando no DEMNE, um framework de roteamento que decide — para cada tipo de entidade — se uma regex, um CRF, um transformer ou um LLM é a ferramenta honesta para a tarefa. Primeiro resultado: 99,5% das entidades clínicas extraídas sem GPU, F1 = 0,941 em 300 notas AP-HP.',
+    sub: "Sou Clément Longeac. Desenvolvo o DEMNE, um framework de roteamento que escolhe, para cada tipo de entidade, o método mais leve que se mantém fiável: regras, um transformer ou um LLM. Numa coorte da AP-HP nunca vista, encaminha 99,5 % das menções para regras auditáveis com um F1 de 0,941, ali onde um transformer afinado chega a 0,358.",
     ctaResearch: 'Ver a pesquisa',
     ctaCV: 'Baixar o currículo',
     caption: 'DEMNE — Rules → Transformer → LLM, esquema ao vivo',
@@ -1751,7 +1761,7 @@ const pt: Dictionary = {
       title: 'Alinhamento regulatório — EU AI Act',
       body: 'A extração de entidades clínicas sobre prontuários de pacientes se enquadra diretamente na categoria de alto risco do EU AI Act. O design em estágios do DEMNE considera os artigos 12 e 14 desde o início, não como um adendo posterior.',
       articles: [
-        { code: 'Art. 12', label: 'Manutenção de registros', desc: 'Cada decisão de extração é rastreável até o estágio (regras, CRF, transformer ou LLM) e o índice de confiança que a produziu, permitindo registro automático para auditoria.' },
+        { code: 'Art. 12', label: 'Manutenção de registros', desc: 'Cada decisão de extração é rastreável até o estágio (regras, transformer ou LLM) e o índice de confiança que a produziu, permitindo registro automático para auditoria.' },
         { code: 'Art. 14', label: 'Supervisão humana', desc: 'As saídas da arbitragem por LLM são sinalizadas para revisão clínica em vez de aceitas silenciosamente, mantendo um humano no ciclo em casos ambíguos.' },
       ],
     },
@@ -1892,10 +1902,11 @@ const pt: Dictionary = {
         description:
           'Scripts autopkgtest que validam software científico em GPU AMD, na infraestrutura de CI do Debian.',
         longBody:
-          'Parte do estágio no Synchrotron SOLEIL: autopkgtests escritos em OpenCL para verificar a compatibilidade de GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) na infraestrutura de integração contínua Debian/ROCm, executados através do GitLab Salsa. Os scripts instalam e desinstalam pacotes em máquinas virtuais limpas e reportam a compatibilidade entre GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Estágio de 4 meses na divisão Div/Exp GRADES do Synchrotron SOLEIL, orientado por Emmanuel Farhi e Frédéric-Emmanuel Picca. O objetivo: reduzir a dependência da cadeia de cálculo científico face à NVIDIA/CUDA, testando se os pacotes científicos Debian correm em GPU AMD através do ROCm.\nEscrevi autopkgtests em OpenCL e validei as compilações num contentor podman+ROCm (via sbuild), integrando-as depois a montante no GitLab Salsa do Debian. Foram adicionados autotests ROCm para PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx e sasmodels; os pacotes sem código OpenCL (genx, examl) ou presos numa migração Python 2→3 inacabada (pysph) foram postos de parte. É um primeiro conjunto de peças que ajuda toda a comunidade científica Debian a passar da NVIDIA para a AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -1908,7 +1919,7 @@ const pt: Dictionary = {
         title: 'PLN clínico e IA biomédica',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -1965,7 +1976,7 @@ const pt: Dictionary = {
     subtitle: 'Textos mais longos sobre os métodos, becos sem saída e decisões por trás do trabalho acima.',
     posts: [
       { status: 'Publicado · out. 2026', title: 'Por que o NER clínico francês quebra modelos genéricos', body: 'Um panorama de onde pipelines NER padrão falham em laudos de oncologia franceses, e o que isso implica para a estrutura do DEMNE.', content: `<p>Abra um relatório de oncologia em francês e a maioria dos modelos de NER prontos a usar tropeça logo na primeira frase. O vocabulário é denso e abreviado (ER, PR, HER2, Ki67, FISH), a formatação muda de um hospital para outro, e a terminologia de biomarcadores que importa está quase ausente dos corpora com que esses modelos foram treinados. O reflexo habitual &mdash; atirar-lhe um modelo grande &mdash; funciona, mas é caro, opaco e difícil de justificar perante um clínico ou um auditor.</p><h2>Nem toda entidade precisa de um LLM</h2><p>O DEMNE parte de uma observação direta: as entidades destes relatórios não são igualmente difíceis. Uma menção de biópsia escreve-se de umas poucas formas estáveis; um nome de fármaco pode aparecer de cem maneiras. Assim, em vez de um único modelo para tudo, o DEMNE mede cada tipo de entidade e encaminha-a para o método mais leve que seja fiável &mdash; uma regra determinística, um transformer afinado ou um LLM apenas como último recurso.</p><p>A medida são cinco métricas de corpus calculadas a partir das anotações: quão regular é a forma de superfície, quão homogéneo é o vocabulário, se um pequeno conjunto de palavras-chave é discriminante, com que frequência a menção surge sob negação ou contradição, e se há dados anotados suficientes para treinar um modelo supervisionado. Um grafo de decisão determinístico transforma esses números num nível, e os seus 17 limiares são calibrados com uma busca multiobjetivo que penaliza a dobrar enviar uma entidade para um método demasiado fraco face a um apenas demasiado caro.</p><h2>O que traz</h2><p>No conjunto de calibração de oncologia (59 tipos de entidade), o encaminhamento concorda com o nível de referência dos especialistas com uma concordância de 0,954 e uma estimativa leave-one-corpus-out de 0,866 &mdash; bem acima de qualquer baseline de nível fixo (sempre-regras atinge 0,729, sempre-LLM 0,148). O teste mais convincente é externo: aplicado sem reajuste a 300 relatórios de TC da AP-HP, em localizações tumorais nunca vistas, o DEMNE encaminhou 99,5 % das menções (411 de 413) para regras determinísticas. Essas regras atingiram um F1 médio de 0,941, ao passo que um transformer afinado nas mesmas entidades, com um orçamento hospitalar realista, ficou-se por 0,358.</p><p>Por outras palavras: para as entidades padronizadas que dominam o relatório oncológico, as regras não eram apenas mais baratas &mdash; eram melhores, e cada decisão de regra traça-se até uma condição explícita, exatamente o que pedem os artigos 12 e 14 do EU AI Act.</p><h2>Onde para</h2><p>Quero ser honesto quanto aos limites. O padrão de referência é pequeno &mdash; 92 tipos de entidade, 59 deles em oncologia &mdash; por isso as pontuações num único corpus são otimistas e só valem as comparações relativas. O nível LLM nunca foi avaliado de ponta a ponta na coorte externa; a sua única entidade encaminhada era demasiado rara. E a calibração não se transfere entre domínios: noutro género clínico ou noutra língua a concordância cai para 0,45&ndash;0,73, pelo que os limiares têm de ser reajustados. O DEMNE é uma prova de viabilidade, não um produto acabado.</p><h2>Porque importa</h2><p>A questão não é que as regras batam os transformers. É que &laquo;qual método&raquo; é uma pergunta que se pode responder entidade a entidade, a partir de propriedades mensuráveis do texto, em vez de recorrer por defeito ao modelo mais pesado e esperar. Para o PLN clínico &mdash; onde o custo, a auditabilidade e a confiança importam ao mesmo tempo &mdash; este enquadramento vale mais do que mais um ponto percentual num benchmark.</p><p>O código e o método completo estão no <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; o manuscrito está em preparação.</p>` },
-      { status: 'Rascunho — em breve', title: 'Extração em estágios vs. um único modelo grande', body: 'O argumento para rotear entidades por regras e um transformer ajustado antes de chamar um LLM — e o que custa errar.' },
+      { status: 'Publicado · out. 2026', title: 'Extração em estágios vs. um único modelo grande', body: 'O argumento para rotear entidades por regras e um transformer ajustado antes de chamar um LLM — e o que custa errar.', content: `<p>Entregue hoje um problema difícil de PLN a uma equipa e o reflexo é pegar no maior modelo disponível e deixá-lo resolver tudo. Em texto clínico francês esse reflexo é caro, lento e difícil de auditar &mdash; e, no fim, nem sequer o mais preciso. O DEMNE faz a aposta oposta: enviar cada tipo de entidade para a ferramenta mais leve capaz de a tratar, e escalar apenas quando o texto realmente o exige.</p><h2>Uma escada, não um martelo</h2><p>O pipeline tem três níveis. Regras determinísticas &mdash; regex e léxicos curados &mdash; tratam das entidades escritas de umas poucas formas estáveis: datas, dosagens, abreviaturas padrão de biomarcadores. Um transformer afinado em texto oncológico francês trata das entidades que exigem verdadeira compreensão semântica e de domínio. Um LLM fica no topo, reservado aos casos realmente ambíguos que sobrevivem às duas etapas anteriores. Nada sobe mais alto do que o necessário.</p><h2>Porquê não só o LLM?</h2><p>Porque um único modelo grande paga o preço do LLM em cada entidade, incluindo as que uma regex teria resolvido num instante. É mais lento, precisa de um orçamento de GPU que a maioria dos hospitais não tem, e cada decisão é uma caixa negra que, ainda assim, é preciso justificar perante um clínico ou um auditor. E na própria tarefa de roteamento, o baseline sempre-LLM foi o pior, concordando com o nível especialista apenas 0,148 das vezes. A ferramenta mais pesada não é automaticamente a mais fiável.</p><h2>O custo de rotear mal</h2><p>A extração em estágios só compensa se o roteamento for bom, por isso é aí que o DEMNE põe o seu cuidado. Cinco métricas medidas a partir das anotações alimentam um grafo de decisão determinístico cujos 17 limiares são calibrados por uma busca multiobjetivo. O objetivo é deliberadamente assimétrico: enviar uma entidade para um método demasiado fraco é penalizado o dobro de enviá-la para um apenas demasiado caro &mdash; porque uma extração perdida num relatório clínico custa mais do que um segundo de GPU desperdiçado.</p><h2>O que dizem os números</h2><p>No conjunto de calibração de oncologia, o roteamento coincide com o nível de referência dos especialistas 0,954 das vezes, contra 0,729 de sempre-regras e 0,148 de sempre-LLM. Aplicado intacto a 300 relatórios da AP-HP nunca vistos, encaminhou 99,5 % das menções para regras determinísticas, que atingiram um F1 médio de 0,941 &mdash; onde um transformer afinado com um orçamento hospitalar realista ficou por 0,358. Para as entidades padronizadas que dominam estes relatórios, o nível mais barato era também o mais preciso.</p><h2>Quando um único modelo é a resposta certa</h2><p>A estratificação não é gratuita: acrescenta uma camada de roteamento para construir, medir e manter, e os limiares têm de ser recalibrados para cada novo domínio. Se o texto é uniforme, as entidades são todas igualmente difíceis, ou há orçamento e tolerância de auditoria para um único modelo grande, a escada é só sobrecarga. A afirmação aqui é estreita &mdash; quando o custo, a latência e a rastreabilidade importam ao mesmo tempo, como no PLN clínico, decidir entidade a entidade supera recorrer por defeito ao modelo mais pesado e esperar.</p><p>O código e o método completo estão no <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; o manuscrito está em preparação.</p>` },
     ],
   },
   contact: {
@@ -1975,6 +1986,7 @@ const pt: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Agendar uma chamada',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -2002,11 +2014,11 @@ const nl: Dictionary = {
     menuToggleLabel: 'Menu openen',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Op zoek naar een onderzoeksstage van 6 maanden · Klinische NLP & biomedische AI · vanaf feb. 2027',
     h1Pre: 'Biomarkers uit klinische tekst halen ',
     h1Accent: 'zonder de GPU wakker te maken',
     h1Post: '',
-    sub: 'Ik ben Clément Longeac. Ik werk aan DEMNE, een routeringsframework dat per entiteitstype beslist of een regex, een CRF, een transformer of een LLM het eerlijke gereedschap voor de taak is. Eerste resultaat: 99,5% van de klinische entiteiten geëxtraheerd zonder GPU, F1 = 0,941 op 300 AP-HP-notities.',
+    sub: "Ik ben Clément Longeac. Ik bouw DEMNE, een routeringsframework dat per entiteitstype de lichtste methode kiest die betrouwbaar blijft — regels, een transformer of een LLM. Op een ongeziene AP-HP-cohort routeert het 99,5 % van de vermeldingen naar auditeerbare regels met een F1 van 0,941, waar een fijn afgestelde transformer slechts 0,358 haalt.",
     ctaResearch: 'Bekijk het onderzoek',
     ctaCV: 'Download CV',
     caption: 'DEMNE — Rules → Transformer → LLM, live schema',
@@ -2047,7 +2059,7 @@ const nl: Dictionary = {
       title: 'Regelgevende afstemming — EU AI Act',
       body: 'Klinische entiteitsextractie op patiëntdossiers valt duidelijk binnen de hoogrisicocategorie van de EU AI Act. Het gefaseerde ontwerp van DEMNE houdt vanaf het begin rekening met artikel 12 en 14, niet achteraf toegevoegd.',
       articles: [
-        { code: 'Art. 12', label: 'Registratie', desc: 'Elke extractiebeslissing is te herleiden tot de fase (regels, CRF, transformer of LLM) en het betrouwbaarheidsscore die deze produceerde, wat automatische auditlogging mogelijk maakt.' },
+        { code: 'Art. 12', label: 'Registratie', desc: 'Elke extractiebeslissing is te herleiden tot de fase (regels, transformer of LLM) en het betrouwbaarheidsscore die deze produceerde, wat automatische auditlogging mogelijk maakt.' },
         { code: 'Art. 14', label: 'Menselijk toezicht', desc: 'Uitkomsten van LLM-arbitrage worden gemarkeerd voor klinische beoordeling in plaats van stilzwijgend geaccepteerd, zodat een mens betrokken blijft bij ambigue gevallen.' },
       ],
     },
@@ -2188,10 +2200,11 @@ const nl: Dictionary = {
         description:
           'autopkgtest-scripts die wetenschappelijke software op AMD-GPU’s valideren, op de CI-infrastructuur van Debian.',
         longBody:
-          'Onderdeel van de stage bij Synchrotron SOLEIL: autopkgtests in OpenCL om de compatibiliteit van AMD-GPU’s te controleren (pyopencl, nabu, ufo-filters, pyvkfft) over de Debian/ROCm continuous-integration-infrastructuur, uitgevoerd via GitLab Salsa. De scripts installeren en verwijderen pakketten op schone virtuele machines en rapporteren de compatibiliteit over GPU’s heen.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Stage van 4 maanden bij de afdeling Div/Exp GRADES van Synchrotron SOLEIL, begeleid door Emmanuel Farhi en Frédéric-Emmanuel Picca. Het doel: de afhankelijkheid van de wetenschappelijke rekenketen van NVIDIA/CUDA verkleinen door te testen of Debian-wetenschapspakketten op AMD-GPU’s draaien via ROCm.\nIk schreef OpenCL-autopkgtests en valideerde de builds in een podman+ROCm-container (via sbuild), en bracht ze daarna upstream in Debians GitLab Salsa. Er werden ROCm-autotests toegevoegd voor PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx en sasmodels; pakketten zonder OpenCL-code (genx, examl) of vast op een onafgemaakte Python 2→3-migratie (pysph) vielen af. Het is een eerste set bouwstenen die de bredere wetenschappelijke Debian-gemeenschap helpt over te stappen van NVIDIA naar AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -2204,7 +2217,7 @@ const nl: Dictionary = {
         title: 'Klinische NLP & biomedische AI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -2261,7 +2274,7 @@ const nl: Dictionary = {
     subtitle: 'Langere stukken over de methoden, doodlopende wegen en beslissingen achter het werk hierboven.',
     posts: [
       { status: 'Gepubliceerd · okt. 2026', title: 'Waarom Franse klinische NER generieke modellen breekt', body: 'Een overzicht van waar standaard NER-pipelines falen op Franse oncologierapporten, en wat dat betekent voor de structuur van DEMNE.', content: `<p>Open een Frans oncologisch verslag en de meeste kant-en-klare NER-modellen struikelen al in de eerste zin. Het vocabulaire is dicht en afgekort (ER, PR, HER2, Ki67, FISH), de opmaak verschilt per ziekenhuis, en de biomarkerterminologie die ertoe doet ontbreekt vrijwel in de corpora waarop deze modellen zijn getraind. De gebruikelijke reflex &mdash; er een groot model op loslaten &mdash; werkt, maar is duur, ondoorzichtig en moeilijk te verantwoorden tegenover een clinicus of auditor.</p><h2>Niet elke entiteit heeft een LLM nodig</h2><p>DEMNE vertrekt van een nuchtere observatie: de entiteiten in deze verslagen zijn niet even moeilijk. Een biopsievermelding wordt op een handvol stabiele manieren geschreven; een medicijnnaam kan in honderd vormen opduiken. Dus in plaats van één model voor alles meet DEMNE elk entiteitstype en stuurt het naar de lichtste methode die betrouwbaar genoeg is &mdash; een deterministische regel, een fijn afgestemde transformer, of een LLM alleen als laatste redmiddel.</p><p>De meting bestaat uit vijf corpusmetingen berekend uit de annotaties: hoe sjabloonmatig de oppervlaktevorm is, hoe homogeen het vocabulaire is, of een kleine set trefwoorden onderscheidend is, hoe vaak de vermelding onder negatie of tegenspraak valt, en of er wel genoeg gelabelde data is om een supervised model te trainen. Een deterministische beslisgraaf zet die getallen om in een niveau, en de 17 drempels worden gekalibreerd met een multi-objective zoektocht die een entiteit naar een te zwakke methode sturen twee keer zo zwaar bestraft als naar een slechts te dure.</p><h2>Wat het oplevert</h2><p>Op de oncologische kalibratieset (59 entiteitstypen) komt de routering overeen met het expertreferentieniveau met een concordantie van 0,954 en een leave-one-corpus-out-schatting van 0,866 &mdash; ruim boven elke baseline met vast niveau (altijd-regels haalt 0,729, altijd-LLM 0,148). De overtuigender test is extern: zonder bijstelling toegepast op 300 CT-verslagen van de AP-HP, op nooit geziene tumorlocaties, routeerde DEMNE 99,5 % van de gemarkeerde vermeldingen (411 van 413) naar deterministische regels. Die regels haalden een gemiddelde F1 van 0,941, terwijl een op dezelfde entiteiten fijn afgestemde transformer binnen een realistisch ziekenhuisbudget bleef steken op 0,358.</p><p>Met andere woorden: voor de gestandaardiseerde entiteiten die de oncologische verslaglegging domineren, waren regels niet alleen goedkoper &mdash; ze waren beter, en elke regelbeslissing is te herleiden tot een expliciete voorwaarde, precies wat de artikelen 12 en 14 van de EU AI Act vragen.</p><h2>Waar het stopt</h2><p>Ik wil eerlijk zijn over de grenzen. De referentiestandaard is klein &mdash; 92 entiteitstypen, 59 ervan in de oncologie &mdash; dus scores op één corpus zijn optimistisch en alleen relatieve vergelijkingen houden stand. Het LLM-niveau is op het externe cohort nooit end-to-end geëvalueerd; de ene gerouteerde entiteit was te zeldzaam. En de kalibratie draagt niet over tussen domeinen: in een ander klinisch genre of een andere taal zakt de concordantie naar 0,45&ndash;0,73, dus de drempels moeten opnieuw worden afgesteld. DEMNE is een haalbaarheidsbewijs, geen afgewerkt product.</p><h2>Waarom het ertoe doet</h2><p>Het punt is niet dat regels transformers verslaan. Het is dat &bdquo;welke methode&rdquo; een vraag is die je per entiteit kunt beantwoorden, vanuit meetbare eigenschappen van de tekst, in plaats van standaard het zwaarste model te kiezen en te hopen. Voor klinische NLP &mdash; waar kosten, auditeerbaarheid en vertrouwen tegelijk tellen &mdash; is die insteek meer waard dan nog een procentpunt op een benchmark.</p><p>De code en de volledige methode staan op <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; het manuscript is in voorbereiding.</p>` },
-      { status: 'Concept — binnenkort', title: 'Gefaseerde extractie versus één groot model', body: 'Het argument om entiteiten via regels en een fijn afgestelde transformer te leiden voordat er ooit een LLM wordt aangeroepen — en wat het kost om dat verkeerd te doen.' },
+      { status: 'Gepubliceerd · okt. 2026', title: 'Gefaseerde extractie versus één groot model', body: 'Het argument om entiteiten via regels en een fijn afgestelde transformer te leiden voordat er ooit een LLM wordt aangeroepen — en wat het kost om dat verkeerd te doen.', content: `<p>Geef een team vandaag een moeilijk NLP-probleem en de reflex is om naar het grootste beschikbare model te grijpen en het alles te laten uitzoeken. Op Franse klinische tekst is die reflex duur, traag en moeilijk te auditen &mdash; en, zo blijkt, niet eens het nauwkeurigst. DEMNE zet in op het tegenovergestelde: stuur elk entiteitstype naar het lichtste gereedschap dat het aankan, en escaleer alleen als de tekst er echt om vraagt.</p><h2>Een trap, geen hamer</h2><p>De pijplijn heeft drie niveaus. Deterministische regels &mdash; regex en samengestelde lexicons &mdash; nemen de entiteiten die op een handvol stabiele manieren worden geschreven: data, doseringen, standaard biomarker-afkortingen. Een op Franse oncologische tekst fijn afgestelde transformer verwerkt de entiteiten die echt semantisch en domeinbegrip vereisen. Een LLM staat bovenaan, gereserveerd voor de werkelijk dubbelzinnige gevallen die beide eerdere stappen overleven. Niets klimt hoger dan nodig.</p><h2>Waarom niet gewoon de LLM?</h2><p>Omdat één groot model de prijs van de LLM op elke entiteit betaalt, ook die welke een regex meteen had opgelost. Het is trager, het vraagt een GPU-budget dat de meeste ziekenhuizen niet hebben, en elke beslissing is een black box die je alsnog moet verantwoorden tegenover een clinicus of auditor. En op de routeringstaak zelf was de altijd-LLM-baseline de slechtste, die het expertniveau slechts 0,148 van de tijd evenaarde. Het zwaarste gereedschap is niet automatisch het betrouwbaarste.</p><h2>De kosten van verkeerd routeren</h2><p>Gefaseerde extractie loont alleen als de routering goed is, dus daar steekt DEMNE zijn zorg in. Vijf uit de annotaties gemeten metingen voeden een deterministische beslisgraaf waarvan de 17 drempels met een multi-objective zoektocht worden gekalibreerd. Het doel is bewust asymmetrisch: een entiteit naar een te zwakke methode sturen wordt twee keer zo zwaar bestraft als naar een slechts te dure &mdash; want een gemiste extractie in een klinisch rapport kost meer dan een verspilde GPU-seconde.</p><h2>Wat de cijfers zeggen</h2><p>Op de oncologische kalibratieset komt de routering 0,954 van de tijd overeen met het expertreferentieniveau, tegen 0,729 voor altijd-regels en 0,148 voor altijd-LLM. Onveranderd toegepast op 300 ongeziene AP-HP-rapporten routeerde het 99,5 % van de vermeldingen naar deterministische regels, die een gemiddelde F1 van 0,941 haalden &mdash; waar een onder een realistisch ziekenhuisbudget fijn afgestelde transformer op 0,358 bleef steken. Voor de gestandaardiseerde entiteiten die deze rapporten domineren, was het goedkope niveau ook het nauwkeurige.</p><h2>Wanneer één model het juiste antwoord is</h2><p>Fasering is niet gratis: het voegt een routeringslaag toe om te bouwen, te meten en te onderhouden, en de drempels moeten voor elk nieuw domein opnieuw worden gekalibreerd. Is de tekst uniform, zijn alle entiteiten even moeilijk, of is er budget en audittolerantie voor één groot model, dan is de trap alleen maar overhead. De claim hier is smal &mdash; als kosten, latentie en traceerbaarheid tegelijk tellen, zoals in klinische NLP, verslaat beslissen per entiteit het standaard kiezen van het zwaarste model en hopen.</p><p>De code en de volledige methode staan op <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; het manuscript is in voorbereiding.</p>` },
     ],
   },
   contact: {
@@ -2271,6 +2284,7 @@ const nl: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Plan een gesprek',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -2298,11 +2312,11 @@ const zh: Dictionary = {
     menuToggleLabel: '打开菜单',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · 寻找 6 个月研究实习 · 临床 NLP 与生物医学 AI · 2027 年 2 月起',
     h1Pre: '从临床文本中提取生物标志物，',
     h1Accent: '却不必唤醒GPU',
     h1Post: '。',
-    sub: '我是Clément Longeac。我正在研发DEMNE，一个路由框架——针对每种实体类型，决定正则表达式、CRF、Transformer还是LLM才是诚实可靠的工具。首个成果：99.5%的临床实体在无需GPU的情况下被提取，在300份AP-HP病历上F1值达到0.941。',
+    sub: "我是 Clément Longeac。我构建 DEMNE——一个路由框架，针对每种实体类型选择仍然可靠的最轻方法：规则、transformer 或 LLM。在一个从未见过的 AP-HP 队列上，它将 99.5% 的提及路由到可审计的规则，F1 达到 0.941，而微调后的 transformer 仅为 0.358。",
     ctaResearch: '查看研究',
     ctaCV: '下载简历',
     caption: 'DEMNE — 规则 → Transformer → LLM，实时示意图',
@@ -2343,7 +2357,7 @@ const zh: Dictionary = {
       title: '监管合规 — 欧盟人工智能法案',
       body: '对患者病历进行临床实体抽取正属于欧盟人工智能法案的高风险类别。DEMNE的分阶段设计从一开始就考虑到第12条和第14条,而非事后补充。',
       articles: [
-        { code: '第12条', label: '记录保存', desc: '每一个抽取决策都可以追溯到产生它的阶段（规则、CRF、Transformer或LLM）以及置信度分数,从而实现自动审计日志记录。' },
+        { code: '第12条', label: '记录保存', desc: '每一个抽取决策都可以追溯到产生它的阶段（规则、Transformer或LLM）以及置信度分数,从而实现自动审计日志记录。' },
         { code: '第14条', label: '人工监督', desc: 'LLM仲裁的输出会被标记以供临床医生审查，而非默默接受，从而在歧义案例中保留人工干预。' },
       ],
     },
@@ -2483,10 +2497,11 @@ const zh: Dictionary = {
         description:
           '在 Debian 的 CI 基础设施上，用于在 AMD GPU 上验证科学软件的 autopkgtest 脚本。',
         longBody:
-          'Synchrotron SOLEIL 实习的一部分：用 OpenCL 编写 autopkgtest，在 Debian/ROCm 持续集成基础设施上检查 AMD GPU 兼容性（pyopencl、nabu、ufo-filters、pyvkfft），通过 GitLab Salsa 运行。脚本在干净的虚拟机上安装和卸载软件包，并报告各 GPU 的兼容性。',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          '在 Synchrotron SOLEIL 的 Div/Exp GRADES 部门进行的 4 个月实习，由 Emmanuel Farhi 和 Frédéric-Emmanuel Picca 指导。目标：通过测试 Debian 科学软件包能否经由 ROCm 在 AMD GPU 上运行，降低科学计算栈对 NVIDIA/CUDA 的依赖。\n我编写了 OpenCL 的 autopkgtest，并在 podman+ROCm 容器中（通过 sbuild）验证构建，然后将其上游提交到 Debian 的 GitLab Salsa。为 PyOpenCL、Nabu、Ufo-filters、clpeak、pyvkfft、gpyfft、silx 和 sasmodels 添加了 ROCm 自动测试；没有 OpenCL 代码的软件包（genx、examl）或卡在未完成的 Python 2→3 迁移上的软件包（pysph）被排除。这是帮助整个 Debian 科学社区从 NVIDIA 迁移到 AMD 的第一批基石。',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -2499,7 +2514,7 @@ const zh: Dictionary = {
         title: '临床NLP与生物医学人工智能',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -2556,7 +2571,7 @@ const zh: Dictionary = {
     subtitle: '关于上述工作背后的方法、弯路与决策的深入文章。',
     posts: [
       { status: '已发布 · 2026年10月', title: '为什么法语临床命名实体识别会让通用模型失效', body: '梳理标准命名实体识别流水线在法语肿瘤学报告上失败的原因，以及这对DEMNE结构设计的启示。', content: `<p>翻开一份法语肿瘤学报告，大多数开箱即用的 NER 模型在第一句话就会出错。词汇密集且多缩写（ER、PR、HER2、Ki67、FISH），排版因医院而异，而真正重要的生物标志物术语在这些模型训练所用的语料库中几乎不存在。惯常的反应&mdash;&mdash;直接上大模型&mdash;&mdash;确实有用，但成本高、不透明，且难以向临床医生或审计者交代。</p><h2>并非每个实体都需要 LLM</h2><p>DEMNE 从一个朴素的观察出发：这些报告中的实体并非同样困难。活检提及只有几种稳定写法；药物名称却可能有上百种形式。因此，DEMNE 不用一个模型包打天下，而是度量每一种实体类型，并将其送往足够可靠的最轻方法&mdash;&mdash;确定性规则、微调过的 transformer，或仅在万不得已时才用 LLM。</p><p>所谓度量，是从标注中计算的五项语料库指标：表层形式的模板化程度、词汇的同质程度、一小组关键词是否具有判别力、提及出现在否定或矛盾之下的频率，以及是否有足够的标注数据来训练有监督模型。一个确定性决策图把这些数字转化为层级，其 17 个阈值通过多目标搜索来校准&mdash;&mdash;将实体送往过弱方法所受的惩罚，是送往仅仅过于昂贵方法的两倍。</p><h2>它带来了什么</h2><p>在肿瘤学校准集（59 种实体类型）上，路由与专家参考层级的一致性达到 0.954，留一语料库交叉验证估计为 0.866&mdash;&mdash;远高于任何固定层级的基线（全用规则为 0.729，全用 LLM 为 0.148）。更有说服力的是外部测试：在不做任何重新调参的情况下，应用于 AP-HP 的 300 份 CT 报告（涉及模型从未见过的癌症部位），DEMNE 将 99.5% 的标记提及（413 个中的 411 个）路由到确定性规则。这些规则达到了 0.941 的平均 F1，而在现实医院预算下对同样实体微调的 transformer 仅为 0.358。</p><p>换言之：对于主导肿瘤学报告的标准化实体，规则不仅更便宜&mdash;&mdash;而且更好，并且每一条规则决策都能追溯到一个明确条件，这正是欧盟 AI 法案第 12 条和第 14 条所要求的。</p><h2>它的边界</h2><p>我想坦诚地谈谈局限。参考标准很小&mdash;&mdash;92 种实体类型，其中 59 种属肿瘤学&mdash;&mdash;因此单一语料库上的分数偏乐观，只有相对比较才成立。LLM 层级从未在外部队列上端到端评估过；它唯一路由到的实体过于罕见。而且校准无法跨域迁移：换到另一种临床体裁或另一种语言，一致性会降到 0.45&ndash;0.73，阈值必须重新拟合。DEMNE 是可行性证明，而非成品。</p><h2>为什么重要</h2><p>重点并不是规则胜过 transformer，而是&ldquo;用哪种方法&rdquo;可以逐实体地、依据文本的可度量属性来回答，而不是默认选最重的模型碰运气。对于临床 NLP&mdash;&mdash;成本、可审计性与信任同时重要&mdash;&mdash;这种思路比在基准上再多一个百分点更有价值。</p><p>代码与完整方法见 <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>；论文正在撰写中。</p>` },
-      { status: '草稿 — 即将发布', title: '分阶段抽取与单一大模型的对比', body: '在调用LLM之前，先通过规则和微调Transformer路由实体的理由——以及出错时的代价。' },
+      { status: '已发布 · 2026年10月', title: '分阶段抽取与单一大模型的对比', body: '在调用LLM之前，先通过规则和微调Transformer路由实体的理由——以及出错时的代价。', content: `<p>今天把一个困难的 NLP 问题交给团队，惯常反应就是搬出能用的最大模型，让它把一切都搞定。在法语临床文本上，这种反应成本高、速度慢、难以审计——而且事实证明，连最准确都算不上。DEMNE 下的是相反的赌注：把每一种实体类型交给能够胜任它的最轻工具，只有当文本确实需要时才升级。</p><h2>是楼梯，不是锤子</h2><p>流水线有三个层级。确定性规则——正则表达式与精选词典——负责那些只有几种稳定写法的实体：日期、剂量、标准生物标志物缩写。在法语肿瘤学文本上微调的 transformer 处理那些需要真正语义与领域理解的实体。LLM 位于顶端，只留给真正含糊、能挺过前两个阶段的情形。没有什么会爬得比它需要的更高。</p><h2>为什么不干脆只用 LLM？</h2><p>因为单一大模型要为每一个实体支付 LLM 的代价，包括那些正则表达式本可瞬间搞定的。它更慢，需要多数医院没有的 GPU 预算，而且每个决策都是黑箱，你仍然要向临床医生或审计者交代。而在路由任务本身上，全用 LLM 的基线表现最差，与专家层级的一致性仅为 0.148。最重的工具并不自动就是最可靠的。</p><h2>路由出错的代价</h2><p>只有路由做得好，分阶段抽取才划算，所以 DEMNE 把心思正是花在这里。从标注中测得的五项指标喂入一个确定性决策图，其 17 个阈值由多目标搜索校准。该目标被刻意设计为不对称：把实体送往过弱方法所受的惩罚，是送往仅仅过于昂贵方法的两倍——因为在临床报告中漏掉一次抽取，比浪费一秒 GPU 代价更大。</p><h2>数字说明了什么</h2><p>在肿瘤学校准集上，路由与专家参考层级的一致性为 0.954，而全用规则为 0.729、全用 LLM 为 0.148。原封不动地应用于 300 份从未见过的 AP-HP 报告时，它将 99.5% 的提及路由到确定性规则，后者达到 0.941 的平均 F1——而在现实医院预算下微调的 transformer 仅为 0.358。对于主导这些报告的标准化实体，最便宜的层级同时也是最准确的。</p><h2>何时单一模型才是正确答案</h2><p>分层并非免费：它增加了一层需要构建、度量和维护的路由，而且阈值必须针对每个新领域重新校准。如果文本是均质的、实体同样困难，或者你有预算和审计容忍度去用一个大模型，那么这座楼梯只是额外负担。这里的主张很窄——当成本、延迟与可追溯性同时重要时，正如临床 NLP 那样，逐实体决策胜过默认选最重的模型再碰运气。</p><p>代码与完整方法见 <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>；论文正在撰写中。</p>` },
     ],
   },
   contact: {
@@ -2566,6 +2581,7 @@ const zh: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: '预约通话',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -2593,11 +2609,11 @@ const ja: Dictionary = {
     menuToggleLabel: 'メニューを開く',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · 6 か月の研究インターンを希望 · 臨床 NLP & 生物医学 AI · 2027 年 2 月から',
     h1Pre: 'GPUを起こさずに、',
     h1Accent: '臨床テキストからバイオマーカーを抽出する',
     h1Post: '。',
-    sub: '私はClément Longeacです。現在、DEMNEというルーティングフレームワークに取り組んでいます——エンティティの種類ごとに、正規表現、CRF、トランスフォーマー、LLMのどれが誠実な選択かを判断します。最初の成果：GPUを使わずに臨床エンティティの99.5%を抽出し、300件のAP-HPノートでF1値0.941を達成しました。',
+    sub: "私は Clément Longeac です。エンティティの種類ごとに、信頼できる最も軽い方法——ルール、transformer、または LLM——を選ぶルーティングフレームワーク DEMNE を開発しています。未見の AP-HP コホートでは、言及の 99.5% を監査可能なルールへ振り分け、F1 は 0.941 に達します。ファインチューニングした transformer は 0.358 にとどまります。",
     ctaResearch: '研究を見る',
     ctaCV: '履歴書をダウンロード',
     caption: 'DEMNE — Rules → Transformer → LLM、ライブ図解',
@@ -2638,7 +2654,7 @@ const ja: Dictionary = {
       title: '規制対応 — EU AI Act',
       body: '患者記録に対する臨床実体抽出は、EU AI Actの高リスクカテゴリに明確に該当します。DEMNEの段階的設計は、後付けではなく最初から第12条と第14条を念頭に置いています。',
       articles: [
-        { code: '第12条', label: '記録保持', desc: 'すべての抽出決定は、それを生成した段階（ルール、CRF、Transformer、またはLLM）と信頼度スコアまでトレース可能で、自動的な監査ログ記録が可能です。' },
+        { code: '第12条', label: '記録保持', desc: 'すべての抽出決定は、それを生成した段階（ルール、Transformer、またはLLM）と信頼度スコアまでトレース可能で、自動的な監査ログ記録が可能です。' },
         { code: '第14条', label: '人間による監督', desc: 'LLMによる裁定結果は黙って受け入れられるのではなく、臨床医によるレビュー対象としてフラグ付けされ、曖昧なケースでは人間が判断に関与し続けます。' },
       ],
     },
@@ -2778,10 +2794,11 @@ const ja: Dictionary = {
         description:
           'Debian の CI 基盤上で、AMD GPU 上の科学ソフトウェアを検証する autopkgtest スクリプト。',
         longBody:
-          'Synchrotron SOLEIL でのインターンシップの一部。AMD GPU の互換性（pyopencl, nabu, ufo-filters, pyvkfft）を Debian/ROCm の継続的インテグレーション基盤上で確認するため、OpenCL で autopkgtest を記述し、GitLab Salsa 経由で実行しました。スクリプトはクリーンな仮想マシンにパッケージをインストール・アンインストールし、GPU 間の互換性を報告します。',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Synchrotron SOLEIL の Div/Exp GRADES 部門での 4 か月のインターンシップ。指導は Emmanuel Farhi と Frédéric-Emmanuel Picca。目的は、Debian の科学パッケージが ROCm を介して AMD GPU で動くかを検証し、科学計算スタックの NVIDIA/CUDA への依存を減らすことでした。\nOpenCL の autopkgtest を書き、podman+ROCm コンテナで（sbuild により）ビルドを検証し、Debian の GitLab Salsa に上流提出しました。PyOpenCL、Nabu、Ufo-filters、clpeak、pyvkfft、gpyfft、silx、sasmodels に ROCm 自動テストを追加。OpenCL コードを含まないパッケージ（genx、examl）や、未完了の Python 2→3 移行で止まっているパッケージ（pysph）は対象外としました。これは、Debian の科学コミュニティ全体が NVIDIA から AMD へ移行するのを助ける最初の基礎部品群です。',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -2794,7 +2811,7 @@ const ja: Dictionary = {
         title: '臨床NLP・生物医学AI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -2851,7 +2868,7 @@ const ja: Dictionary = {
     subtitle: '上記の研究の背後にある手法、行き詰まり、意思決定についての詳しい記事。',
     posts: [
       { status: '公開 · 2026年10月', title: 'なぜフランス語臨床NERは汎用モデルを機能不全にするのか', body: '標準的なNERパイプラインがフランス語腫瘍学レポートで失敗する箇所と、それがDEMNEの構造設計に与える意味についての解説。', content: `<p>フランス語の腫瘍学レポートを開くと、既製の NER モデルの多くは最初の一文でつまずきます。語彙は密で略語が多く（ER, PR, HER2, Ki67, FISH）、書式は病院ごとに変わり、重要なバイオマーカー用語はこれらのモデルが学習したコーパスにほとんど現れません。よくある反応&mdash;&mdash;大きなモデルを投入する&mdash;&mdash;は機能しますが、高コストで不透明、臨床医や監査人に説明しづらいものです。</p><h2>すべての実体に LLM が要るわけではない</h2><p>DEMNE は率直な観察から出発します。これらのレポートの実体は一様に難しいわけではありません。生検の言及は数通りの安定した書き方しかありませんが、薬剤名は百通りにも現れます。そこで DEMNE は、何にでも一つのモデルを使うのではなく、実体の種類ごとに測定し、十分に信頼できる最も軽い手法&mdash;&mdash;決定的ルール、ファインチューンした transformer、最後の手段としてのみ LLM&mdash;&mdash;へ振り分けます。</p><p>その測定とは、アノテーションから算出する 5 つのコーパス指標です。表層形がどれほど定型的か、語彙がどれほど均質か、小さなキーワード集合が識別的か、言及が否定や矛盾の下にどれほどの頻度で現れるか、そして教師あり学習に足る注釈データがそもそもあるか。決定的な決定グラフがこれらの数値を階層に変換し、その 17 の閾値は多目的探索で較正されます。実体を弱すぎる手法に送る誤りは、単に高価すぎる手法に送る誤りの 2 倍重く罰せられます。</p><h2>何が得られるか</h2><p>腫瘍学の較正セット（59 種の実体）では、ルーティングは専門家の参照階層と 0.954 の一致度で合致し、leave-one-corpus-out 推定は 0.866&mdash;&mdash;いかなる固定階層のベースライン（常にルールで 0.729、常に LLM で 0.148）をも大きく上回ります。より説得力があるのは外部評価です。再調整なしに、モデルが一度も見たことのないがん部位の AP-HP の CT レポート 300 件へ適用したところ、DEMNE は強調された言及の 99.5%（413 件中 411 件）を決定的ルールへ振り分けました。これらのルールは平均 F1 0.941 に達し、現実的な病院予算で同じ実体にファインチューンした transformer は 0.358 にとどまりました。</p><p>言い換えれば、腫瘍学レポートを占める標準化された実体については、ルールは単に安いだけでなく&mdash;&mdash;より優れており、しかも各ルール判断は明示的な条件まで遡れます。これはまさに EU AI Act 第 12 条・第 14 条が求めるものです。</p><h2>どこで止まるか</h2><p>限界について正直でありたいと思います。参照標準は小さく&mdash;&mdash;実体 92 種、うち腫瘍学は 59 種&mdash;&mdash;単一コーパスのスコアは楽観的で、相対比較しか成り立ちません。LLM 階層は外部コホートでエンドツーエンドに評価されておらず、唯一振り分けられた実体は稀すぎました。さらに較正はドメイン間で転移しません。別の臨床ジャンルや言語に移ると一致度は 0.45&ndash;0.73 まで下がり、閾値は再調整が必要です。DEMNE は実現可能性の証明であり、完成品ではありません。</p><h2>なぜ重要か</h2><p>要点はルールが transformer に勝つことではありません。&ldquo;どの手法を使うか&rdquo;が、最も重いモデルを既定にして祈るのではなく、テキストの測定可能な性質から実体ごとに答えられる問いだということです。臨床 NLP&mdash;&mdash;コスト・監査可能性・信頼が同時に問われる領域&mdash;&mdash;では、この枠組みはベンチマークの 1 ポイントより価値があります。</p><p>コードと完全な手法は <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> にあります。論文は準備中です。</p>` },
-      { status: '下書き — 近日公開', title: '段階的抽出 対 単一の大規模モデル', body: 'LLMを呼び出す前にルールとファインチューニング済みTransformerを経由させて実体をルーティングすることの根拠と、それを誤った場合のコスト。' },
+      { status: '公開 · 2026年10月', title: '段階的抽出 対 単一の大規模モデル', body: 'LLMを呼び出す前にルールとファインチューニング済みTransformerを経由させて実体をルーティングすることの根拠と、それを誤った場合のコスト。', content: `<p>難しい NLP の問題をチームに渡すと、今の反射は、使える最大のモデルを持ち出してすべてを任せることです。フランス語の臨床テキストでは、その反射は高コストで遅く、監査しづらく——しかも結局、最も正確ですらありません。DEMNE は逆に賭けます。各エンティティの種類を、それを扱える最も軽いツールへ送り、テキストが本当に要求するときだけ上位へ回します。</p><h2>ハンマーではなく階段</h2><p>パイプラインは 3 層です。決定的ルール——正規表現と厳選した辞書——は、数通りの安定した書き方しかないエンティティ（日付、用量、標準的なバイオマーカー略語）を担います。フランス語腫瘍学テキストでファインチューニングした transformer は、真の意味的・ドメイン的理解を要するエンティティを処理します。LLM は頂点にあり、前の 2 段階を生き延びた本当に曖昧な事例のためだけに取っておかれます。必要以上に上へは登りません。</p><h2>なぜ LLM だけにしないのか</h2><p>単一の大きなモデルは、正規表現なら瞬時に片づくものも含め、すべてのエンティティに LLM のコストを払うからです。遅く、多くの病院にはない GPU 予算を要し、どの判断もブラックボックスで、結局は臨床医や監査人に説明しなければなりません。しかもルーティングのタスク自体では、常に LLM のベースラインが最も悪く、専門家の階層と一致したのはわずか 0.148 でした。最も重いツールが自動的に最も信頼できるわけではありません。</p><h2>ルーティングを誤るコスト</h2><p>段階的抽出は、ルーティングが良いときにのみ見合うので、DEMNE はまさにそこに注意を注ぎます。アノテーションから測った 5 つの指標が決定的な決定グラフに入り、その 17 の閾値は多目的探索で較正されます。目的関数は意図的に非対称です。エンティティを弱すぎる手法へ送る誤りは、単に高価すぎる手法へ送る誤りの 2 倍重く罰せられます——臨床レポートでの抽出漏れは、無駄になった GPU の 1 秒より高くつくからです。</p><h2>数字が語ること</h2><p>腫瘍学の較正セットでは、ルーティングは専門家の参照階層と 0.954 で一致し、常にルールは 0.729、常に LLM は 0.148 でした。未見の AP-HP レポート 300 件へ手を加えずに適用すると、言及の 99.5% を決定的ルールへ振り分け、平均 F1 0.941 に達しました——現実的な病院予算でファインチューニングした transformer は 0.358 にとどまりました。これらのレポートを占める標準化されたエンティティでは、安い階層が同時に正確な階層でもありました。</p><h2>単一モデルが正解になるとき</h2><p>段階化はただではありません。構築・測定・保守すべきルーティング層が増え、閾値は新しいドメインごとに再較正しなければなりません。テキストが均質で、エンティティがどれも同じ難度で、あるいは大きなモデル 1 つに使える予算と監査の許容があるなら、階段は単なるオーバーヘッドです。ここでの主張は狭いものです——コスト・遅延・追跡可能性が同時に重要なとき、臨床 NLP のように、エンティティごとに決めることは、最も重いモデルを既定にして祈ることに勝ります。</p><p>コードと完全な手法は <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> にあります。論文は準備中です。</p>` },
     ],
   },
   contact: {
@@ -2861,6 +2878,7 @@ const ja: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: '通話を予約',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -2888,11 +2906,11 @@ const ko: Dictionary = {
     menuToggleLabel: '메뉴 열기',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · 6개월 연구 인턴십을 찾는 중 · 임상 NLP & 생물의학 AI · 2027년 2월부터',
     h1Pre: 'GPU를 깨우지 않고 ',
     h1Accent: '임상 텍스트에서 바이오마커를 추출합니다',
     h1Post: '',
-    sub: '저는 Clément Longeac입니다. 저는 DEMNE라는 라우팅 프레임워크를 개발하고 있습니다 — 엔티티 유형마다 정규식, CRF, 트랜스포머, LLM 중 어느 것이 그 작업에 정직한 도구인지 결정합니다. 첫 결과: GPU 없이 임상 엔티티의 99.5%를 추출했으며, 300건의 AP-HP 노트에서 F1 = 0.941을 달성했습니다.',
+    sub: "저는 Clément Longeac입니다. 엔티티 유형마다 신뢰할 수 있는 가장 가벼운 방법——규칙, transformer, 또는 LLM——을 선택하는 라우팅 프레임워크 DEMNE를 개발합니다. 처음 보는 AP-HP 코호트에서 언급의 99.5%를 감사 가능한 규칙으로 라우팅하며 F1 0.941에 도달하는데, 미세조정된 transformer는 0.358에 그칩니다.",
     ctaResearch: '연구 보기',
     ctaCV: '이력서 다운로드',
     caption: 'DEMNE — Rules → Transformer → LLM, 실시간 도식',
@@ -2933,7 +2951,7 @@ const ko: Dictionary = {
       title: '규제 정합성 — EU AI Act',
       body: '환자 기록에 대한 임상 개체 추출은 EU AI Act의 고위험 범주에 명확히 해당합니다. DEMNE의 단계별 설계는 사후에 덧붙인 것이 아니라 처음부터 제12조와 제14조를 염두에 두고 만들어졌습니다.',
       articles: [
-        { code: '제12조', label: '기록 보관', desc: '모든 추출 결정은 이를 생성한 단계(규칙, CRF, Transformer, 또는 LLM)와 신뢰도 점수까지 추적 가능하며, 감사 로그를 자동으로 기록할 수 있습니다.' },
+        { code: '제12조', label: '기록 보관', desc: '모든 추출 결정은 이를 생성한 단계(규칙, Transformer, 또는 LLM)와 신뢰도 점수까지 추적 가능하며, 감사 로그를 자동으로 기록할 수 있습니다.' },
         { code: '제14조', label: '인간의 감독', desc: 'LLM 중재 결과는 조용히 수용되지 않고 임상의 검토를 위해 플래그가 지정되어, 모호한 사례에서도 인간이 계속 관여합니다.' },
       ],
     },
@@ -3073,10 +3091,11 @@ const ko: Dictionary = {
         description:
           'Debian의 CI 인프라에서 AMD GPU상의 과학 소프트웨어를 검증하는 autopkgtest 스크립트.',
         longBody:
-          'Synchrotron SOLEIL 인턴십의 일부: AMD GPU 호환성(pyopencl, nabu, ufo-filters, pyvkfft)을 Debian/ROCm 지속적 통합 인프라에서 확인하기 위해 OpenCL로 autopkgtest를 작성하고 GitLab Salsa로 실행했습니다. 스크립트는 깨끗한 가상 머신에서 패키지를 설치·제거하고 GPU 간 호환성을 보고합니다.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Synchrotron SOLEIL의 Div/Exp GRADES 부서에서 진행한 4개월 인턴십으로, Emmanuel Farhi와 Frédéric-Emmanuel Picca가 지도했습니다. 목표는 Debian 과학 패키지가 ROCm을 통해 AMD GPU에서 동작하는지 검증하여 과학 계산 스택의 NVIDIA/CUDA 의존도를 줄이는 것이었습니다.\nOpenCL autopkgtest를 작성하고 podman+ROCm 컨테이너에서(sbuild로) 빌드를 검증한 뒤 Debian의 GitLab Salsa에 업스트림으로 반영했습니다. PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx, sasmodels에 ROCm 자동 테스트를 추가했고, OpenCL 코드가 없는 패키지(genx, examl)나 미완의 Python 2→3 마이그레이션에 막힌 패키지(pysph)는 제외했습니다. Debian 과학 커뮤니티 전체가 NVIDIA에서 AMD로 이동하도록 돕는 첫 번째 구성 요소 모음입니다.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -3089,7 +3108,7 @@ const ko: Dictionary = {
         title: '임상 NLP 및 생물의학 AI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -3146,7 +3165,7 @@ const ko: Dictionary = {
     subtitle: '위 연구를 뒷받침하는 방법, 막다른 길, 결정들에 대한 더 긴 글.',
     posts: [
       { status: '게시됨 · 2026년 10월', title: '프랑스어 임상 NER이 범용 모델을 무너뜨리는 이유', body: '표준 NER 파이프라인이 프랑스어 종양학 보고서에서 실패하는 지점과, 이것이 DEMNE의 구조 설계에 시사하는 바에 대한 설명.', content: `<p>프랑스어 종양학 보고서를 펼치면 대부분의 기성 NER 모델은 첫 문장부터 흔들립니다. 어휘는 조밀하고 약어가 많으며(ER, PR, HER2, Ki67, FISH), 서식은 병원마다 다르고, 정작 중요한 바이오마커 용어는 이 모델들이 학습한 코퍼스에 거의 나타나지 않습니다. 흔한 반응&mdash;&mdash;큰 모델을 투입하는 것&mdash;&mdash;은 통하지만, 비싸고 불투명하며 임상의나 감사자에게 설명하기 어렵습니다.</p><h2>모든 엔터티에 LLM이 필요하지는 않다</h2><p>DEMNE는 단순한 관찰에서 출발합니다. 이 보고서의 엔터티들이 똑같이 어려운 것은 아닙니다. 생검 언급은 몇 가지 안정적인 방식으로 쓰이지만, 약물명은 수백 가지 형태로 나타날 수 있습니다. 그래서 DEMNE는 모든 것에 하나의 모델을 쓰는 대신, 엔터티 유형마다 측정하여 충분히 신뢰할 수 있는 가장 가벼운 방법&mdash;&mdash;결정적 규칙, 미세조정한 transformer, 그리고 최후의 수단으로서의 LLM&mdash;&mdash;으로 보냅니다.</p><p>측정이란 주석에서 계산한 다섯 가지 코퍼스 지표입니다. 표층 형태가 얼마나 정형적인지, 어휘가 얼마나 균질한지, 작은 키워드 집합이 변별력이 있는지, 언급이 부정이나 모순 아래 얼마나 자주 등장하는지, 그리고 지도학습 모델을 훈련할 만큼의 레이블 데이터가 있는지입니다. 결정적 결정 그래프가 이 수치들을 계층으로 바꾸며, 17개의 임계값은 다목적 탐색으로 보정됩니다. 엔터티를 너무 약한 방법으로 보내는 오류는 단지 너무 비싼 방법으로 보내는 오류보다 두 배 무겁게 벌점을 받습니다.</p><h2>무엇을 얻는가</h2><p>종양학 보정 세트(엔터티 유형 59개)에서 라우팅은 전문가 참조 계층과 0.954의 일치도로 일치하며, leave-one-corpus-out 추정치는 0.866&mdash;&mdash;어떤 고정 계층 기준선(항상 규칙 0.729, 항상 LLM 0.148)도 크게 상회합니다. 더 설득력 있는 것은 외부 검증입니다. 재조정 없이, 모델이 한 번도 보지 못한 암 부위의 AP-HP CT 보고서 300건에 적용했을 때 DEMNE는 강조된 언급의 99.5%(413건 중 411건)를 결정적 규칙으로 보냈습니다. 그 규칙들은 평균 F1 0.941에 도달한 반면, 현실적인 병원 예산에서 같은 엔터티로 미세조정한 transformer는 0.358에 그쳤습니다.</p><p>바꿔 말하면, 종양학 보고를 지배하는 표준화된 엔터티에 대해 규칙은 더 저렴할 뿐 아니라&mdash;&mdash;더 우수했고, 모든 규칙 결정은 명시적 조건까지 추적됩니다. 이는 바로 EU AI Act 제12조와 제14조가 요구하는 바입니다.</p><h2>어디서 멈추는가</h2><p>한계에 대해 정직하고 싶습니다. 참조 표준은 작습니다&mdash;&mdash;엔터티 92종, 그중 59종이 종양학&mdash;&mdash;따라서 단일 코퍼스 점수는 낙관적이며 상대 비교만 유효합니다. LLM 계층은 외부 코호트에서 종단 간으로 평가된 적이 없고, 거기로 라우팅된 유일한 엔터티는 너무 드물었습니다. 또한 보정은 도메인 간에 전이되지 않습니다. 다른 임상 장르나 언어로 옮기면 일치도가 0.45&ndash;0.73으로 떨어져 임계값을 다시 맞춰야 합니다. DEMNE는 실현 가능성의 증명이지 완성품이 아닙니다.</p><h2>왜 중요한가</h2><p>핵심은 규칙이 transformer를 이긴다는 것이 아닙니다. &ldquo;어떤 방법을 쓸까&rdquo;를, 가장 무거운 모델을 기본값으로 삼아 요행을 바라는 대신, 텍스트의 측정 가능한 속성으로부터 엔터티별로 답할 수 있다는 것입니다. 비용·감사가능성·신뢰가 동시에 중요한 임상 NLP에서&mdash;&mdash;이 관점은 벤치마크에서 1퍼센트포인트를 더 얻는 것보다 값집니다.</p><p>코드와 전체 방법은 <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>에 있습니다. 논문은 준비 중입니다.</p>` },
-      { status: '초안 — 곧 공개', title: '단계별 추출 대 단일 대형 모델', body: 'LLM을 호출하기 전에 규칙과 미세조정된 Transformer를 거쳐 개체를 라우팅해야 하는 이유와, 잘못했을 때의 대가.' },
+      { status: '게시됨 · 2026년 10월', title: '단계별 추출 대 단일 대형 모델', body: 'LLM을 호출하기 전에 규칙과 미세조정된 Transformer를 거쳐 개체를 라우팅해야 하는 이유와, 잘못했을 때의 대가.', content: `<p>오늘날 어려운 NLP 문제를 팀에 맡기면, 반사적으로 쓸 수 있는 가장 큰 모델을 꺼내 모든 것을 맡깁니다. 프랑스어 임상 텍스트에서 그 반사 작용은 비싸고 느리며 감사하기 어렵고——결국 가장 정확하지도 않습니다. DEMNE는 반대로 베팅합니다. 각 엔티티 유형을 감당할 수 있는 가장 가벼운 도구로 보내고, 텍스트가 정말로 요구할 때만 상위로 올립니다.</p><h2>망치가 아니라 계단</h2><p>파이프라인은 세 계층입니다. 결정적 규칙——정규식과 선별된 사전——은 몇 가지 안정적인 방식으로 쓰이는 엔티티(날짜, 용량, 표준 바이오마커 약어)를 맡습니다. 프랑스어 종양학 텍스트로 미세조정된 transformer는 진정한 의미적·도메인적 이해가 필요한 엔티티를 처리합니다. LLM은 맨 위에 있으며, 앞선 두 단계를 모두 통과한 정말 모호한 경우에만 쓰입니다. 무엇도 필요 이상으로 높이 오르지 않습니다.</p><h2>왜 그냥 LLM만 쓰지 않는가?</h2><p>단일 대형 모델은 정규식이 즉시 해결했을 것까지 포함해 모든 엔티티에 LLM 비용을 치르기 때문입니다. 더 느리고, 대부분의 병원이 갖추지 못한 GPU 예산이 필요하며, 모든 결정이 블랙박스라 결국 임상의나 감사자에게 해명해야 합니다. 게다가 라우팅 작업 자체에서 항상-LLM 기준선이 가장 나빠, 전문가 계층과 일치한 비율은 0.148에 불과했습니다. 가장 무거운 도구가 자동으로 가장 신뢰할 수 있는 것은 아닙니다.</p><h2>라우팅을 잘못할 때의 대가</h2><p>단계별 추출은 라우팅이 좋을 때만 이득이므로, 바로 그곳에 DEMNE가 공을 들입니다. 주석에서 측정한 다섯 가지 지표가 결정적 결정 그래프에 입력되고, 그 17개의 임계값은 다목적 탐색으로 보정됩니다. 목표는 의도적으로 비대칭입니다. 엔티티를 너무 약한 방법으로 보내는 것은 단지 너무 비싼 방법으로 보내는 것보다 두 배 무겁게 벌점을 받습니다——임상 보고서에서 놓친 추출은 낭비된 GPU 1초보다 비싸기 때문입니다.</p><h2>숫자가 말하는 것</h2><p>종양학 보정 세트에서 라우팅은 전문가 참조 계층과 0.954로 일치하며, 항상-규칙은 0.729, 항상-LLM은 0.148입니다. 손대지 않고 처음 보는 AP-HP 보고서 300건에 적용했을 때, 언급의 99.5%를 결정적 규칙으로 보냈고 이는 평균 F1 0.941에 도달했습니다——현실적인 병원 예산에서 미세조정된 transformer는 0.358에 그쳤습니다. 이 보고서를 지배하는 표준화된 엔티티에 대해서는, 값싼 계층이 곧 정확한 계층이었습니다.</p><h2>단일 모델이 정답일 때</h2><p>단계화는 공짜가 아닙니다. 구축·측정·유지해야 할 라우팅 계층이 늘고, 임계값은 새로운 도메인마다 다시 보정해야 합니다. 텍스트가 균질하고, 엔티티가 모두 똑같이 어렵고, 혹은 대형 모델 하나를 쓸 예산과 감사 허용치가 있다면, 그 계단은 그저 오버헤드입니다. 여기서의 주장은 좁습니다——비용·지연·추적가능성이 동시에 중요할 때, 임상 NLP처럼, 엔티티별로 결정하는 편이 가장 무거운 모델을 기본값으로 삼아 요행을 바라는 것보다 낫습니다.</p><p>코드와 전체 방법은 <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>에 있습니다. 논문은 준비 중입니다.</p>` },
     ],
   },
   contact: {
@@ -3156,6 +3175,7 @@ const ko: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: '통화 예약',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -3183,11 +3203,11 @@ const ru: Dictionary = {
     menuToggleLabel: 'Открыть меню',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Ищу 6-месячную исследовательскую стажировку · Клинический NLP и биомедицинский ИИ · с февр. 2027',
     h1Pre: 'Извлекаю биомаркеры из клинического текста ',
     h1Accent: 'не пробуждая GPU',
     h1Post: '',
-    sub: 'Я Clément Longeac. Я работаю над DEMNE — фреймворком маршрутизации, который для каждого типа сущности решает, что является честным инструментом для задачи: регулярное выражение, CRF, трансформер или LLM. Первый результат: 99,5% клинических сущностей извлечено без GPU, F1 = 0,941 на 300 заметках AP-HP.',
+    sub: "Я Clément Longeac. Я создаю DEMNE — фреймворк маршрутизации, который для каждого типа сущности выбирает самый лёгкий метод, остающийся надёжным: правила, трансформер или LLM. На ранее не виденной когорте AP-HP он направляет 99,5 % упоминаний к аудируемым правилам с F1 0,941, тогда как дообученный трансформер достигает лишь 0,358.",
     ctaResearch: 'Смотреть исследование',
     ctaCV: 'Скачать резюме',
     caption: 'DEMNE — Rules → Transformer → LLM, живая схема',
@@ -3228,7 +3248,7 @@ const ru: Dictionary = {
       title: 'Соответствие регулированию — EU AI Act',
       body: 'Извлечение клинических сущностей из записей пациентов однозначно попадает в категорию высокого риска согласно EU AI Act. Поэтапная архитектура DEMNE учитывает статьи 12 и 14 с самого начала, а не добавляет их постфактум.',
       articles: [
-        { code: 'Ст. 12', label: 'Ведение записей', desc: 'Каждое решение об извлечении можно отследить до этапа (правила, CRF, трансформер или LLM) и оценки достоверности, которая его породила, что позволяет автоматически вести журнал аудита.' },
+        { code: 'Ст. 12', label: 'Ведение записей', desc: 'Каждое решение об извлечении можно отследить до этапа (правила, трансформер или LLM) и оценки достоверности, которая его породила, что позволяет автоматически вести журнал аудита.' },
         { code: 'Ст. 14', label: 'Контроль человеком', desc: 'Результаты арбитража LLM помечаются для проверки клиницистом, а не принимаются молча, что сохраняет участие человека в неоднозначных случаях.' },
       ],
     },
@@ -3369,10 +3389,11 @@ const ru: Dictionary = {
         description:
           'Скрипты autopkgtest, проверяющие научное ПО на GPU AMD в CI-инфраструктуре Debian.',
         longBody:
-          'Часть стажировки в Synchrotron SOLEIL: autopkgtests на OpenCL для проверки совместимости GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) в инфраструктуре непрерывной интеграции Debian/ROCm, запускаемые через GitLab Salsa. Скрипты устанавливают и удаляют пакеты на чистых виртуальных машинах и сообщают о совместимости между GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Четырёхмесячная стажировка в подразделении Div/Exp GRADES в Synchrotron SOLEIL под руководством Emmanuel Farhi и Frédéric-Emmanuel Picca. Цель — снизить зависимость стека научных вычислений от NVIDIA/CUDA, проверив, работают ли научные пакеты Debian на GPU AMD через ROCm.\nЯ написал autopkgtests на OpenCL и проверял сборки в контейнере podman+ROCm (через sbuild), затем отправлял их в апстрим в GitLab Salsa Debian. Автотесты ROCm добавлены для PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx и sasmodels; пакеты без кода OpenCL (genx, examl) или застрявшие на незавершённой миграции Python 2→3 (pysph) были исключены. Это первый набор кирпичиков, помогающий всему научному сообществу Debian перейти с NVIDIA на AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -3385,7 +3406,7 @@ const ru: Dictionary = {
         title: 'Клинический NLP и биомедицинский ИИ',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -3442,7 +3463,7 @@ const ru: Dictionary = {
     subtitle: 'Более развёрнутые материалы о методах, тупиках и решениях, стоящих за работой выше.',
     posts: [
       { status: 'Опубликовано · окт. 2026', title: 'Почему французский клинический NER ломает универсальные модели', body: 'Обзор того, где стандартные конвейеры NER терпят неудачу на французских онкологических отчётах, и что это означает для структуры DEMNE.', content: `<p>Откройте французский онкологический отчёт &mdash; и большинство готовых NER-моделей спотыкаются уже на первом предложении. Лексика плотная и сокращённая (ER, PR, HER2, Ki67, FISH), форматирование меняется от больницы к больнице, а важная терминология биомаркеров почти отсутствует в корпусах, на которых эти модели обучались. Привычный рефлекс &mdash; бросить на задачу большую модель &mdash; работает, но дорог, непрозрачен и труден для обоснования перед клиницистом или аудитором.</p><h2>Не каждой сущности нужен LLM</h2><p>DEMNE исходит из простого наблюдения: сущности в этих отчётах не одинаково трудны. Упоминание биопсии пишется несколькими устойчивыми способами; название препарата может встречаться в сотне форм. Поэтому вместо одной модели на всё DEMNE измеряет каждый тип сущности и направляет его к самому лёгкому достаточно надёжному методу &mdash; детерминированному правилу, дообученному transformer или LLM лишь в крайнем случае.</p><p>Измерение &mdash; это пять корпусных метрик, вычисляемых из разметки: насколько шаблонна поверхностная форма, насколько однородна лексика, различителен ли небольшой набор ключевых слов, как часто упоминание попадает под отрицание или противоречие и достаточно ли вообще размеченных данных для обучения модели с учителем. Детерминированный граф решений превращает эти числа в уровень, а его 17 порогов калибруются многокритериальным поиском, который вдвое сильнее штрафует отправку сущности к слишком слабому методу, чем к просто слишком дорогому.</p><h2>Что это даёт</h2><p>На онкологическом калибровочном наборе (59 типов сущностей) маршрутизация совпадает с экспертным эталонным уровнем с согласованностью 0,954 и оценкой leave-one-corpus-out 0,866 &mdash; намного выше любой базовой стратегии с фиксированным уровнем (всегда-правила дают 0,729, всегда-LLM 0,148). Более убедителен внешний тест: примённый без перенастройки к 300 КТ-отчётам AP-HP по ранее не виденным локализациям рака, DEMNE направил 99,5 % выделенных упоминаний (411 из 413) к детерминированным правилам. Эти правила достигли среднего F1 0,941, тогда как transformer, дообученный на тех же сущностях при реалистичном больничном бюджете, дошёл лишь до 0,358.</p><p>Иными словами: для стандартизованных сущностей, доминирующих в онкологической отчётности, правила были не только дешевле &mdash; они были лучше, и каждое решение правила прослеживается до явного условия, что как раз и требуют статьи 12 и 14 EU AI Act.</p><h2>Где он останавливается</h2><p>Хочу быть честным о пределах. Эталонный стандарт мал &mdash; 92 типа сущностей, 59 из них в онкологии &mdash; поэтому оценки на одном корпусе оптимистичны, и верны лишь относительные сравнения. Уровень LLM ни разу не оценивался сквозным образом на внешней когорте; его единственная направленная сущность была слишком редкой. И калибровка не переносится между доменами: в другом клиническом жанре или языке согласованность падает до 0,45&ndash;0,73, так что пороги приходится перенастраивать. DEMNE &mdash; доказательство осуществимости, а не готовый продукт.</p><h2>Почему это важно</h2><p>Суть не в том, что правила побеждают transformer’ы. Суть в том, что &laquo;какой метод&raquo; &mdash; это вопрос, на который можно ответить для каждой сущности, исходя из измеримых свойств текста, а не выбирать по умолчанию самую тяжёлую модель и надеяться. Для клинического NLP &mdash; где цена, аудируемость и доверие важны одновременно &mdash; такая постановка стоит больше, чем ещё один процентный пункт на бенчмарке.</p><p>Код и полный метод &mdash; на <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; рукопись готовится.</p>` },
-      { status: 'Черновик — скоро', title: 'Поэтапное извлечение против одной большой модели', body: 'Аргументы в пользу направления сущностей через правила и дообученный трансформер, прежде чем вообще вызывать LLM — и цена ошибки в этом решении.' },
+      { status: 'Опубликовано · окт. 2026', title: 'Поэтапное извлечение против одной большой модели', body: 'Аргументы в пользу направления сущностей через правила и дообученный трансформер, прежде чем вообще вызывать LLM — и цена ошибки в этом решении.', content: `<p>Передайте сегодня команде трудную задачу NLP &mdash; и рефлекс в том, чтобы взять самую большую доступную модель и позволить ей разобраться со всем. На французском клиническом тексте этот рефлекс дорог, медлен и труден для аудита &mdash; и, как выясняется, даже не самый точный. DEMNE делает обратную ставку: направлять каждый тип сущности к самому лёгкому инструменту, который справится, и эскалировать лишь тогда, когда текст действительно этого требует.</p><h2>Лестница, а не молоток</h2><p>В конвейере три уровня. Детерминированные правила &mdash; регулярные выражения и отобранные лексиконы &mdash; берут сущности, записываемые несколькими устойчивыми способами: даты, дозировки, стандартные сокращения биомаркеров. Трансформер, дообученный на французском онкологическом тексте, обрабатывает сущности, требующие настоящего семантического и доменного понимания. LLM стоит на вершине, оставаясь для действительно неоднозначных случаев, переживших оба предыдущих этапа. Ничто не поднимается выше, чем необходимо.</p><h2>Почему не один только LLM?</h2><p>Потому что одна большая модель платит цену LLM за каждую сущность, включая те, что регулярное выражение решило бы мгновенно. Она медленнее, требует бюджета GPU, которого у большинства больниц нет, и каждое решение &mdash; чёрный ящик, который всё равно надо обосновать перед клиницистом или аудитором. А на самой задаче маршрутизации базовая стратегия всегда-LLM оказалась худшей, совпадая с экспертным уровнем лишь в 0,148 случаев. Самый тяжёлый инструмент не автоматически самый надёжный.</p><h2>Цена неверной маршрутизации</h2><p>Поэтапное извлечение окупается только при хорошей маршрутизации, поэтому именно туда DEMNE вкладывает внимание. Пять метрик, измеренных по разметке, питают детерминированный граф решений, чьи 17 порогов калибруются многокритериальным поиском. Цель намеренно асимметрична: отправить сущность к слишком слабому методу штрафуется вдвое сильнее, чем к просто слишком дорогому &mdash; ведь пропущенное извлечение в клиническом отчёте стоит дороже потраченной секунды GPU.</p><h2>Что говорят цифры</h2><p>На онкологическом калибровочном наборе маршрутизация совпадает с экспертным эталонным уровнем в 0,954 случаев против 0,729 у всегда-правил и 0,148 у всегда-LLM. Применённая без изменений к 300 невиданным отчётам AP-HP, она направила 99,5 % упоминаний к детерминированным правилам, достигшим среднего F1 0,941 &mdash; тогда как трансформер, дообученный при реалистичном больничном бюджете, дошёл лишь до 0,358. Для стандартизованных сущностей, доминирующих в этих отчётах, дешёвый уровень был и самым точным.</p><h2>Когда одна модель &mdash; правильный ответ</h2><p>Этапность не бесплатна: она добавляет слой маршрутизации, который надо строить, измерять и поддерживать, а пороги приходится перекалибровывать для каждого нового домена. Если текст однороден, сущности одинаково трудны или есть бюджет и аудиторская терпимость к одной большой модели, лестница &mdash; лишь накладные расходы. Утверждение здесь узкое: когда цена, задержка и прослеживаемость важны одновременно, как в клиническом NLP, решать по каждой сущности лучше, чем по умолчанию брать самую тяжёлую модель и надеяться.</p><p>Код и полный метод &mdash; на <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; рукопись готовится.</p>` },
     ],
   },
   contact: {
@@ -3452,6 +3473,7 @@ const ru: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Назначить звонок',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -3479,11 +3501,11 @@ const ar: Dictionary = {
     menuToggleLabel: 'فتح القائمة',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · أبحث عن تدريب بحثي لمدة 6 أشهر · معالجة اللغة السريرية والذكاء الاصطناعي الطبي الحيوي · اعتبارًا من فبراير 2027',
     h1Pre: 'أستخرج المؤشرات الحيوية من النص السريري ',
     h1Accent: 'دون إيقاظ وحدة معالجة الرسومات',
     h1Post: '',
-    sub: 'أنا كليمون لونجياك. أعمل على DEMNE، إطار عمل للتوجيه يقرر — لكل نوع من الكيانات — ما إذا كانت الأداة الصادقة للمهمة هي تعبير نمطي (regex)، أو CRF، أو محول (transformer)، أو نموذج لغوي كبير (LLM). النتيجة الأولى: استخراج 99.5% من الكيانات السريرية دون استخدام وحدة معالجة الرسومات، بدقة F1 = 0.941 على 300 ملاحظة من AP-HP.',
+    sub: "أنا Clément Longeac. أطوّر DEMNE، إطار توجيه يختار لكل نوع كيان أخفّ طريقة تظل موثوقة: قواعد أو محوّل (transformer) أو نموذج لغوي كبير. على مجموعة AP-HP لم يرها من قبل، يوجّه 99.5% من الإشارات إلى قواعد قابلة للتدقيق بقيمة F1 تساوي 0.941، حيث لا يتجاوز المحوّل المضبوط 0.358.",
     ctaResearch: 'استعرض الأبحاث',
     ctaCV: 'تحميل السيرة الذاتية',
     caption: 'DEMNE — Rules → Transformer → LLM، مخطط حي',
@@ -3524,7 +3546,7 @@ const ar: Dictionary = {
       title: 'التوافق التنظيمي — قانون الذكاء الاصطناعي الأوروبي',
       body: 'يقع استخراج الكيانات السريرية من سجلات المرضى بوضوح ضمن فئة المخاطر العالية في قانون الذكاء الاصطناعي الأوروبي. يأخذ التصميم المتدرج لـDEMNE المادتين 12 و14 بعين الاعتبار منذ البداية، وليس كإضافة لاحقة.',
       articles: [
-        { code: 'المادة 12', label: 'حفظ السجلات', desc: 'يمكن تتبع كل قرار استخراج حتى المرحلة (القواعد، CRF، المحولات، أو النموذج اللغوي الكبير) ودرجة الثقة التي أنتجته، مما يتيح تسجيلًا تلقائيًا للتدقيق.' },
+        { code: 'المادة 12', label: 'حفظ السجلات', desc: 'يمكن تتبع كل قرار استخراج حتى المرحلة (القواعد، المحولات، أو النموذج اللغوي الكبير) ودرجة الثقة التي أنتجته، مما يتيح تسجيلًا تلقائيًا للتدقيق.' },
         { code: 'المادة 14', label: 'الرقابة البشرية', desc: 'تُوسم مخرجات تحكيم النموذج اللغوي الكبير لمراجعة الطبيب بدلًا من قبولها بصمت، مما يُبقي الإنسان جزءًا من الحلقة في الحالات الغامضة.' },
       ],
     },
@@ -3664,10 +3686,11 @@ const ar: Dictionary = {
         description:
           'نصوص autopkgtest تتحقق من البرمجيات العلمية على وحدات معالجة الرسوميات AMD، على بنية التكامل المستمر في Debian.',
         longBody:
-          'جزء من تدريب في Synchrotron SOLEIL: نصوص autopkgtest مكتوبة بلغة OpenCL للتحقق من توافق وحدات معالجة الرسوميات AMD (pyopencl، nabu، ufo-filters، pyvkfft) عبر بنية التكامل المستمر Debian/ROCm، تُشغَّل عبر GitLab Salsa. تثبّت النصوص الحِزم وتزيلها على أجهزة افتراضية نظيفة وتُبلّغ عن التوافق بين وحدات المعالجة.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'تدريب لمدة 4 أشهر في قسم Div/Exp GRADES بمنشأة Synchrotron SOLEIL، بإشراف Emmanuel Farhi وFrédéric-Emmanuel Picca. الهدف: تقليل اعتماد منظومة الحوسبة العلمية على NVIDIA/CUDA عبر اختبار ما إذا كانت حِزم Debian العلمية تعمل على وحدات معالجة الرسوميات AMD من خلال ROCm.\nكتبتُ autopkgtests بلغة OpenCL وتحقّقت من عمليات البناء داخل حاوية podman+ROCm (عبر sbuild)، ثم دفعتُها إلى الأعلى في GitLab Salsa الخاص بـ Debian. أُضيفت اختبارات ROCm التلقائية لـ PyOpenCL وNabu وUfo-filters وclpeak وpyvkfft وgpyfft وsilx وsasmodels؛ واستُبعدت الحِزم التي لا تحتوي على شيفرة OpenCL (genx وexaml) أو المتوقّفة عند ترحيل غير مكتمل من Python 2 إلى 3 (pysph). إنها مجموعة أولى من اللبنات تساعد مجتمع Debian العلمي بأكمله على الانتقال من NVIDIA إلى AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -3680,7 +3703,7 @@ const ar: Dictionary = {
         title: 'معالجة اللغة السريرية والذكاء الاصطناعي الحيوي الطبي',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -3737,7 +3760,7 @@ const ar: Dictionary = {
     subtitle: 'مقالات أطول حول الأساليب والطرق المسدودة والقرارات التي شكّلت العمل أعلاه.',
     posts: [
       { status: 'نُشر · أكتوبر 2026', title: 'لماذا يُفشل التعرف على الكيانات السريرية الفرنسية النماذج العامة', body: 'جولة على النقاط التي تفشل فيها خطوط أنابيب التعرف على الكيانات القياسية في تقارير الأورام الفرنسية، وما يعنيه ذلك لبنية DEMNE.', content: `<p>افتح تقريرًا فرنسيًا في علم الأورام، وستتعثر معظم نماذج NER الجاهزة منذ الجملة الأولى. فالمفردات كثيفة ومختصرة (ER، PR، HER2، Ki67، FISH)، والتنسيق يتغيّر من مستشفى إلى آخر، ومصطلحات المؤشرات الحيوية المهمة تكاد تغيب عن المجموعات التي دُرِّبت عليها هذه النماذج. ورد الفعل المعتاد &mdash; إلقاء نموذج كبير على المشكلة &mdash; ينجح، لكنه مكلف وغامض ويصعب تبريره أمام طبيب سريري أو مدقّق.</p><h2>ليست كل كيان بحاجة إلى نموذج لغوي كبير</h2><p>ينطلق DEMNE من ملاحظة صريحة: الكيانات في هذه التقارير ليست متساوية الصعوبة. فذكر الخزعة يُكتب بعدد قليل من الصيغ الثابتة؛ أما اسم الدواء فقد يظهر بمئة شكل. لذا، بدلًا من نموذج واحد لكل شيء، يقيس DEMNE كل نوع كيان ويوجّهه إلى أخف طريقة تظل موثوقة &mdash; قاعدة حتمية، أو transformer مضبوط، أو نموذج لغوي كبير كملاذ أخير فقط.</p><p>والقياس هو خمسة مقاييس للمجموعات تُحسب من التعليقات التوضيحية: مدى انتظام الشكل السطحي، ومدى تجانس المفردات، وما إذا كانت مجموعة صغيرة من الكلمات المفتاحية مميِّزة، وكم مرة يقع الذكر تحت النفي أو التناقض، وما إذا كانت هناك بيانات موسومة كافية لتدريب نموذج خاضع للإشراف أصلًا. ويحوّل مخطط قرار حتمي هذه الأرقام إلى مستوى، وتُعاير عتباته السبع عشرة ببحث متعدد الأهداف يعاقب إرسال كيان إلى طريقة أضعف من اللازم ضعفَي عقوبة إرساله إلى طريقة مكلفة أكثر من اللازم فحسب.</p><h2>ماذا يحقق</h2><p>على مجموعة المعايرة الأورامية (59 نوع كيان)، يتوافق التوجيه مع المستوى المرجعي للخبراء بتوافق قدره 0.954 وتقدير leave-one-corpus-out قدره 0.866 &mdash; أعلى بكثير من أي أساس ثابت المستوى (دائمًا-القواعد يبلغ 0.729، ودائمًا-النموذج اللغوي 0.148). والاختبار الأكثر إقناعًا خارجي: إذ طُبِّق دون أي إعادة ضبط على 300 تقرير أشعة مقطعية من AP-HP في مواقع سرطانية لم يرها النموذج قط، فوجّه DEMNE 99.5% من الإشارات المميَّزة (411 من 413) إلى قواعد حتمية. وبلغت هذه القواعد متوسط F1 قدره 0.941، بينما لم يتجاوز transformer مضبوط على الكيانات نفسها ضمن ميزانية مستشفى واقعية سوى 0.358.</p><p>بعبارة أخرى: بالنسبة للكيانات المعيارية التي تهيمن على التقارير الأورامية، لم تكن القواعد أرخص فحسب &mdash; بل كانت أفضل، ويمكن تتبّع كل قرار قاعدة حتى شرط صريح، وهو تحديدًا ما تطلبه المادتان 12 و14 من EU AI Act.</p><h2>أين يتوقف</h2><p>أودّ أن أكون صادقًا بشأن الحدود. فالمعيار المرجعي صغير &mdash; 92 نوع كيان، منها 59 في علم الأورام &mdash; لذا فإن درجات المجموعة الواحدة متفائلة ولا تصحّ إلا المقارنات النسبية. ولم يُقيَّم مستوى النموذج اللغوي الكبير من طرف إلى طرف على المجموعة الخارجية؛ إذ كان الكيان الوحيد الموجَّه إليه نادرًا للغاية. كما أن المعايرة لا تنتقل بين المجالات: فعند الانتقال إلى نوع سريري آخر أو لغة أخرى يهبط التوافق إلى 0.45&ndash;0.73، ويجب إعادة ضبط العتبات. إن DEMNE إثبات جدوى، لا منتجًا مكتملًا.</p><h2>لماذا يهم</h2><p>ليست الفكرة أن القواعد تتفوّق على transformer. بل أن &laquo;أي طريقة&raquo; سؤال يمكن الإجابة عنه كيانًا بكيان، انطلاقًا من خصائص قابلة للقياس في النص، بدل اللجوء افتراضيًا إلى أثقل نموذج والأمل في النجاح. وبالنسبة لمعالجة اللغة السريرية &mdash; حيث تتزامن أهمية الكلفة وقابلية التدقيق والثقة &mdash; يساوي هذا التأطير أكثر من نقطة مئوية إضافية على معيار قياس.</p><p>الشيفرة والطريقة الكاملة على <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>؛ والمخطوطة قيد الإعداد.</p>` },
-      { status: 'مسودة — قريبًا', title: 'الاستخراج المتدرج مقابل نموذج كبير واحد', body: 'الحجة وراء توجيه الكيانات عبر القواعد ومحوّل مضبوط قبل استدعاء أي نموذج لغوي كبير — وما تكلفة الخطأ في ذلك.' },
+      { status: 'نُشر · أكتوبر 2026', title: 'الاستخراج المتدرج مقابل نموذج كبير واحد', body: 'الحجة وراء توجيه الكيانات عبر القواعد ومحوّل مضبوط قبل استدعاء أي نموذج لغوي كبير — وما تكلفة الخطأ في ذلك.', content: `<p>سلّم فريقًا اليوم مسألة معالجة لغة طبيعية صعبة، وسيكون ردّ الفعل هو الوصول إلى أكبر نموذج متاح وترك كل شيء له. على النص السريري الفرنسي، ردّ الفعل هذا مكلف وبطيء وصعب التدقيق &mdash; وفي النهاية ليس حتى الأدقّ. يراهن DEMNE على العكس: إرسال كل نوع كيان إلى أخفّ أداة قادرة على التعامل معه، والتصعيد فقط حين يتطلّب النص ذلك فعلًا.</p><h2>سُلّم، لا مطرقة</h2><p>يتكوّن المسار من ثلاث طبقات. القواعد الحتمية &mdash; التعبيرات النمطية والمعاجم المنتقاة &mdash; تتولّى الكيانات المكتوبة بعدد قليل من الصيغ الثابتة: التواريخ والجرعات والاختصارات المعيارية للمؤشرات الحيوية. ومحوّل (transformer) مضبوط على نص أورام فرنسي يعالج الكيانات التي تتطلّب فهمًا دلاليًا وميدانيًا حقيقيًا. ويقع النموذج اللغوي الكبير في القمة، محجوزًا للحالات الغامضة فعلًا التي تنجو من المرحلتين السابقتين. ولا يصعد شيء أعلى مما يلزم.</p><h2>لماذا لا نكتفي بالنموذج اللغوي الكبير؟</h2><p>لأن نموذجًا واحدًا كبيرًا يدفع كلفة النموذج اللغوي الكبير على كل كيان، بما فيها ما كان تعبير نمطي ليحسمه فورًا. فهو أبطأ، ويحتاج ميزانية وحدات رسوميات لا تملكها معظم المستشفيات، وكل قرار صندوق أسود يجب تبريره رغم ذلك أمام طبيب أو مدقّق. وفي مهمة التوجيه نفسها كان خط الأساس «دائمًا النموذج اللغوي» الأسوأ، إذ وافق المستوى الخبير بنسبة 0.148 فقط. فالأداة الأثقل ليست تلقائيًا الأوثق.</p><h2>كلفة التوجيه الخاطئ</h2><p>لا يُجدي الاستخراج المرحلي إلا إذا كان التوجيه جيدًا، ولذلك يصبّ DEMNE عنايته هناك. خمسة مقاييس مأخوذة من التعليقات التوضيحية تغذّي مخطط قرار حتميًا تُعاير عتباته السبع عشرة ببحث متعدد الأهداف. والهدف غير متماثل عن عمد: إرسال كيان إلى طريقة أضعف من اللازم يُعاقَب ضعف عقوبة إرساله إلى طريقة مكلفة أكثر من اللازم فحسب &mdash; لأن استخراجًا فائتًا في تقرير سريري أغلى من ثانية وحدة رسوميات مهدورة.</p><h2>ماذا تقول الأرقام</h2><p>على مجموعة المعايرة الأورامية، يوافق التوجيه المستوى المرجعي للخبراء بنسبة 0.954، مقابل 0.729 لـ«دائمًا القواعد» و0.148 لـ«دائمًا النموذج اللغوي». وبتطبيقه دون تعديل على 300 تقرير AP-HP لم تُرَ من قبل، وجّه 99.5% من الإشارات إلى قواعد حتمية بلغت متوسط F1 قدره 0.941 &mdash; بينما لم يتجاوز محوّل مضبوط ضمن ميزانية مستشفى واقعية 0.358. فبالنسبة للكيانات المعيارية التي تهيمن على هذه التقارير، كانت الطبقة الأرخص هي الأدقّ أيضًا.</p><h2>متى يكون النموذج الواحد هو الجواب الصحيح</h2><p>ليست المرحلية مجانية: فهي تضيف طبقة توجيه ينبغي بناؤها وقياسها وصيانتها، وعلى العتبات أن تُعاد معايرتها لكل مجال جديد. فإذا كان النص متجانسًا، والكيانات كلها بالصعوبة نفسها، أو توافرت الميزانية وتحمّل التدقيق لنموذج واحد كبير، فإن السُّلّم مجرد عبء إضافي. والدعوى هنا ضيّقة &mdash; حين تهمّ الكلفة والكمون وقابلية التتبّع في آنٍ واحد، كما في المعالجة السريرية للغة، يتفوّق القرار كيانًا بكيان على اللجوء افتراضيًا إلى أثقل نموذج والأمل.</p><p>الشيفرة والطريقة الكاملة على <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>؛ والمخطوطة قيد الإعداد.</p>` },
     ],
   },
   contact: {
@@ -3747,6 +3770,7 @@ const ar: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'حجز مكالمة',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -3774,11 +3798,11 @@ const hi: Dictionary = {
     menuToggleLabel: 'मेनू खोलें',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · 6 महीने की शोध इंटर्नशिप की तलाश · क्लिनिकल NLP और बायोमेडिकल AI · फ़रवरी 2027 से',
     h1Pre: 'क्लिनिकल टेक्स्ट से बायोमार्कर निकालना, ',
     h1Accent: 'बिना GPU जगाए',
     h1Post: '।',
-    sub: 'मैं क्लेमों लोंज्याक हूँ। मैं DEMNE पर काम कर रहा हूँ, एक रूटिंग फ्रेमवर्क जो हर एंटिटी टाइप के लिए तय करता है — कि क्या रेगेक्स, CRF, ट्रांसफॉर्मर, या LLM उस काम के लिए ईमानदार टूल है। पहला परिणाम: बिना GPU के 99.5% क्लिनिकल एंटिटी निकाली गईं, 300 AP-HP नोट्स पर F1 = 0.941।',
+    sub: "मैं Clément Longeac हूँ। मैं DEMNE बनाता हूँ, एक रूटिंग फ्रेमवर्क जो हर एंटिटी प्रकार के लिए सबसे हल्की पर विश्वसनीय विधि चुनता है — नियम, एक ट्रांसफॉर्मर, या एक LLM। एक अनदेखी AP-HP कोहॉर्ट पर यह 99.5% उल्लेखों को ऑडिट-योग्य नियमों की ओर भेजता है, F1 0.941 के साथ, जबकि फाइन-ट्यून किया ट्रांसफॉर्मर केवल 0.358 तक पहुँचता है।",
     ctaResearch: 'अनुसंधान देखें',
     ctaCV: 'सीवी डाउनलोड करें',
     caption: 'DEMNE — Rules → Transformer → LLM, लाइव योजनाबद्ध चित्र',
@@ -3807,7 +3831,7 @@ const hi: Dictionary = {
     tagline: 'क्लिनिकल एनईआर · फ्रेंच ऑन्कोलॉजी कॉर्पस',
     p1: 'रेडीमेड एनईआर मॉडल फ्रेंच क्लिनिकल टेक्स्ट पर बुरी तरह विफल होते हैं: घने संक्षिप्ताक्षर, अस्पताल प्रणालियों के बीच असंगत फॉर्मेटिंग, और बायोमार्कर शब्दावली जो सामान्य प्रशिक्षण डेटा में मुश्किल से दिखाई देती है। DEMNE इसे एक ही मॉडल के बजाय एक चरणबद्ध पाइपलाइन से हल करता है — हर चरण वही करता है जो उसमें सबसे अच्छा होता है, और आवश्यकता पड़ने पर ही भारी मॉडल की ओर बढ़ता है।',
     p2: 'यह सिस्टम तीन अलग-अलग फ्रेंच ऑन्कोलॉजी कॉर्पस पर DrBERT-7GB को फाइन-ट्यून करता है, और उपचार-संबंधी रिपोर्टिंग में इस्तेमाल होने वाले सात प्राथमिकता वाले बायोमार्कर एंटिटी प्रकारों को लक्षित करता है।',
-    tags: ['क्लिनिकल एनएलपी', 'सीआरएफ', 'ट्रांसफॉर्मर', 'DrBERT-7GB', 'फ्रेंच ऑन्कोलॉजी'],
+    tags: ['क्लिनिकल एनएलपी', 'ट्रांसफॉर्मर', 'DrBERT-7GB', 'फ्रेंच ऑन्कोलॉजी'],
     viewRepo: 'रिपॉज़िटरी देखें',
     readMethodology: 'मेथडोलॉजी पढ़ें',
     pipeline: [
@@ -3819,7 +3843,7 @@ const hi: Dictionary = {
       title: 'नियामक अनुपालन — EU AI Act',
       body: 'रोगी रिकॉर्ड पर क्लिनिकल एंटिटी एक्सट्रैक्शन स्पष्ट रूप से EU AI Act की उच्च-जोखिम श्रेणी में आता है। DEMNE का चरणबद्ध डिज़ाइन शुरुआत से ही अनुच्छेद 12 और 14 को ध्यान में रखता है, बाद में जोड़े गए उपाय के रूप में नहीं।',
       articles: [
-        { code: 'अनुच्छेद 12', label: 'रिकॉर्ड-कीपिंग', desc: 'हर एक्सट्रैक्शन निर्णय उस चरण (नियम, सीआरएफ, ट्रांसफॉर्मर, या एलएलएम) और विश्वास स्कोर तक ट्रेस किया जा सकता है जिसने उसे उत्पन्न किया, जिससे स्वचालित ऑडिट लॉगिंग संभव होती है।' },
+        { code: 'अनुच्छेद 12', label: 'रिकॉर्ड-कीपिंग', desc: 'हर एक्सट्रैक्शन निर्णय उस चरण (नियम, ट्रांसफॉर्मर, या एलएलएम) और विश्वास स्कोर तक ट्रेस किया जा सकता है जिसने उसे उत्पन्न किया, जिससे स्वचालित ऑडिट लॉगिंग संभव होती है।' },
         { code: 'अनुच्छेद 14', label: 'मानव निगरानी', desc: 'एलएलएम मध्यस्थता के आउटपुट को चुपचाप स्वीकार करने के बजाय क्लिनिशियन समीक्षा के लिए फ्लैग किया जाता है, जिससे अस्पष्ट मामलों में मानव की भूमिका बनी रहती है।' },
       ],
     },
@@ -3959,10 +3983,11 @@ const hi: Dictionary = {
         description:
           'Debian की CI अवसंरचना पर, AMD GPU पर वैज्ञानिक सॉफ़्टवेयर को सत्यापित करने वाले autopkgtest स्क्रिप्ट।',
         longBody:
-          'Synchrotron SOLEIL इंटर्नशिप का हिस्सा: AMD GPU संगतता (pyopencl, nabu, ufo-filters, pyvkfft) की जाँच के लिए OpenCL में लिखे गए autopkgtest, जो Debian/ROCm निरंतर-एकीकरण अवसंरचना पर GitLab Salsa के माध्यम से चलते हैं। स्क्रिप्ट साफ़ वर्चुअल मशीनों पर पैकेज इंस्टॉल और अनइंस्टॉल करती हैं और GPU के बीच संगतता की रिपोर्ट देती हैं।',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Synchrotron SOLEIL की Div/Exp GRADES शाखा में 4 महीने की इंटर्नशिप, Emmanuel Farhi और Frédéric-Emmanuel Picca के मार्गदर्शन में। उद्देश्य: यह परखकर कि Debian के वैज्ञानिक पैकेज ROCm के माध्यम से AMD GPU पर चलते हैं या नहीं, वैज्ञानिक-गणना स्टैक की NVIDIA/CUDA पर निर्भरता घटाना।\nमैंने OpenCL में autopkgtests लिखे और podman+ROCm कंटेनर में (sbuild के ज़रिए) बिल्ड सत्यापित किए, फिर उन्हें Debian के GitLab Salsa में अपस्ट्रीम भेजा। PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx और sasmodels के लिए ROCm ऑटो-टेस्ट जोड़े गए; जिन पैकेजों में OpenCL कोड नहीं था (genx, examl) या जो अधूरे Python 2→3 माइग्रेशन पर अटके थे (pysph), उन्हें छोड़ दिया गया। यह पहली कुछ बुनियादी ईंटें हैं जो पूरे Debian वैज्ञानिक समुदाय को NVIDIA से AMD की ओर बढ़ने में मदद करती हैं।',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -3975,7 +4000,7 @@ const hi: Dictionary = {
         title: 'क्लिनिकल एनएलपी और बायोमेडिकल एआई',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -4032,7 +4057,7 @@ const hi: Dictionary = {
     subtitle: 'ऊपर दिए गए कार्य के पीछे की विधियों, गतिरोधों और निर्णयों पर लंबे लेख।',
     posts: [
       { status: 'प्रकाशित · अक्तू. 2026', title: 'फ्रेंच क्लिनिकल एनईआर सामान्य-उद्देश्य मॉडलों को क्यों तोड़ देता है', body: 'यह एक विश्लेषण है कि मानक एनईआर पाइपलाइन फ्रेंच ऑन्कोलॉजी रिपोर्टों पर कहाँ विफल होते हैं, और इसका DEMNE की संरचना के लिए क्या मतलब है।', content: `<p>कोई फ़्रेंच ऑन्कोलॉजी रिपोर्ट खोलिए और अधिकांश तैयार-मिलने वाले NER मॉडल पहली ही पंक्ति में लड़खड़ा जाते हैं। शब्दावली सघन और संक्षिप्त है (ER, PR, HER2, Ki67, FISH), स्वरूपण हर अस्पताल में बदलता है, और जो बायोमार्कर शब्दावली मायने रखती है वह उन कॉर्पस में लगभग अनुपस्थित है जिन पर ये मॉडल प्रशिक्षित हुए। सामान्य प्रतिक्रिया &mdash; उस पर एक बड़ा मॉडल दाग देना &mdash; काम तो करती है, पर महँगी, अपारदर्शी और किसी चिकित्सक या ऑडिटर के सामने उचित ठहराना कठिन है।</p><h2>हर एंटिटी को LLM की ज़रूरत नहीं</h2><p>DEMNE एक सीधे अवलोकन से शुरू होता है: इन रिपोर्टों की एंटिटियाँ समान रूप से कठिन नहीं हैं। बायोप्सी का उल्लेख कुछ स्थिर रूपों में लिखा जाता है; जबकि दवा का नाम सौ रूपों में आ सकता है। इसलिए हर चीज़ के लिए एक ही मॉडल के बजाय, DEMNE प्रत्येक एंटिटी प्रकार को मापता है और उसे सबसे हल्की पर पर्याप्त विश्वसनीय विधि की ओर भेजता है &mdash; एक नियतात्मक नियम, एक फ़ाइन-ट्यून किया transformer, या अंतिम उपाय के रूप में ही LLM।</p><p>यह माप एनोटेशन से परिकलित पाँच कॉर्पस मेट्रिक्स हैं: सतही रूप कितना टेम्पलेट-योग्य है, शब्दावली कितनी समरूप है, क्या एक छोटा कीवर्ड-समुच्चय विभेदक है, उल्लेख कितनी बार निषेध या विरोधाभास के अधीन आता है, और क्या पर्यवेक्षित मॉडल को प्रशिक्षित करने के लिए पर्याप्त लेबल डेटा है ही। एक नियतात्मक निर्णय-ग्राफ़ इन संख्याओं को एक स्तर में बदलता है, और इसके 17 थ्रेशहोल्ड एक बहु-उद्देश्यीय खोज से कैलिब्रेट किए जाते हैं, जो किसी एंटिटी को बहुत कमज़ोर विधि की ओर भेजने पर, महज़ बहुत महँगी विधि की तुलना में, दोगुना दंड देती है।</p><h2>इससे क्या मिलता है</h2><p>ऑन्कोलॉजी कैलिब्रेशन सेट (59 एंटिटी प्रकार) पर, रूटिंग विशेषज्ञ संदर्भ स्तर से 0.954 की सहमति और 0.866 के leave-one-corpus-out अनुमान के साथ मेल खाती है &mdash; किसी भी स्थिर-स्तर बेसलाइन से कहीं ऊपर (सदा-नियम 0.729, सदा-LLM 0.148)। अधिक ठोस परीक्षण बाह्य है: बिना किसी पुनः-समायोजन के AP-HP की 300 CT रिपोर्टों पर, ऐसे कैंसर स्थलों के लिए जो मॉडल ने कभी नहीं देखे, DEMNE ने 99.5% चिह्नित उल्लेखों (413 में से 411) को नियतात्मक नियमों की ओर भेजा। उन नियमों ने 0.941 का औसत F1 प्राप्त किया, जबकि यथार्थ अस्पताल बजट में उन्हीं एंटिटियों पर फ़ाइन-ट्यून किया transformer केवल 0.358 तक पहुँच पाया।</p><p>दूसरे शब्दों में: ऑन्कोलॉजी रिपोर्टिंग पर हावी मानकीकृत एंटिटियों के लिए, नियम केवल सस्ते ही नहीं थे &mdash; वे बेहतर थे, और हर नियम-निर्णय एक स्पष्ट शर्त तक अनुरेखित होता है, जो ठीक वही है जो EU AI Act के अनुच्छेद 12 और 14 माँगते हैं।</p><h2>यह कहाँ रुकता है</h2><p>मैं सीमाओं के बारे में ईमानदार रहना चाहता हूँ। संदर्भ मानक छोटा है &mdash; 92 एंटिटी प्रकार, जिनमें 59 ऑन्कोलॉजी में &mdash; इसलिए एकल-कॉर्पस स्कोर आशावादी हैं और केवल सापेक्ष तुलनाएँ ही टिकती हैं। LLM स्तर का बाह्य समूह पर आद्योपांत मूल्यांकन कभी नहीं हुआ; उसकी एकमात्र रूट की गई एंटिटी बहुत दुर्लभ थी। और कैलिब्रेशन डोमेनों के बीच स्थानांतरित नहीं होता: किसी अन्य क्लिनिकल शैली या भाषा पर सहमति 0.45&ndash;0.73 तक गिर जाती है, इसलिए थ्रेशहोल्ड दोबारा फ़िट करने पड़ते हैं। DEMNE व्यवहार्यता का प्रमाण है, कोई तैयार उत्पाद नहीं।</p><h2>यह क्यों मायने रखता है</h2><p>बात यह नहीं कि नियम transformer को हरा देते हैं। बात यह है कि &ldquo;कौन-सी विधि&rdquo; एक ऐसा प्रश्न है जिसका उत्तर पाठ के मापनीय गुणों से, एंटिटी-दर-एंटिटी दिया जा सकता है &mdash; न कि डिफ़ॉल्ट रूप से सबसे भारी मॉडल चुनकर उम्मीद लगाना। क्लिनिकल NLP के लिए &mdash; जहाँ लागत, ऑडिट-योग्यता और विश्वास एक साथ मायने रखते हैं &mdash; यह दृष्टिकोण किसी बेंचमार्क पर एक और प्रतिशत-अंक से अधिक मूल्यवान है।</p><p>कोड और पूरी विधि <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> पर है; पांडुलिपि तैयारी में है।</p>` },
-      { status: 'ड्राफ्ट — जल्द आ रहा है', title: 'चरणबद्ध एक्सट्रैक्शन बनाम एकल बड़ा मॉडल', body: 'एलएलएम को कॉल करने से पहले नियमों और एक फाइन-ट्यून किए गए ट्रांसफॉर्मर के माध्यम से एंटिटीज़ को रूट करने का तर्क — और गलत होने पर इसकी कीमत।' },
+      { status: 'प्रकाशित · अक्तू. 2026', title: 'चरणबद्ध एक्सट्रैक्शन बनाम एकल बड़ा मॉडल', body: 'एलएलएम को कॉल करने से पहले नियमों और एक फाइन-ट्यून किए गए ट्रांसफॉर्मर के माध्यम से एंटिटीज़ को रूट करने का तर्क — और गलत होने पर इसकी कीमत।', content: `<p>आज किसी टीम को कोई कठिन NLP समस्या सौंपिए और प्रतिक्रिया यही होती है कि जो सबसे बड़ा मॉडल उपलब्ध हो उसे उठा लिया जाए और सब कुछ उसी पर छोड़ दिया जाए। फ़्रेंच क्लिनिकल टेक्स्ट पर यह प्रतिक्रिया महँगी, धीमी और ऑडिट करने में कठिन है — और अंततः सबसे सटीक भी नहीं। DEMNE उल्टा दाँव लगाता है: हर एंटिटी प्रकार को उस सबसे हल्के उपकरण के पास भेजो जो उसे संभाल सके, और तभी ऊपर बढ़ो जब टेक्स्ट वास्तव में माँग करे।</p><h2>हथौड़ा नहीं, सीढ़ी</h2><p>पाइपलाइन के तीन स्तर हैं। नियतात्मक नियम — रेगेक्स और चुने हुए लेक्सिकॉन — उन एंटिटियों को लेते हैं जो कुछ स्थिर रूपों में लिखी जाती हैं: तिथियाँ, खुराक, मानक बायोमार्कर संक्षेप। फ़्रेंच ऑन्कोलॉजी टेक्स्ट पर फ़ाइन-ट्यून किया ट्रांसफॉर्मर उन एंटिटियों को संभालता है जिन्हें वास्तविक अर्थगत व डोमेन समझ चाहिए। LLM शीर्ष पर बैठता है, केवल उन सचमुच अस्पष्ट मामलों के लिए जो दोनों पूर्व चरणों से बच निकलते हैं। कुछ भी आवश्यकता से ऊपर नहीं चढ़ता।</p><h2>सिर्फ़ LLM क्यों नहीं?</h2><p>क्योंकि एक बड़ा मॉडल हर एंटिटी पर LLM की कीमत चुकाता है, उनमें वे भी जिन्हें रेगेक्स पल भर में निपटा देता। यह धीमा है, इसे ऐसा GPU बजट चाहिए जो अधिकांश अस्पतालों के पास नहीं, और हर निर्णय एक ब्लैक बॉक्स है जिसे फिर भी किसी चिकित्सक या ऑडिटर के सामने उचित ठहराना पड़ता है। और रूटिंग कार्य में ही, सदा-LLM बेसलाइन सबसे ख़राब रही, विशेषज्ञ स्तर से केवल 0.148 बार मेल खाती हुई। सबसे भारी उपकरण अपने आप सबसे भरोसेमंद नहीं होता।</p><h2>ग़लत रूटिंग की कीमत</h2><p>चरणबद्ध एक्सट्रैक्शन तभी फ़ायदेमंद है जब रूटिंग अच्छी हो, इसलिए DEMNE अपना ध्यान वहीं लगाता है। एनोटेशन से मापे गए पाँच मेट्रिक्स एक नियतात्मक निर्णय-ग्राफ़ को पोषित करते हैं जिसके 17 थ्रेशहोल्ड एक बहु-उद्देश्यीय खोज से कैलिब्रेट होते हैं। उद्देश्य जान-बूझकर असममित है: किसी एंटिटी को बहुत कमज़ोर विधि की ओर भेजने पर, महज़ बहुत महँगी विधि की तुलना में, दोगुना दंड मिलता है — क्योंकि क्लिनिकल रिपोर्ट में एक छूटा हुआ एक्सट्रैक्शन, बर्बाद हुए एक GPU सेकंड से अधिक महँगा है।</p><h2>संख्याएँ क्या कहती हैं</h2><p>ऑन्कोलॉजी कैलिब्रेशन सेट पर, रूटिंग विशेषज्ञ संदर्भ स्तर से 0.954 बार मेल खाती है, जबकि सदा-नियम 0.729 और सदा-LLM 0.148। बिना बदले 300 अनदेखी AP-HP रिपोर्टों पर लागू करने पर, इसने 99.5% उल्लेखों को नियतात्मक नियमों की ओर भेजा, जिन्होंने 0.941 का औसत F1 प्राप्त किया — जबकि यथार्थ अस्पताल बजट में फ़ाइन-ट्यून किया ट्रांसफॉर्मर केवल 0.358 तक पहुँचा। इन रिपोर्टों पर हावी मानकीकृत एंटिटियों के लिए, सबसे सस्ता स्तर ही सबसे सटीक भी था।</p><h2>जब एकल मॉडल ही सही उत्तर हो</h2><p>चरणबद्धता मुफ़्त नहीं: यह बनाने, मापने और बनाए रखने के लिए एक रूटिंग परत जोड़ती है, और थ्रेशहोल्ड हर नए डोमेन के लिए फिर से कैलिब्रेट करने पड़ते हैं। यदि टेक्स्ट एकरूप है, सभी एंटिटियाँ समान रूप से कठिन हैं, या एक बड़े मॉडल के लिए बजट और ऑडिट सहनशीलता है, तो यह सीढ़ी केवल अतिरिक्त भार है। यहाँ दावा सीमित है — जब लागत, विलंबता और अनुरेखणीयता एक साथ मायने रखते हैं, जैसे क्लिनिकल NLP में, तब एंटिटी-दर-एंटिटी तय करना, डिफ़ॉल्ट रूप से सबसे भारी मॉडल चुनकर उम्मीद लगाने से बेहतर है।</p><p>कोड और पूरी विधि <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> पर है; पांडुलिपि तैयारी में है।</p>` },
     ],
   },
   contact: {
@@ -4042,6 +4067,7 @@ const hi: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'कॉल बुक करें',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -4069,11 +4095,11 @@ const tr: Dictionary = {
     menuToggleLabel: 'Menüyü aç',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · 6 aylık bir araştırma stajı arıyorum · Klinik NLP ve biyomedikal YZ · Şubat 2027’den itibaren',
     h1Pre: "GPU'yu uyandırmadan ",
     h1Accent: 'klinik metinden biyobelirteç çıkarıyorum',
     h1Post: '',
-    sub: "Ben Clément Longeac. DEMNE üzerinde çalışıyorum; her varlık türü için regex, CRF, transformer veya LLM'den hangisinin görev için dürüst araç olduğuna karar veren bir yönlendirme çerçevesi. İlk sonuç: klinik varlıkların %99,5'si GPU kullanılmadan çıkarıldı, 300 AP-HP notunda F1 = 0,941.",
+    sub: "Ben Clément Longeac. Her varlık türü için güvenilir kalan en hafif yöntemi — kurallar, bir transformer veya bir LLM — seçen yönlendirme çerçevesi DEMNE'yi geliştiriyorum. Daha önce görülmemiş bir AP-HP kohortunda, anmaların %99,5'ini denetlenebilir kurallara yönlendirir ve F1 0,941'e ulaşır; ince ayarlı bir transformer ise yalnızca 0,358'de kalır.",
     ctaResearch: 'Araştırmayı gör',
     ctaCV: 'Özgeçmişi indir',
     caption: 'DEMNE — Rules → Transformer → LLM, canlı şema',
@@ -4114,7 +4140,7 @@ const tr: Dictionary = {
       title: 'Düzenleyici uyum — AB Yapay Zeka Yasası',
       body: 'Hasta kayıtları üzerinde klinik varlık çıkarımı, AB Yapay Zeka Yasası\'nın yüksek riskli kategorisine doğrudan girer. DEMNE\'nin aşamalı tasarımı, sonradan eklenmek yerine baştan itibaren 12. ve 14. Maddeleri göz önünde bulundurur.',
       articles: [
-        { code: 'Madde 12', label: 'Kayıt tutma', desc: 'Her çıkarım kararı, onu üreten aşamaya (kurallar, CRF, transformer veya LLM) ve güven skoruna kadar izlenebilir, bu da otomatik denetim kaydını mümkün kılar.' },
+        { code: 'Madde 12', label: 'Kayıt tutma', desc: 'Her çıkarım kararı, onu üreten aşamaya (kurallar, transformer veya LLM) ve güven skoruna kadar izlenebilir, bu da otomatik denetim kaydını mümkün kılar.' },
         { code: 'Madde 14', label: 'İnsan gözetimi', desc: 'LLM hakemlik çıktıları sessizce kabul edilmek yerine klinik inceleme için işaretlenir, böylece belirsiz vakalarda insan döngüde kalır.' },
       ],
     },
@@ -4255,10 +4281,11 @@ const tr: Dictionary = {
         description:
           'Debian’ın CI altyapısında, AMD GPU’larda bilimsel yazılımı doğrulayan autopkgtest betikleri.',
         longBody:
-          'Synchrotron SOLEIL stajının bir parçası: AMD GPU uyumluluğunu (pyopencl, nabu, ufo-filters, pyvkfft) Debian/ROCm sürekli entegrasyon altyapısında denetlemek için OpenCL ile yazılan, GitLab Salsa üzerinden çalıştırılan autopkgtest’ler. Betikler temiz sanal makinelerde paketleri kurar ve kaldırır, GPU’lar arası uyumluluğu raporlar.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Synchrotron SOLEIL’deki Div/Exp GRADES biriminde, Emmanuel Farhi ve Frédéric-Emmanuel Picca danışmanlığında 4 aylık staj. Amaç: Debian bilimsel paketlerinin ROCm aracılığıyla AMD GPU’larda çalışıp çalışmadığını test ederek bilimsel hesaplama yığınının NVIDIA/CUDA bağımlılığını azaltmaktı.\nOpenCL autopkgtest’leri yazdım ve derlemeleri bir podman+ROCm konteynerinde (sbuild ile) doğruladım, ardından Debian’ın GitLab Salsa’sına upstream gönderdim. PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx ve sasmodels için ROCm otomatik testleri eklendi; OpenCL kodu olmayan paketler (genx, examl) veya tamamlanmamış bir Python 2→3 geçişinde takılı kalanlar (pysph) elendi. Bu, tüm Debian bilim topluluğunun NVIDIA’dan AMD’ye geçişine yardımcı olan ilk yapı taşları kümesidir.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -4271,7 +4298,7 @@ const tr: Dictionary = {
         title: 'Klinik NLP ve Biyomedikal Yapay Zeka',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -4328,7 +4355,7 @@ const tr: Dictionary = {
     subtitle: 'Yukarıdaki çalışmanın arkasındaki yöntemler, çıkmaz sokaklar ve kararlar hakkında daha uzun yazılar.',
     posts: [
       { status: 'Yayımlandı · Eki 2026', title: 'Fransızca klinik NER neden genel amaçlı modelleri bozuyor', body: 'Standart NER hatlarının Fransız onkoloji raporlarında nerede başarısız olduğuna ve bunun DEMNE\'nin yapısı için ne anlama geldiğine dair bir inceleme.', content: `<p>Fransızca bir onkoloji raporunu açın; hazır NER modellerinin çoğu daha ilk cümlede tökezler. Sözcük dağarcığı yoğun ve kısaltmalıdır (ER, PR, HER2, Ki67, FISH), biçimlendirme hastaneden hastaneye değişir ve önemli biyobelirteç terminolojisi bu modellerin eğitildiği derlemlerde neredeyse hiç geçmez. Alışılmış refleks &mdash; soruna büyük bir model atmak &mdash; işe yarar ama pahalı, şeffaf olmayan ve bir klinisyen ya da denetçiye karşı savunması zor bir yoldur.</p><h2>Her varlık bir LLM gerektirmez</h2><p>DEMNE yalın bir gözlemden yola çıkar: bu raporlardaki varlıklar eşit derecede zor değildir. Bir biyopsi anması birkaç istikrarlı biçimde yazılır; bir ilaç adıysa yüz biçimde görünebilir. Bu yüzden DEMNE, her şey için tek bir model yerine, her varlık türünü ölçer ve yeterince güvenilir olan en hafif yönteme gönderir &mdash; belirlenimci bir kural, ince ayarlı bir transformer veya yalnızca son çare olarak bir LLM.</p><p>Ölçüm, açıklamalardan hesaplanan beş derlem ölçütüdür: yüzey biçiminin ne kadar şablonlaşabilir olduğu, söz dağarcığının ne kadar türdeş olduğu, küçük bir anahtar sözcük kümesinin ayırt edici olup olmadığı, anmanın ne sıklıkla olumsuzlama ya da çelişki altında olduğu ve denetimli bir model eğitmeye yetecek kadar etiketli veri bulunup bulunmadığı. Belirlenimci bir karar grafiği bu sayıları bir katmana dönüştürür ve 17 eşiği, bir varlığı fazla zayıf bir yönteme göndermeyi, yalnızca fazla pahalı bir yönteme göndermekten iki kat ağır cezalandıran çok amaçlı bir aramayla kalibre edilir.</p><h2>Ne kazandırır</h2><p>Onkoloji kalibrasyon kümesinde (59 varlık türü), yönlendirme uzman referans katmanıyla 0,954 uyum ve 0,866 leave-one-corpus-out tahminiyle örtüşür &mdash; sabit katmanlı herhangi bir temelin (her zaman-kurallar 0,729, her zaman-LLM 0,148) çok üzerinde. Daha ikna edici sınama dışsaldır: hiç yeniden ayar yapılmadan, modelin daha önce görmediği kanser bölgelerine ait 300 AP-HP BT raporuna uygulandığında, DEMNE vurgulanan anmaların %99,5’ini (413’te 411) belirlenimci kurallara yönlendirdi. Bu kurallar 0,941 ortalama F1’e ulaşırken, aynı varlıklar üzerinde gerçekçi bir hastane bütçesiyle ince ayarlanan bir transformer yalnızca 0,358’de kaldı.</p><p>Başka bir deyişle: onkoloji raporlamasına egemen standartlaşmış varlıklar için kurallar yalnızca daha ucuz değildi &mdash; daha iyiydi ve her kural kararı açık bir koşula kadar izlenebilir; bu da tam olarak EU AI Act’in 12. ve 14. maddelerinin istediği şeydir.</p><h2>Nerede durur</h2><p>Sınırlar konusunda dürüst olmak istiyorum. Referans standart küçük &mdash; 92 varlık türü, 59’u onkolojide &mdash; dolayısıyla tek derlem skorları iyimserdir ve yalnızca göreli karşılaştırmalar geçerlidir. LLM katmanı dış kohortta uçtan uca hiç değerlendirilmedi; oraya yönlendirilen tek varlık fazla nadirdi. Ayrıca kalibrasyon alanlar arası aktarılmaz: başka bir klinik türe ya da dile geçildiğinde uyum 0,45&ndash;0,73’e düşer, yani eşiklerin yeniden ayarlanması gerekir. DEMNE bir uygulanabilirlik kanıtıdır, bitmiş bir ürün değil.</p><h2>Neden önemli</h2><p>Mesele kuralların transformer’ları yenmesi değil. Mesele, &laquo;hangi yöntem&raquo; sorusunun &mdash; en ağır modeli varsayılan yapıp ummak yerine &mdash; metnin ölçülebilir özelliklerinden varlık başına yanıtlanabilmesi. Maliyetin, denetlenebilirliğin ve güvenin aynı anda önemli olduğu klinik NLP için bu çerçeve, bir ölçütte bir yüzde puanı daha kazanmaktan değerlidir.</p><p>Kod ve yöntemin tamamı <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> üzerinde; makale hazırlanıyor.</p>` },
-      { status: 'Taslak — yakında', title: 'Aşamalı çıkarım ve tek büyük model karşılaştırması', body: 'Bir LLM\'i çağırmadan önce varlıkları kurallar ve ince ayarlı bir transformer üzerinden yönlendirmenin gerekçesi — ve bunu yanlış yapmanın bedeli.' },
+      { status: 'Yayımlandı · Eki 2026', title: 'Aşamalı çıkarım ve tek büyük model karşılaştırması', body: 'Bir LLM\'i çağırmadan önce varlıkları kurallar ve ince ayarlı bir transformer üzerinden yönlendirmenin gerekçesi — ve bunu yanlış yapmanın bedeli.', content: `<p>Bugün bir ekibe zor bir NLP problemi verin; refleks, eldeki en büyük modeli alıp her şeyi ona çözdürmektir. Fransızca klinik metinde bu refleks pahalı, yavaş ve denetlenmesi zordur &mdash; ve nihayetinde en doğru olan bile değildir. DEMNE tersine bahse girer: her varlık türünü, onu kaldırabilecek en hafif araca gönderir ve yalnızca metin gerçekten gerektirdiğinde yükseltir.</p><h2>Çekiç değil, merdiven</h2><p>Hat üç katmanlıdır. Belirlenimci kurallar &mdash; regex ve özenle seçilmiş sözlükler &mdash; birkaç istikrarlı biçimde yazılan varlıkları alır: tarihler, dozajlar, standart biyobelirteç kısaltmaları. Fransızca onkoloji metninde ince ayarlı bir transformer, gerçek anlamsal ve alan anlayışı gerektiren varlıkları işler. Bir LLM en tepede durur ve yalnızca önceki iki aşamayı atlatan gerçekten belirsiz durumlara ayrılmıştır. Hiçbir şey gerektiğinden yükseğe tırmanmaz.</p><h2>Neden sadece LLM değil?</h2><p>Çünkü tek bir büyük model, bir regex’in anında halledeceği varlıklar da dahil her varlıkta LLM bedelini öder. Daha yavaştır, çoğu hastanede bulunmayan bir GPU bütçesi ister ve her karar, yine de bir klinisyene ya da denetçiye savunmanız gereken bir kara kutudur. Üstelik yönlendirme görevinde her zaman-LLM temeli en kötüsüydü; uzman katmanıyla yalnızca 0,148 oranında örtüştü. En ağır araç, otomatik olarak en güvenilir olan değildir.</p><h2>Yanlış yönlendirmenin bedeli</h2><p>Aşamalı çıkarım ancak yönlendirme iyiyse işe yarar; bu yüzden DEMNE özenini tam oraya harcar. Açıklamalardan ölçülen beş ölçüt, 17 eşiği çok amaçlı bir aramayla kalibre edilen belirlenimci bir karar grafiğini besler. Amaç bilinçli olarak asimetriktir: bir varlığı fazla zayıf bir yönteme göndermek, yalnızca fazla pahalı bir yönteme göndermekten iki kat ağır cezalandırılır &mdash; çünkü bir klinik raporda kaçırılan bir çıkarım, boşa giden bir GPU saniyesinden pahalıya mal olur.</p><h2>Sayılar ne diyor</h2><p>Onkoloji kalibrasyon kümesinde yönlendirme, uzman referans katmanıyla 0,954 oranında örtüşür; her zaman-kurallar 0,729, her zaman-LLM 0,148. Hiç dokunulmadan 300 görülmemiş AP-HP raporuna uygulandığında, anmaların %99,5’ini belirlenimci kurallara yönlendirdi; bunlar 0,941 ortalama F1’e ulaştı &mdash; gerçekçi bir hastane bütçesiyle ince ayarlanan bir transformer ise 0,358’de kaldı. Bu raporlara egemen standartlaşmış varlıklar için ucuz katman, aynı zamanda doğru olandı.</p><h2>Tek modelin doğru yanıt olduğu durumlar</h2><p>Aşamalandırma bedava değildir: inşa edilip ölçülecek ve bakımı yapılacak bir yönlendirme katmanı ekler ve eşiklerin her yeni alan için yeniden kalibre edilmesi gerekir. Metin tekdüzeyse, varlıklar eşit derecede zorsa ya da tek bir büyük modele yetecek bütçe ve denetim toleransı varsa, merdiven yalnızca ek yüktür. Buradaki iddia dardır &mdash; maliyet, gecikme ve izlenebilirlik aynı anda önem taşıdığında, tıpkı klinik NLP’de olduğu gibi, varlık başına karar vermek en ağır modeli varsayılan yapıp ummaktan iyidir.</p><p>Kod ve yöntemin tamamı <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> üzerinde; makale hazırlanıyor.</p>` },
     ],
   },
   contact: {
@@ -4338,6 +4365,7 @@ const tr: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Görüşme ayarla',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -4365,11 +4393,11 @@ const pl: Dictionary = {
     menuToggleLabel: 'Otwórz menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Szukam 6-miesięcznego stażu badawczego · Kliniczne NLP i biomedyczna SI · od lut. 2027',
     h1Pre: 'Wydobywam biomarkery z tekstu klinicznego ',
     h1Accent: 'nie budząc GPU',
     h1Post: '',
-    sub: 'Jestem Clément Longeac. Pracuję nad DEMNE, frameworkiem routingu, który dla każdego typu jednostki decyduje, czy uczciwym narzędziem do zadania jest wyrażenie regularne, CRF, transformer czy LLM. Pierwszy wynik: 99,5% jednostek klinicznych wydobytych bez GPU, F1 = 0,941 na 300 notatkach AP-HP.',
+    sub: "Jestem Clément Longeac. Tworzę DEMNE, framework routingu, który dla każdego typu encji wybiera najlżejszą metodę pozostającą niezawodną: reguły, transformer lub LLM. Na niewidzianej wcześniej kohorcie AP-HP kieruje 99,5 % wzmianek do audytowalnych reguł z F1 0,941, podczas gdy dostrojony transformer osiąga jedynie 0,358.",
     ctaResearch: 'Zobacz badania',
     ctaCV: 'Pobierz CV',
     caption: 'DEMNE — Rules → Transformer → LLM, schemat na żywo',
@@ -4410,7 +4438,7 @@ const pl: Dictionary = {
       title: 'Zgodność regulacyjna — EU AI Act',
       body: 'Ekstrakcja encji klinicznych z dokumentacji pacjentów jednoznacznie mieści się w kategorii wysokiego ryzyka EU AI Act. Etapowy design DEMNE uwzględnia artykuły 12 i 14 od samego początku, a nie jako późniejszy dodatek.',
       articles: [
-        { code: 'Art. 12', label: 'Prowadzenie rejestrów', desc: 'Każda decyzja o ekstrakcji jest identyfikowalna aż do etapu (reguły, CRF, transformer lub LLM) i wyniku pewności, który ją wygenerował, co umożliwia automatyczne logowanie na potrzeby audytu.' },
+        { code: 'Art. 12', label: 'Prowadzenie rejestrów', desc: 'Każda decyzja o ekstrakcji jest identyfikowalna aż do etapu (reguły, transformer lub LLM) i wyniku pewności, który ją wygenerował, co umożliwia automatyczne logowanie na potrzeby audytu.' },
         { code: 'Art. 14', label: 'Nadzór ludzki', desc: 'Wyniki arbitrażu LLM są oznaczane do przeglądu przez klinicystę, a nie akceptowane bezgłośnie, dzięki czemu człowiek pozostaje zaangażowany w niejednoznaczne przypadki.' },
       ],
     },
@@ -4550,10 +4578,11 @@ const pl: Dictionary = {
         description:
           'Skrypty autopkgtest sprawdzające oprogramowanie naukowe na GPU AMD, w infrastrukturze CI Debiana.',
         longBody:
-          'Część stażu w Synchrotron SOLEIL: autopkgtesty napisane w OpenCL do sprawdzania zgodności GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) w infrastrukturze ciągłej integracji Debian/ROCm, uruchamiane przez GitLab Salsa. Skrypty instalują i odinstalowują pakiety na czystych maszynach wirtualnych i raportują zgodność między GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Czteromiesięczny staż w dziale Div/Exp GRADES w Synchrotron SOLEIL pod opieką Emmanuela Farhiego i Frédérica-Emmanuela Picci. Cel: zmniejszyć zależność stosu obliczeń naukowych od NVIDIA/CUDA, testując, czy naukowe pakiety Debiana działają na GPU AMD przez ROCm.\nNapisałem autopkgtesty w OpenCL i walidowałem budowy w kontenerze podman+ROCm (przez sbuild), a następnie wysłałem je upstream do GitLab Salsa Debiana. Dodano autotesty ROCm dla PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx i sasmodels; pakiety bez kodu OpenCL (genx, examl) lub utknięte na niedokończonej migracji Python 2→3 (pysph) zostały wykluczone. To pierwszy zestaw klocków, który pomaga całej naukowej społeczności Debiana przejść z NVIDIA na AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -4566,7 +4595,7 @@ const pl: Dictionary = {
         title: 'Kliniczne NLP i biomedyczna SI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -4623,7 +4652,7 @@ const pl: Dictionary = {
     subtitle: 'Dłuższe teksty o metodach, ślepych zaułkach i decyzjach stojących za powyższą pracą.',
     posts: [
       { status: 'Opublikowano · paź 2026', title: 'Dlaczego francuski kliniczny NER psuje modele ogólnego przeznaczenia', body: 'Przegląd miejsc, w których standardowe pipeline\'y NER zawodzą na francuskich raportach onkologicznych, i co to oznacza dla struktury DEMNE.', content: `<p>Otwórz francuski raport onkologiczny, a większość gotowych modeli NER potyka się już w pierwszym zdaniu. Słownictwo jest gęste i skrótowe (ER, PR, HER2, Ki67, FISH), formatowanie zmienia się między szpitalami, a istotna terminologia biomarkerów niemal nie występuje w korpusach, na których te modele trenowano. Zwykły odruch &mdash; rzucić na to duży model &mdash; działa, ale jest kosztowny, nieprzejrzysty i trudny do obrony przed klinicystą lub audytorem.</p><h2>Nie każda encja potrzebuje LLM</h2><p>DEMNE wychodzi od prostej obserwacji: encje w tych raportach nie są jednakowo trudne. Wzmianka o biopsji zapisywana jest na kilka stabilnych sposobów; nazwa leku może pojawić się w stu formach. Dlatego zamiast jednego modelu do wszystkiego, DEMNE mierzy każdy typ encji i kieruje go do najlżejszej metody, która pozostaje wystarczająco niezawodna &mdash; reguły deterministycznej, dostrojonego transformera lub LLM tylko w ostateczności.</p><p>Ten pomiar to pięć metryk korpusu obliczanych z adnotacji: jak bardzo forma powierzchniowa jest szablonowa, jak jednorodne jest słownictwo, czy mały zbiór słów kluczowych jest dyskryminujący, jak często wzmianka występuje pod negacją lub sprzecznością oraz czy w ogóle jest dość danych etykietowanych, by wytrenować model nadzorowany. Deterministyczny graf decyzyjny zamienia te liczby w poziom, a jego 17 progów kalibruje się wyszukiwaniem wielokryterialnym, które dwukrotnie mocniej karze skierowanie encji do metody zbyt słabej niż do jedynie zbyt kosztownej.</p><h2>Co to daje</h2><p>Na onkologicznym zbiorze kalibracyjnym (59 typów encji) routing zgadza się z eksperckim poziomem odniesienia ze zgodnością 0,954 i oszacowaniem leave-one-corpus-out 0,866 &mdash; znacznie powyżej dowolnej bazy o stałym poziomie (zawsze-reguły osiąga 0,729, zawsze-LLM 0,148). Bardziej przekonujący jest test zewnętrzny: zastosowany bez dostrajania do 300 raportów TK z AP-HP, dla nigdy niewidzianych lokalizacji nowotworu, DEMNE skierował 99,5 % wyróżnionych wzmianek (411 z 413) do reguł deterministycznych. Reguły te osiągnęły średnie F1 0,941, podczas gdy transformer dostrojony na tych samych encjach przy realistycznym budżecie szpitalnym dotarł tylko do 0,358.</p><p>Innymi słowy: dla standaryzowanych encji dominujących w raportowaniu onkologicznym reguły były nie tylko tańsze &mdash; były lepsze, a każda decyzja reguły daje się prześledzić do jawnego warunku, czego właśnie wymagają artykuły 12 i 14 EU AI Act.</p><h2>Gdzie się zatrzymuje</h2><p>Chcę być szczery co do ograniczeń. Standard odniesienia jest mały &mdash; 92 typy encji, 59 z nich w onkologii &mdash; więc wyniki na jednym korpusie są optymistyczne i ważne są tylko porównania względne. Poziom LLM nigdy nie został oceniony od początku do końca na kohorcie zewnętrznej; jedyna skierowana tam encja była zbyt rzadka. A kalibracja nie przenosi się między domenami: w innym gatunku klinicznym lub języku zgodność spada do 0,45&ndash;0,73, więc progi trzeba dopasować na nowo. DEMNE to dowód wykonalności, nie gotowy produkt.</p><h2>Dlaczego to ważne</h2><p>Rzecz nie w tym, że reguły pokonują transformery. Rzecz w tym, że &bdquo;którą metodę&rdquo; można rozstrzygnąć encja po encji, na podstawie mierzalnych właściwości tekstu, zamiast domyślnie wybierać najcięższy model i mieć nadzieję. Dla klinicznego NLP &mdash; gdzie koszt, audytowalność i zaufanie liczą się jednocześnie &mdash; takie ujęcie jest warte więcej niż kolejny punkt procentowy na benchmarku.</p><p>Kod i pełna metoda są na <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskrypt jest w przygotowaniu.</p>` },
-      { status: 'Szkic — wkrótce', title: 'Ekstrakcja etapowa kontra jeden duży model', body: 'Argumentacja za kierowaniem encji przez reguły i dostrojony transformer, zanim w ogóle wywoła się LLM — oraz koszt pomyłki w tym podejściu.' },
+      { status: 'Opublikowano · paź 2026', title: 'Ekstrakcja etapowa kontra jeden duży model', body: 'Argumentacja za kierowaniem encji przez reguły i dostrojony transformer, zanim w ogóle wywoła się LLM — oraz koszt pomyłki w tym podejściu.', content: `<p>Dajcie dziś zespołowi trudny problem NLP, a odruch będzie taki, by sięgnąć po największy dostępny model i pozwolić mu wszystko rozwiązać. Na francuskim tekście klinicznym ten odruch jest kosztowny, powolny i trudny do audytu &mdash; a na dodatek nawet nie najdokładniejszy. DEMNE obstawia odwrotnie: wysłać każdy typ encji do najlżejszego narzędzia, które sobie z nią poradzi, i eskalować tylko wtedy, gdy tekst naprawdę tego wymaga.</p><h2>Schody, nie młotek</h2><p>Potok ma trzy poziomy. Reguły deterministyczne &mdash; wyrażenia regularne i wyselekcjonowane leksykony &mdash; biorą encje zapisywane na kilka stabilnych sposobów: daty, dawki, standardowe skróty biomarkerów. Transformer dostrojony na francuskim tekście onkologicznym obsługuje encje wymagające prawdziwego rozumienia semantycznego i dziedzinowego. LLM stoi na szczycie, zarezerwowany dla naprawdę niejednoznacznych przypadków, które przetrwały oba wcześniejsze etapy. Nic nie wspina się wyżej, niż musi.</p><h2>Dlaczego nie sam LLM?</h2><p>Bo jeden duży model płaci cenę LLM za każdą encję, w tym te, które wyrażenie regularne załatwiłoby natychmiast. Jest wolniejszy, wymaga budżetu GPU, którego większość szpitali nie ma, a każda decyzja to czarna skrzynka, którą i tak trzeba uzasadnić klinicyście lub audytorowi. A w samym zadaniu routingu baza zawsze-LLM wypadła najgorzej, zgadzając się z poziomem eksperckim jedynie w 0,148 przypadków. Najcięższe narzędzie nie jest automatycznie najbardziej niezawodne.</p><h2>Koszt złego routingu</h2><p>Ekstrakcja etapowa opłaca się tylko przy dobrym routingu, więc to tam DEMNE wkłada swoją staranność. Pięć metryk mierzonych z adnotacji zasila deterministyczny graf decyzyjny, którego 17 progów kalibruje wyszukiwanie wielokryterialne. Cel jest celowo asymetryczny: skierowanie encji do metody zbyt słabej karane jest dwukrotnie mocniej niż do jedynie zbyt kosztownej &mdash; bo pominięta ekstrakcja w raporcie klinicznym kosztuje więcej niż zmarnowana sekunda GPU.</p><h2>Co mówią liczby</h2><p>Na onkologicznym zbiorze kalibracyjnym routing zgadza się z eksperckim poziomem odniesienia w 0,954, wobec 0,729 dla zawsze-reguł i 0,148 dla zawsze-LLM. Zastosowany bez zmian do 300 niewidzianych raportów AP-HP, skierował 99,5 % wzmianek do reguł deterministycznych, które osiągnęły średnie F1 0,941 &mdash; podczas gdy transformer dostrojony przy realistycznym budżecie szpitalnym dotarł do 0,358. Dla standaryzowanych encji dominujących w tych raportach tani poziom był zarazem tym dokładnym.</p><h2>Kiedy jeden model jest właściwą odpowiedzią</h2><p>Etapowość nie jest darmowa: dodaje warstwę routingu do zbudowania, zmierzenia i utrzymania, a progi trzeba przekalibrować dla każdej nowej dziedziny. Jeśli tekst jest jednorodny, encje równie trudne, albo jest budżet i tolerancja audytu dla jednego dużego modelu, schody są tylko narzutem. Teza jest tu wąska &mdash; gdy koszt, opóźnienie i identyfikowalność liczą się jednocześnie, jak w klinicznym NLP, decydowanie per encja bije domyślny wybór najcięższego modelu i nadzieję.</p><p>Kod i pełna metoda są na <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskrypt jest w przygotowaniu.</p>` },
     ],
   },
   contact: {
@@ -4633,6 +4662,7 @@ const pl: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Umów rozmowę',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -4660,11 +4690,11 @@ const vi: Dictionary = {
     menuToggleLabel: 'Mở menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Tìm kỳ thực tập nghiên cứu 6 tháng · NLP lâm sàng & AI y sinh · từ tháng 2 năm 2027',
     h1Pre: 'Trích xuất dấu ấn sinh học từ văn bản lâm sàng ',
     h1Accent: 'mà không cần đánh thức GPU',
     h1Post: '',
-    sub: 'Tôi là Clément Longeac. Tôi đang phát triển DEMNE, một framework định tuyến quyết định — cho từng loại thực thể — liệu regex, CRF, transformer, hay LLM mới là công cụ trung thực cho công việc. Kết quả đầu tiên: 99,5% thực thể lâm sàng được trích xuất không cần GPU, F1 = 0,941 trên 300 ghi chú AP-HP.',
+    sub: "Tôi là Clément Longeac. Tôi xây dựng DEMNE, một framework định tuyến chọn, cho từng loại thực thể, phương pháp nhẹ nhất mà vẫn đáng tin cậy: quy tắc, một transformer hoặc một LLM. Trên một nhóm AP-HP chưa từng thấy, nó định tuyến 99,5 % số đề cập tới các quy tắc có thể kiểm toán với F1 0,941, trong khi một transformer đã tinh chỉnh chỉ đạt 0,358.",
     ctaResearch: 'Xem nghiên cứu',
     ctaCV: 'Tải CV',
     caption: 'DEMNE — Rules → Transformer → LLM, sơ đồ trực tiếp',
@@ -4705,7 +4735,7 @@ const vi: Dictionary = {
       title: 'Tuân thủ quy định — EU AI Act',
       body: 'Việc trích xuất thực thể lâm sàng từ hồ sơ bệnh nhân rõ ràng thuộc nhóm rủi ro cao của EU AI Act. Thiết kế theo giai đoạn của DEMNE đã tính đến Điều 12 và 14 ngay từ đầu, chứ không phải bổ sung sau.',
       articles: [
-        { code: 'Điều 12', label: 'Lưu trữ hồ sơ', desc: 'Mọi quyết định trích xuất đều có thể truy vết đến giai đoạn (quy tắc, CRF, transformer hoặc LLM) và điểm tin cậy đã tạo ra nó, cho phép ghi nhật ký kiểm toán tự động.' },
+        { code: 'Điều 12', label: 'Lưu trữ hồ sơ', desc: 'Mọi quyết định trích xuất đều có thể truy vết đến giai đoạn (quy tắc, transformer hoặc LLM) và điểm tin cậy đã tạo ra nó, cho phép ghi nhật ký kiểm toán tự động.' },
         { code: 'Điều 14', label: 'Giám sát của con người', desc: 'Kết quả phân xử của LLM được gắn cờ để bác sĩ lâm sàng xem xét thay vì được chấp nhận âm thầm, giữ con người trong vòng lặp đối với các trường hợp mơ hồ.' },
       ],
     },
@@ -4846,10 +4876,11 @@ const vi: Dictionary = {
         description:
           'Các script autopkgtest kiểm định phần mềm khoa học trên GPU AMD, trên hạ tầng CI của Debian.',
         longBody:
-          'Một phần của kỳ thực tập tại Synchrotron SOLEIL: các autopkgtest viết bằng OpenCL để kiểm tra khả năng tương thích GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) trên hạ tầng tích hợp liên tục Debian/ROCm, chạy qua GitLab Salsa. Các script cài đặt và gỡ bỏ gói trên máy ảo sạch và báo cáo khả năng tương thích giữa các GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Kỳ thực tập 4 tháng tại bộ phận Div/Exp GRADES của Synchrotron SOLEIL, dưới sự hướng dẫn của Emmanuel Farhi và Frédéric-Emmanuel Picca. Mục tiêu: giảm sự phụ thuộc của ngăn xếp tính toán khoa học vào NVIDIA/CUDA bằng cách kiểm tra xem các gói khoa học của Debian có chạy trên GPU AMD thông qua ROCm hay không.\nTôi viết các autopkgtest bằng OpenCL và kiểm định các bản build trong một container podman+ROCm (qua sbuild), rồi đưa chúng lên thượng nguồn trên GitLab Salsa của Debian. Đã thêm autotest ROCm cho PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx và sasmodels; các gói không có mã OpenCL (genx, examl) hoặc mắc kẹt ở quá trình chuyển Python 2→3 còn dang dở (pysph) bị loại. Đây là bộ viên gạch đầu tiên giúp cả cộng đồng khoa học Debian chuyển từ NVIDIA sang AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -4863,7 +4894,7 @@ const vi: Dictionary = {
         title: 'NLP lâm sàng & AI y sinh',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -4920,7 +4951,7 @@ const vi: Dictionary = {
     subtitle: 'Các bài viết dài hơn về phương pháp, ngõ cụt và quyết định đằng sau công việc nêu trên.',
     posts: [
       { status: 'Đã đăng · Th.10 2026', title: 'Vì sao NER lâm sàng tiếng Pháp làm hỏng các mô hình tổng quát', body: 'Một góc nhìn về nơi các pipeline NER tiêu chuẩn thất bại trên báo cáo ung bướu tiếng Pháp, và điều đó có ý nghĩa gì đối với cấu trúc của DEMNE.', content: `<p>Mở một báo cáo ung thư học tiếng Pháp, phần lớn các mô hình NER có sẵn vấp ngay ở câu đầu tiên. Từ vựng dày đặc và viết tắt (ER, PR, HER2, Ki67, FISH), định dạng thay đổi giữa các bệnh viện, và thuật ngữ dấu ấn sinh học quan trọng gần như vắng bóng trong các kho ngữ liệu mà các mô hình này được huấn luyện. Phản xạ thường thấy &mdash; ném một mô hình lớn vào bài toán &mdash; thì hiệu quả, nhưng tốn kém, mờ đục và khó biện minh trước một bác sĩ lâm sàng hay kiểm toán viên.</p><h2>Không phải thực thể nào cũng cần LLM</h2><p>DEMNE khởi đi từ một quan sát thẳng thắn: các thực thể trong những báo cáo này không khó như nhau. Một đề cập sinh thiết được viết theo vài cách ổn định; còn tên thuốc có thể xuất hiện dưới trăm hình thức. Vì vậy, thay vì một mô hình cho mọi thứ, DEMNE đo lường từng loại thực thể và gửi nó tới phương pháp nhẹ nhất mà vẫn đủ tin cậy &mdash; một quy tắc tất định, một transformer đã tinh chỉnh, hoặc một LLM chỉ như phương án cuối cùng.</p><p>Phép đo là năm chỉ số kho ngữ liệu tính từ phần chú thích: hình thức bề mặt có khuôn mẫu đến đâu, từ vựng đồng nhất đến đâu, một tập từ khóa nhỏ có tính phân biệt hay không, đề cập rơi vào phủ định hoặc mâu thuẫn thường xuyên ra sao, và liệu có đủ dữ liệu gán nhãn để huấn luyện một mô hình có giám sát hay không. Một đồ thị quyết định tất định biến những con số ấy thành một tầng, và 17 ngưỡng của nó được hiệu chỉnh bằng một tìm kiếm đa mục tiêu, phạt nặng gấp đôi việc gửi một thực thể tới phương pháp quá yếu so với việc gửi tới một phương pháp chỉ quá tốn kém.</p><h2>Nó mang lại điều gì</h2><p>Trên tập hiệu chỉnh ung thư học (59 loại thực thể), việc định tuyến khớp với tầng tham chiếu của chuyên gia với độ đồng thuận 0,954 và ước lượng leave-one-corpus-out 0,866 &mdash; cao hơn hẳn mọi baseline tầng cố định (luôn-quy-tắc đạt 0,729, luôn-LLM 0,148). Phép thử thuyết phục hơn là ở bên ngoài: áp dụng mà không tinh chỉnh lại trên 300 báo cáo CT của AP-HP, ở những vị trí ung thư mô hình chưa từng thấy, DEMNE đã định tuyến 99,5 % đề cập được đánh dấu (411 trên 413) tới các quy tắc tất định. Các quy tắc ấy đạt F1 trung bình 0,941, trong khi một transformer tinh chỉnh trên cùng các thực thể, trong một ngân sách bệnh viện thực tế, chỉ dừng ở 0,358.</p><p>Nói cách khác: với những thực thể chuẩn hóa chiếm phần lớn trong báo cáo ung thư học, các quy tắc không chỉ rẻ hơn &mdash; chúng còn tốt hơn, và mỗi quyết định quy tắc đều truy ngược được tới một điều kiện tường minh, đúng điều mà Điều 12 và 14 của EU AI Act yêu cầu.</p><h2>Nó dừng ở đâu</h2><p>Tôi muốn trung thực về các giới hạn. Chuẩn tham chiếu nhỏ &mdash; 92 loại thực thể, 59 trong số đó thuộc ung thư học &mdash; nên điểm số trên một kho ngữ liệu là lạc quan và chỉ các so sánh tương đối mới đứng vững. Tầng LLM chưa bao giờ được đánh giá đầu-cuối trên nhóm bên ngoài; thực thể duy nhất được định tuyến tới đó quá hiếm. Và việc hiệu chỉnh không chuyển giao giữa các miền: chuyển sang một thể loại lâm sàng hay ngôn ngữ khác, độ đồng thuận rơi xuống 0,45&ndash;0,73, nên các ngưỡng phải được tinh chỉnh lại. DEMNE là một bằng chứng khả thi, không phải một sản phẩm hoàn chỉnh.</p><h2>Vì sao điều này quan trọng</h2><p>Vấn đề không phải quy tắc thắng transformer. Vấn đề là &laquo;dùng phương pháp nào&raquo; là một câu hỏi có thể trả lời theo từng thực thể, dựa trên các thuộc tính đo được của văn bản, thay vì mặc định chọn mô hình nặng nhất rồi hy vọng. Với NLP lâm sàng &mdash; nơi chi phí, khả năng kiểm toán và niềm tin cùng quan trọng &mdash; cách đặt vấn đề này đáng giá hơn một điểm phần trăm nữa trên một benchmark.</p><p>Mã nguồn và phương pháp đầy đủ có trên <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; bản thảo đang được chuẩn bị.</p>` },
-      { status: 'Bản nháp — sắp ra mắt', title: 'Trích xuất theo giai đoạn so với một mô hình lớn duy nhất', body: 'Lập luận cho việc định tuyến thực thể qua các quy tắc và một transformer đã tinh chỉnh trước khi gọi đến LLM — và cái giá phải trả nếu làm sai.' },
+      { status: 'Đã đăng · Th.10 2026', title: 'Trích xuất theo giai đoạn so với một mô hình lớn duy nhất', body: 'Lập luận cho việc định tuyến thực thể qua các quy tắc và một transformer đã tinh chỉnh trước khi gọi đến LLM — và cái giá phải trả nếu làm sai.', content: `<p>Giao một bài toán NLP khó cho một nhóm ngày nay, phản xạ là với lấy mô hình lớn nhất có được và để nó lo hết. Trên văn bản lâm sàng tiếng Pháp, phản xạ ấy tốn kém, chậm và khó kiểm toán &mdash; và hóa ra, thậm chí không phải là chính xác nhất. DEMNE đặt cược ngược lại: gửi mỗi loại thực thể tới công cụ nhẹ nhất có thể xử lý nó, và chỉ nâng cấp khi văn bản thực sự đòi hỏi.</p><h2>Một cầu thang, không phải cái búa</h2><p>Pipeline có ba tầng. Các quy tắc tất định &mdash; regex và từ điển được tuyển chọn &mdash; đảm nhận những thực thể được viết theo vài cách ổn định: ngày tháng, liều lượng, chữ viết tắt chuẩn của dấu ấn sinh học. Một transformer tinh chỉnh trên văn bản ung thư học tiếng Pháp xử lý những thực thể cần hiểu biết ngữ nghĩa và chuyên ngành thực sự. Một LLM nằm trên đỉnh, dành riêng cho những trường hợp thực sự mơ hồ sống sót qua cả hai tầng trước. Không gì leo cao hơn mức cần thiết.</p><h2>Vì sao không chỉ dùng LLM?</h2><p>Vì một mô hình lớn duy nhất phải trả cái giá của LLM cho mọi thực thể, kể cả những cái mà một regex đã giải quyết tức thì. Nó chậm hơn, cần ngân sách GPU mà hầu hết bệnh viện không có, và mọi quyết định là một hộp đen mà bạn vẫn phải biện minh trước một bác sĩ lâm sàng hay kiểm toán viên. Và ngay trên bài toán định tuyến, baseline luôn-LLM là tệ nhất, chỉ đồng thuận với tầng chuyên gia 0,148. Công cụ nặng nhất không mặc nhiên là đáng tin cậy nhất.</p><h2>Cái giá của định tuyến sai</h2><p>Trích xuất theo tầng chỉ đáng giá nếu việc định tuyến tốt, nên đó là nơi DEMNE dồn sự cẩn trọng. Năm chỉ số đo từ phần chú thích nuôi một đồ thị quyết định tất định có 17 ngưỡng được hiệu chỉnh bằng một tìm kiếm đa mục tiêu. Mục tiêu được cố ý đặt bất đối xứng: gửi một thực thể tới phương pháp quá yếu bị phạt nặng gấp đôi so với gửi tới một phương pháp chỉ quá tốn kém &mdash; vì một lần bỏ sót trích xuất trong báo cáo lâm sàng tốn kém hơn một giây GPU bị lãng phí.</p><h2>Những con số nói gì</h2><p>Trên tập hiệu chỉnh ung thư học, việc định tuyến khớp với tầng tham chiếu của chuyên gia 0,954, so với 0,729 của luôn-quy-tắc và 0,148 của luôn-LLM. Áp dụng nguyên vẹn lên 300 báo cáo AP-HP chưa từng thấy, nó định tuyến 99,5 % số đề cập tới các quy tắc tất định, đạt F1 trung bình 0,941 &mdash; trong khi một transformer tinh chỉnh trong một ngân sách bệnh viện thực tế chỉ đạt 0,358. Với những thực thể chuẩn hóa chiếm phần lớn các báo cáo này, tầng rẻ nhất cũng là tầng chính xác nhất.</p><h2>Khi một mô hình duy nhất là câu trả lời đúng</h2><p>Phân tầng không miễn phí: nó thêm một lớp định tuyến phải xây dựng, đo lường và bảo trì, và các ngưỡng phải được hiệu chỉnh lại cho mỗi miền mới. Nếu văn bản đồng nhất, các thực thể đều khó như nhau, hoặc có ngân sách và mức dung thứ kiểm toán cho một mô hình lớn duy nhất, thì cầu thang chỉ là chi phí thừa. Luận điểm ở đây là hẹp &mdash; khi chi phí, độ trễ và khả năng truy vết cùng quan trọng, như trong NLP lâm sàng, quyết định theo từng thực thể thắng việc mặc định chọn mô hình nặng nhất rồi hy vọng.</p><p>Mã nguồn và phương pháp đầy đủ có trên <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; bản thảo đang được chuẩn bị.</p>` },
     ],
   },
   contact: {
@@ -4930,6 +4961,7 @@ const vi: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Đặt lịch gọi',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -4957,11 +4989,11 @@ const id: Dictionary = {
     menuToggleLabel: 'Buka menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Mencari magang riset 6 bulan · NLP klinis & AI biomedis · mulai Feb 2027',
     h1Pre: 'Mengekstrak biomarker dari teks klinis ',
     h1Accent: 'tanpa membangunkan GPU',
     h1Post: '',
-    sub: 'Saya Clément Longeac. Saya sedang mengerjakan DEMNE, kerangka kerja routing yang memutuskan — untuk setiap jenis entitas — apakah regex, CRF, transformer, atau LLM adalah alat yang jujur untuk tugas tersebut. Hasil pertama: 99,5% entitas klinis diekstrak tanpa GPU, F1 = 0,941 pada 300 catatan AP-HP.',
+    sub: "Saya Clément Longeac. Saya membangun DEMNE, sebuah framework perutean yang memilih, untuk setiap jenis entitas, metode paling ringan yang tetap andal: aturan, sebuah transformer, atau sebuah LLM. Pada kohort AP-HP yang belum pernah dilihat, ia merutekan 99,5 % sebutan ke aturan yang dapat diaudit dengan F1 0,941, sementara transformer yang disetel hanya mencapai 0,358.",
     ctaResearch: 'Lihat riset',
     ctaCV: 'Unduh CV',
     caption: 'DEMNE — Rules → Transformer → LLM, skema langsung',
@@ -5002,7 +5034,7 @@ const id: Dictionary = {
       title: 'Keselarasan regulasi — EU AI Act',
       body: 'Ekstraksi entitas klinis dari rekam medis pasien jelas masuk dalam kategori risiko tinggi EU AI Act. Desain bertahap DEMNE mempertimbangkan Pasal 12 dan 14 sejak awal, bukan ditambahkan belakangan.',
       articles: [
-        { code: 'Pasal 12', label: 'Pencatatan', desc: 'Setiap keputusan ekstraksi dapat dilacak hingga ke tahap (aturan, CRF, transformer, atau LLM) dan skor keyakinan yang menghasilkannya, memungkinkan pencatatan audit otomatis.' },
+        { code: 'Pasal 12', label: 'Pencatatan', desc: 'Setiap keputusan ekstraksi dapat dilacak hingga ke tahap (aturan, transformer, atau LLM) dan skor keyakinan yang menghasilkannya, memungkinkan pencatatan audit otomatis.' },
         { code: 'Pasal 14', label: 'Pengawasan manusia', desc: 'Output arbitrase LLM ditandai untuk tinjauan klinisi alih-alih diterima begitu saja, menjaga keterlibatan manusia dalam kasus-kasus ambigu.' },
       ],
     },
@@ -5142,10 +5174,11 @@ const id: Dictionary = {
         description:
           'Skrip autopkgtest yang memvalidasi perangkat lunak ilmiah pada GPU AMD, di infrastruktur CI Debian.',
         longBody:
-          'Bagian dari magang di Synchrotron SOLEIL: autopkgtest yang ditulis dalam OpenCL untuk memeriksa kompatibilitas GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) di infrastruktur integrasi berkelanjutan Debian/ROCm, dijalankan lewat GitLab Salsa. Skrip memasang dan mencopot paket pada mesin virtual bersih serta melaporkan kompatibilitas antar-GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Magang 4 bulan di divisi Div/Exp GRADES di Synchrotron SOLEIL, dibimbing oleh Emmanuel Farhi dan Frédéric-Emmanuel Picca. Tujuannya: mengurangi ketergantungan tumpukan komputasi ilmiah pada NVIDIA/CUDA dengan menguji apakah paket ilmiah Debian berjalan di GPU AMD melalui ROCm.\nSaya menulis autopkgtest OpenCL dan memvalidasi build dalam kontainer podman+ROCm (via sbuild), lalu mengirimnya ke upstream di GitLab Salsa Debian. Autotest ROCm ditambahkan untuk PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx, dan sasmodels; paket tanpa kode OpenCL (genx, examl) atau yang tersangkut migrasi Python 2→3 yang belum selesai (pysph) dikesampingkan. Ini adalah set balok pembangun pertama yang membantu komunitas ilmiah Debian secara luas beralih dari NVIDIA ke AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -5158,7 +5191,7 @@ const id: Dictionary = {
         title: 'NLP Klinis & AI Biomedis',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -5215,7 +5248,7 @@ const id: Dictionary = {
     subtitle: 'Tulisan yang lebih panjang tentang metode, jalan buntu, dan keputusan di balik pekerjaan di atas.',
     posts: [
       { status: 'Terbit · Okt 2026', title: 'Mengapa NER klinis Prancis merusak model tujuan umum', body: 'Penjelasan tentang di mana pipeline NER standar gagal pada laporan onkologi Prancis, dan apa artinya bagi struktur DEMNE.', content: `<p>Buka sebuah laporan onkologi berbahasa Prancis, dan sebagian besar model NER siap pakai tersandung sejak kalimat pertama. Kosakatanya padat dan penuh singkatan (ER, PR, HER2, Ki67, FISH), formatnya berganti dari satu rumah sakit ke rumah sakit lain, dan terminologi biomarker yang penting nyaris absen dari korpus tempat model-model ini dilatih. Refleks yang biasa &mdash; melemparkan model besar ke masalah ini &mdash; memang berhasil, tetapi mahal, tidak transparan, dan sulit dipertanggungjawabkan di hadapan klinisi atau auditor.</p><h2>Tak setiap entitas butuh LLM</h2><p>DEMNE berangkat dari pengamatan lugas: entitas dalam laporan ini tidak sama sulitnya. Sebutan biopsi ditulis dalam segelintir bentuk yang stabil; sedangkan nama obat bisa muncul dalam seratus bentuk. Jadi, alih-alih satu model untuk segalanya, DEMNE mengukur setiap tipe entitas dan mengarahkannya ke metode paling ringan yang tetap cukup andal &mdash; aturan deterministik, transformer yang disetel, atau LLM hanya sebagai pilihan terakhir.</p><p>Pengukuran itu berupa lima metrik korpus yang dihitung dari anotasi: seberapa berpola bentuk permukaannya, seberapa homogen kosakatanya, apakah himpunan kata kunci kecil bersifat diskriminatif, seberapa sering sebutan berada di bawah negasi atau kontradiksi, dan apakah ada cukup data berlabel untuk melatih model terbimbing. Sebuah graf keputusan deterministik mengubah angka-angka itu menjadi jenjang, dan 17 ambangnya dikalibrasi dengan pencarian multi-tujuan yang menghukum dua kali lebih berat pengiriman entitas ke metode yang terlalu lemah ketimbang ke metode yang sekadar terlalu mahal.</p><h2>Apa manfaatnya</h2><p>Pada set kalibrasi onkologi (59 tipe entitas), peruteannya sepakat dengan jenjang rujukan pakar dengan konkordansi 0,954 dan estimasi leave-one-corpus-out 0,866 &mdash; jauh di atas baseline berjenjang tetap mana pun (selalu-aturan mencapai 0,729, selalu-LLM 0,148). Uji yang lebih meyakinkan bersifat eksternal: diterapkan tanpa penyetelan ulang pada 300 laporan CT AP-HP, untuk lokasi kanker yang belum pernah dilihat model, DEMNE merutekan 99,5 % sebutan yang ditandai (411 dari 413) ke aturan deterministik. Aturan-aturan itu mencapai F1 rata-rata 0,941, sementara transformer yang disetel pada entitas yang sama dalam anggaran rumah sakit realistis hanya mencapai 0,358.</p><p>Dengan kata lain: untuk entitas terstandar yang mendominasi pelaporan onkologi, aturan bukan hanya lebih murah &mdash; aturan lebih baik, dan setiap keputusan aturan dapat dilacak hingga sebuah syarat eksplisit, persis yang diminta Pasal 12 dan 14 EU AI Act.</p><h2>Di mana ia berhenti</h2><p>Saya ingin jujur soal batasannya. Standar rujukan itu kecil &mdash; 92 tipe entitas, 59 di antaranya onkologi &mdash; sehingga skor pada satu korpus bersifat optimistis dan hanya perbandingan relatif yang berlaku. Jenjang LLM tidak pernah dievaluasi menyeluruh pada kohort eksternal; satu-satunya entitas yang dirutekan ke sana terlalu langka. Lagi pula kalibrasi tidak berpindah antar-domain: beralih ke genre klinis atau bahasa lain membuat konkordansi turun ke 0,45&ndash;0,73, sehingga ambangnya harus disetel ulang. DEMNE adalah bukti kelayakan, bukan produk jadi.</p><h2>Mengapa ini penting</h2><p>Intinya bukan bahwa aturan mengalahkan transformer. Intinya, &laquo;metode mana&raquo; adalah pertanyaan yang bisa dijawab per entitas, dari sifat teks yang terukur, alih-alih menetapkan model terberat sebagai bawaan lalu berharap. Untuk NLP klinis &mdash; tempat biaya, keteraudiktan, dan kepercayaan sama-sama penting &mdash; kerangka ini lebih berharga daripada satu poin persentase tambahan pada sebuah tolok ukur.</p><p>Kode dan metode lengkapnya ada di <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskripnya sedang disiapkan.</p>` },
-      { status: 'Draf — segera hadir', title: 'Ekstraksi bertahap vs. satu model besar', body: 'Argumen untuk merutekan entitas melalui aturan dan transformer yang di-fine-tune sebelum memanggil LLM sama sekali — dan biaya yang harus dibayar jika salah.' },
+      { status: 'Terbit · Okt 2026', title: 'Ekstraksi bertahap vs. satu model besar', body: 'Argumen untuk merutekan entitas melalui aturan dan transformer yang di-fine-tune sebelum memanggil LLM sama sekali — dan biaya yang harus dibayar jika salah.', content: `<p>Serahkan masalah NLP yang sulit kepada sebuah tim hari ini, dan refleksnya adalah meraih model terbesar yang tersedia dan membiarkannya menyelesaikan segalanya. Pada teks klinis Prancis, refleks itu mahal, lambat, dan sulit diaudit &mdash; dan, ternyata, bahkan bukan yang paling akurat. DEMNE bertaruh sebaliknya: mengirim setiap jenis entitas ke alat teringan yang mampu menanganinya, dan meningkatkannya hanya saat teks benar-benar menuntutnya.</p><h2>Sebuah tangga, bukan palu</h2><p>Pipeline-nya memiliki tiga jenjang. Aturan deterministik &mdash; regex dan leksikon terkurasi &mdash; menangani entitas yang ditulis dalam segelintir bentuk stabil: tanggal, dosis, singkatan baku biomarker. Sebuah transformer yang disetel pada teks onkologi Prancis menangani entitas yang memerlukan pemahaman semantik dan domain yang sesungguhnya. Sebuah LLM berada di puncak, disediakan untuk kasus yang benar-benar ambigu yang lolos dari kedua tahap sebelumnya. Tidak ada yang naik lebih tinggi dari yang diperlukan.</p><h2>Mengapa tidak cukup LLM saja?</h2><p>Karena satu model besar membayar harga LLM pada setiap entitas, termasuk yang sebenarnya langsung tuntas oleh sebuah regex. Ia lebih lambat, memerlukan anggaran GPU yang tak dimiliki kebanyakan rumah sakit, dan setiap keputusan adalah kotak hitam yang tetap harus Anda pertanggungjawabkan di hadapan klinisi atau auditor. Dan pada tugas peruteannya sendiri, baseline selalu-LLM adalah yang terburuk, sepakat dengan jenjang pakar hanya 0,148. Alat terberat tidak otomatis yang paling andal.</p><h2>Biaya salah merutekan</h2><p>Ekstraksi bertahap hanya sepadan jika peruteannya baik, jadi di sanalah DEMNE mencurahkan kehati-hatiannya. Lima metrik yang diukur dari anotasi memberi masukan pada sebuah graf keputusan deterministik yang 17 ambangnya dikalibrasi dengan pencarian multi-tujuan. Tujuannya sengaja asimetris: mengirim entitas ke metode yang terlalu lemah dihukum dua kali lebih berat daripada ke metode yang sekadar terlalu mahal &mdash; karena satu ekstraksi yang terlewat dalam laporan klinis lebih mahal daripada satu detik GPU yang terbuang.</p><h2>Apa kata angka-angkanya</h2><p>Pada set kalibrasi onkologi, peruteannya cocok dengan jenjang rujukan pakar sebesar 0,954, berbanding 0,729 untuk selalu-aturan dan 0,148 untuk selalu-LLM. Diterapkan tanpa diubah pada 300 laporan AP-HP yang belum pernah dilihat, ia merutekan 99,5 % sebutan ke aturan deterministik, yang mencapai F1 rata-rata 0,941 &mdash; sementara transformer yang disetel dalam anggaran rumah sakit realistis hanya mencapai 0,358. Untuk entitas terstandar yang mendominasi laporan-laporan ini, jenjang termurah sekaligus yang paling akurat.</p><h2>Kapan satu model adalah jawaban yang tepat</h2><p>Pentahapan tidak gratis: ia menambah lapisan perutean untuk dibangun, diukur, dan dipelihara, dan ambang-ambangnya harus dikalibrasi ulang untuk setiap domain baru. Jika teksnya seragam, entitasnya sama sulitnya, atau ada anggaran dan toleransi audit untuk satu model besar, tangga itu hanyalah beban tambahan. Klaim di sini sempit &mdash; ketika biaya, latensi, dan keterlacakan penting sekaligus, seperti pada NLP klinis, memutuskan per entitas mengalahkan menetapkan model terberat sebagai bawaan lalu berharap.</p><p>Kode dan metode lengkapnya ada di <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskripnya sedang disiapkan.</p>` },
     ],
   },
   contact: {
@@ -5225,6 +5258,7 @@ const id: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Jadwalkan panggilan',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -5252,11 +5286,11 @@ const sv: Dictionary = {
     menuToggleLabel: 'Öppna menyn',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Söker en 6 månaders forskningspraktik · Klinisk NLP & biomedicinsk AI · från feb. 2027',
     h1Pre: 'Extraherar biomarkörer från klinisk text ',
     h1Accent: 'utan att väcka GPU:n',
     h1Post: '',
-    sub: 'Jag är Clément Longeac. Jag arbetar med DEMNE, ett routningsramverk som för varje entitetstyp avgör om ett reguljärt uttryck, en CRF, en transformer eller en LLM är det ärliga verktyget för uppgiften. Första resultatet: 99,5 % av de kliniska entiteterna extraherade utan GPU, F1 = 0,941 på 300 AP-HP-anteckningar.',
+    sub: "Jag är Clément Longeac. Jag bygger DEMNE, ett dirigeringsramverk som för varje entitetstyp väljer den lättaste metod som förblir tillförlitlig: regler, en transformer eller en LLM. På en osedd AP-HP-kohort dirigerar det 99,5 % av omnämnandena till granskningsbara regler med F1 0,941, där en finjusterad transformer bara når 0,358.",
     ctaResearch: 'Se forskningen',
     ctaCV: 'Ladda ner CV',
     caption: 'DEMNE — Rules → Transformer → LLM, schema i realtid',
@@ -5297,7 +5331,7 @@ const sv: Dictionary = {
       title: 'Regelefterlevnad — EU AI Act',
       body: 'Klinisk entitetsextraktion från patientjournaler faller tydligt inom högriskkategorin i EU AI Act. DEMNE:s stegvisa design tar hänsyn till artikel 12 och 14 från början, inte som ett senare tillägg.',
       articles: [
-        { code: 'Art. 12', label: 'Registerföring', desc: 'Varje extraktionsbeslut kan spåras till det steg (regler, CRF, transformer eller LLM) och den konfidenspoäng som producerade det, vilket möjliggör automatisk granskningsloggning.' },
+        { code: 'Art. 12', label: 'Registerföring', desc: 'Varje extraktionsbeslut kan spåras till det steg (regler, transformer eller LLM) och den konfidenspoäng som producerade det, vilket möjliggör automatisk granskningsloggning.' },
         { code: 'Art. 14', label: 'Mänsklig tillsyn', desc: 'Utdata från LLM-skiljedomen flaggas för klinisk granskning istället för att accepteras tyst, vilket håller en människa i loopen vid tvetydiga fall.' },
       ],
     },
@@ -5437,10 +5471,11 @@ const sv: Dictionary = {
         description:
           'autopkgtest-skript som validerar vetenskaplig programvara på AMD-GPU:er, på Debians CI-infrastruktur.',
         longBody:
-          'En del av praktiken vid Synchrotron SOLEIL: autopkgtester skrivna i OpenCL för att kontrollera AMD-GPU-kompatibilitet (pyopencl, nabu, ufo-filters, pyvkfft) över Debian/ROCm-infrastrukturen för kontinuerlig integration, körda via GitLab Salsa. Skripten installerar och avinstallerar paket på rena virtuella maskiner och rapporterar kompatibilitet mellan GPU:er.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Fyra månaders praktik vid avdelningen Div/Exp GRADES på Synchrotron SOLEIL, handledd av Emmanuel Farhi och Frédéric-Emmanuel Picca. Målet: minska den vetenskapliga beräkningsstackens beroende av NVIDIA/CUDA genom att testa om Debians vetenskapspaket kör på AMD-GPU:er via ROCm.\nJag skrev OpenCL-autopkgtester och validerade byggena i en podman+ROCm-container (via sbuild) och skickade dem sedan uppströms till Debians GitLab Salsa. ROCm-autotester lades till för PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx och sasmodels; paket utan OpenCL-kod (genx, examl) eller fast i en oavslutad Python 2→3-migrering (pysph) sållades bort. Det är en första uppsättning byggstenar som hjälper hela den vetenskapliga Debian-gemenskapen att gå från NVIDIA till AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -5453,7 +5488,7 @@ const sv: Dictionary = {
         title: 'Klinisk NLP & biomedicinsk AI',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -5510,7 +5545,7 @@ const sv: Dictionary = {
     subtitle: 'Längre texter om metoder, återvändsgränder och beslut bakom arbetet ovan.',
     posts: [
       { status: 'Publicerad · okt. 2026', title: 'Varför fransk klinisk NER slår ut generella modeller', body: 'En genomgång av var standard-NER-pipelines misslyckas på franska onkologirapporter, och vad det innebär för DEMNE:s struktur.', content: `<p>Öppna en fransk onkologisk rapport, så snubblar de flesta färdiga NER-modeller redan i första meningen. Ordförrådet är tätt och förkortat (ER, PR, HER2, Ki67, FISH), formateringen skiftar mellan sjukhus, och den biomarkörterminologi som betyder något saknas nästan helt i de korpusar modellerna tränats på. Den vanliga reflexen &mdash; att kasta en stor modell på problemet &mdash; fungerar, men är dyr, ogenomskinlig och svår att försvara inför en kliniker eller en granskare.</p><h2>Alla entiteter behöver inte en LLM</h2><p>DEMNE utgår från en krass iakttagelse: entiteterna i dessa rapporter är inte lika svåra. En biopsiomnämning skrivs på en handfull stabila sätt; ett läkemedelsnamn kan dyka upp i hundra former. Så i stället för en modell för allt mäter DEMNE varje entitetstyp och skickar den till den lättaste metod som är tillräckligt tillförlitlig &mdash; en deterministisk regel, en finjusterad transformer, eller en LLM endast som sista utväg.</p><p>Mätningen består av fem korpusmått beräknade ur annoteringarna: hur mallbar ytformen är, hur homogent ordförrådet är, om en liten nyckelordsmängd är diskriminerande, hur ofta omnämnandet ligger under negation eller motsägelse, och om det alls finns tillräckligt med märkt data för att träna en övervakad modell. En deterministisk beslutsgraf gör dessa tal till en nivå, och dess 17 tröskelvärden kalibreras med en flermålssökning som bestraffar att skicka en entitet till en alltför svag metod dubbelt så hårt som till en bara alltför dyr.</p><h2>Vad det ger</h2><p>På den onkologiska kalibreringsmängden (59 entitetstyper) stämmer dirigeringen med expertreferensnivån med en konkordans på 0,954 och en leave-one-corpus-out-skattning på 0,866 &mdash; långt över varje baslinje med fast nivå (alltid-regler når 0,729, alltid-LLM 0,148). Det mer övertygande testet är externt: tillämpad utan omjustering på 300 DT-rapporter från AP-HP, för cancerlokaler modellen aldrig sett, dirigerade DEMNE 99,5 % av de markerade omnämnandena (411 av 413) till deterministiska regler. Dessa regler nådde ett medel-F1 på 0,941, medan en transformer finjusterad på samma entiteter inom en realistisk sjukhusbudget stannade på 0,358.</p><p>Med andra ord: för de standardiserade entiteter som dominerar onkologisk rapportering var regler inte bara billigare &mdash; de var bättre, och varje regelbeslut går att spåra till ett explicit villkor, precis vad artiklarna 12 och 14 i EU AI Act kräver.</p><h2>Var det stannar</h2><p>Jag vill vara ärlig om gränserna. Referensstandarden är liten &mdash; 92 entitetstyper, 59 av dem inom onkologi &mdash; så poäng på en enda korpus är optimistiska och bara relativa jämförelser håller. LLM-nivån utvärderades aldrig från början till slut på den externa kohorten; dess enda dirigerade entitet var för sällsynt. Och kalibreringen överförs inte mellan domäner: byter man klinisk genre eller språk faller konkordansen till 0,45&ndash;0,73, så trösklarna måste justeras om. DEMNE är ett genomförbarhetsbevis, inte en färdig produkt.</p><h2>Varför det spelar roll</h2><p>Poängen är inte att regler slår transformrar. Poängen är att &bdquo;vilken metod&ldquo; är en fråga man kan besvara per entitet, utifrån mätbara egenskaper hos texten, i stället för att som standard välja den tyngsta modellen och hoppas. För klinisk NLP &mdash; där kostnad, granskbarhet och tillit betyder något samtidigt &mdash; är den infallsvinkeln värd mer än ännu en procentenhet på ett riktmärke.</p><p>Koden och hela metoden finns på <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskriptet är under arbete.</p>` },
-      { status: 'Utkast — kommer snart', title: 'Stegvis extraktion kontra en enda stor modell', body: 'Argumentet för att dirigera entiteter genom regler och en finjusterad transformer innan man alls anropar en LLM — och vad det kostar att göra fel.' },
+      { status: 'Publicerad · okt. 2026', title: 'Stegvis extraktion kontra en enda stor modell', body: 'Argumentet för att dirigera entiteter genom regler och en finjusterad transformer innan man alls anropar en LLM — och vad det kostar att göra fel.', content: `<p>Ge ett team ett svårt NLP-problem i dag, och reflexen är att ta till den största tillgängliga modellen och låta den reda ut allt. På fransk klinisk text är den reflexen dyr, långsam och svår att granska &mdash; och, visar det sig, inte ens den mest exakta. DEMNE satsar på motsatsen: skicka varje entitetstyp till det lättaste verktyg som klarar den, och eskalera bara när texten verkligen kräver det.</p><h2>En trappa, inte en hammare</h2><p>Pipelinen har tre nivåer. Deterministiska regler &mdash; regex och kuraterade lexikon &mdash; tar entiteterna som skrivs på en handfull stabila sätt: datum, doser, standardförkortningar för biomarkörer. En transformer finjusterad på fransk onkologisk text hanterar entiteterna som kräver verklig semantisk och domänmässig förståelse. En LLM sitter överst, reserverad för de verkligt tvetydiga fallen som överlever båda tidigare steg. Inget klättrar högre än det behöver.</p><h2>Varför inte bara LLM:en?</h2><p>För att en enda stor modell betalar LLM:ens pris på varje entitet, även de som en regex hade klarat direkt. Den är långsammare, kräver en GPU-budget som de flesta sjukhus inte har, och varje beslut är en svart låda som du ändå måste försvara inför en kliniker eller granskare. Och på själva dirigeringsuppgiften var alltid-LLM-baslinjen den sämsta och höll bara med expertnivån 0,148 av gångerna. Det tyngsta verktyget är inte automatiskt det mest tillförlitliga.</p><h2>Vad felaktig dirigering kostar</h2><p>Stegvis extraktion lönar sig bara om dirigeringen är bra, så det är där DEMNE lägger sin omsorg. Fem mått uppmätta ur annoteringarna matar en deterministisk beslutsgraf vars 17 tröskelvärden kalibreras med en flermålssökning. Målet är medvetet asymmetriskt: att skicka en entitet till en alltför svag metod bestraffas dubbelt så hårt som till en bara alltför dyr &mdash; för en missad extraktion i en klinisk rapport kostar mer än en bortkastad GPU-sekund.</p><h2>Vad siffrorna säger</h2><p>På den onkologiska kalibreringsmängden stämmer dirigeringen med expertreferensnivån 0,954 av gångerna, mot 0,729 för alltid-regler och 0,148 för alltid-LLM. Tillämpad orörd på 300 osedda AP-HP-rapporter dirigerade den 99,5 % av omnämnandena till deterministiska regler, som nådde ett medel-F1 på 0,941 &mdash; där en transformer finjusterad inom en realistisk sjukhusbudget stannade på 0,358. För de standardiserade entiteter som dominerar dessa rapporter var den billiga nivån också den exakta.</p><h2>När en enda modell är rätt svar</h2><p>Stegindelning är inte gratis: den lägger till ett dirigeringslager att bygga, mäta och underhålla, och trösklarna måste omkalibreras för varje ny domän. Om texten är enhetlig, entiteterna lika svåra, eller det finns budget och granskningstolerans för en enda stor modell, är trappan bara overhead. Påståendet här är smalt &mdash; när kostnad, latens och spårbarhet betyder något samtidigt, som i klinisk NLP, slår beslut per entitet att som standard välja den tyngsta modellen och hoppas.</p><p>Koden och hela metoden finns på <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; manuskriptet är under arbete.</p>` },
     ],
   },
   contact: {
@@ -5520,6 +5555,7 @@ const sv: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Boka ett samtal',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -5547,11 +5583,11 @@ const uk: Dictionary = {
     menuToggleLabel: 'Відкрити меню',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · Шукаю 6-місячне дослідницьке стажування · Клінічний NLP та біомедичний ШІ · з лют. 2027',
     h1Pre: 'Видобуваю біомаркери з клінічного тексту ',
     h1Accent: 'не пробуджуючи GPU',
     h1Post: '',
-    sub: 'Я Clément Longeac. Я працюю над DEMNE — фреймворком маршрутизації, який для кожного типу сутності вирішує, чи є чесним інструментом для завдання регулярний вираз, CRF, трансформер або LLM. Перший результат: 99,5% клінічних сутностей видобуто без GPU, F1 = 0,941 на 300 нотатках AP-HP.',
+    sub: "Я Clément Longeac. Я створюю DEMNE — фреймворк маршрутизації, який для кожного типу сутності обирає найлегший метод, що лишається надійним: правила, трансформер або LLM. На раніше не баченій когорті AP-HP він спрямовує 99,5 % згадок до аудитованих правил з F1 0,941, тоді як донавчений трансформер досягає лише 0,358.",
     ctaResearch: 'Переглянути дослідження',
     ctaCV: 'Завантажити резюме',
     caption: 'DEMNE — Rules → Transformer → LLM, схема в реальному часі',
@@ -5592,7 +5628,7 @@ const uk: Dictionary = {
       title: 'Регуляторна відповідність — EU AI Act',
       body: 'Вилучення клінічних сутностей з медичних записів пацієнтів однозначно потрапляє до категорії високого ризику EU AI Act. Поетапна архітектура DEMNE враховує статті 12 та 14 з самого початку, а не додає їх заднім числом.',
       articles: [
-        { code: 'Ст. 12', label: 'Ведення записів', desc: 'Кожне рішення про вилучення можна простежити до етапу (правила, CRF, трансформер або LLM) та оцінки впевненості, яка його породила, що дає змогу автоматично вести журнал аудиту.' },
+        { code: 'Ст. 12', label: 'Ведення записів', desc: 'Кожне рішення про вилучення можна простежити до етапу (правила, трансформер або LLM) та оцінки впевненості, яка його породила, що дає змогу автоматично вести журнал аудиту.' },
         { code: 'Ст. 14', label: 'Людський нагляд', desc: 'Результати арбітражу LLM позначаються для перевірки клініцистом, а не приймаються мовчки, що зберігає участь людини у неоднозначних випадках.' },
       ],
     },
@@ -5733,10 +5769,11 @@ const uk: Dictionary = {
         description:
           'Скрипти autopkgtest, що перевіряють наукове ПЗ на GPU AMD в CI-інфраструктурі Debian.',
         longBody:
-          'Частина стажування в Synchrotron SOLEIL: autopkgtests на OpenCL для перевірки сумісності GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) в інфраструктурі безперервної інтеграції Debian/ROCm, запущені через GitLab Salsa. Скрипти встановлюють і видаляють пакети на чистих віртуальних машинах і звітують про сумісність між GPU.',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'Чотиримісячне стажування у відділі Div/Exp GRADES у Synchrotron SOLEIL під керівництвом Emmanuel Farhi та Frédéric-Emmanuel Picca. Мета — зменшити залежність стека наукових обчислень від NVIDIA/CUDA, перевіривши, чи працюють наукові пакети Debian на GPU AMD через ROCm.\nЯ написав autopkgtests мовою OpenCL і перевіряв збірки в контейнері podman+ROCm (через sbuild), а потім відправляв їх в апстрим до GitLab Salsa Debian. Автотести ROCm додано для PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx та sasmodels; пакети без коду OpenCL (genx, examl) або застряглі на незавершеній міграції Python 2→3 (pysph) було відсіяно. Це перший набір цеглинок, що допомагає всій науковій спільноті Debian перейти з NVIDIA на AMD.',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -5749,7 +5786,7 @@ const uk: Dictionary = {
         title: 'Клінічний NLP і біомедичний ШІ',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -5806,7 +5843,7 @@ const uk: Dictionary = {
     subtitle: 'Розлогіші матеріали про методи, глухі кути та рішення, що стоять за роботою вище.',
     posts: [
       { status: 'Опубліковано · жовт. 2026', title: 'Чому французький клінічний NER ламає універсальні моделі', body: 'Огляд того, де стандартні конвеєри NER зазнають невдачі на французьких онкологічних звітах, і що це означає для структури DEMNE.', content: `<p>Відкрийте французький онкологічний звіт &mdash; і більшість готових NER-моделей спотикаються вже на першому реченні. Лексика щільна й скорочена (ER, PR, HER2, Ki67, FISH), форматування змінюється від лікарні до лікарні, а важлива термінологія біомаркерів майже відсутня в корпусах, на яких ці моделі навчалися. Звичний рефлекс &mdash; кинути на задачу велику модель &mdash; працює, але він дорогий, непрозорий і важкий для обґрунтування перед клініцистом чи аудитором.</p><h2>Не кожній сутності потрібен LLM</h2><p>DEMNE виходить із простого спостереження: сутності в цих звітах не однаково складні. Згадка про біопсію пишеться кількома сталими способами; назва ж препарату може траплятися в сотні форм. Тож замість однієї моделі на все DEMNE вимірює кожен тип сутності й спрямовує його до найлегшого достатньо надійного методу &mdash; детермінованого правила, доналаштованого transformer або LLM лише як крайній засіб.</p><p>Вимірювання &mdash; це п’ять корпусних метрик, обчислених з анотацій: наскільки шаблонною є поверхнева форма, наскільки однорідна лексика, чи є невеликий набір ключових слів розрізнювальним, як часто згадка опиняється під запереченням чи суперечністю, і чи є взагалі достатньо розмічених даних, щоб навчити кероване модель. Детермінований граф рішень перетворює ці числа на рівень, а його 17 порогів калібрують багатокритеріальним пошуком, що вдвічі суворіше карає відправлення сутності до заслабкого методу, ніж до просто задорогого.</p><h2>Що це дає</h2><p>На онкологічному калібрувальному наборі (59 типів сутностей) маршрутизація збігається з експертним еталонним рівнем із узгодженістю 0,954 та оцінкою leave-one-corpus-out 0,866 &mdash; значно вище за будь-яку базову стратегію з фіксованим рівнем (завжди-правила дає 0,729, завжди-LLM 0,148). Переконливіший тест &mdash; зовнішній: застосований без переналаштування до 300 КТ-звітів AP-HP для раніше не бачених локалізацій раку, DEMNE спрямував 99,5 % виділених згадок (411 із 413) до детермінованих правил. Ці правила досягли середнього F1 0,941, тоді як transformer, доналаштований на тих самих сутностях за реалістичного лікарняного бюджету, дійшов лише до 0,358.</p><p>Інакше кажучи: для стандартизованих сутностей, що домінують в онкологічній звітності, правила були не лише дешевшими &mdash; вони були кращими, і кожне рішення правила простежується до явної умови, саме цього й вимагають статті 12 і 14 EU AI Act.</p><h2>Де він зупиняється</h2><p>Хочу бути чесним щодо меж. Еталонний стандарт малий &mdash; 92 типи сутностей, 59 із них в онкології &mdash; тож оцінки на одному корпусі оптимістичні, і чинними є лише відносні порівняння. Рівень LLM ніколи не оцінювався наскрізно на зовнішній когорті; його єдина спрямована сутність була надто рідкісною. А калібрування не переноситься між доменами: на іншому клінічному жанрі чи мові узгодженість падає до 0,45&ndash;0,73, тож пороги доводиться переналаштовувати. DEMNE &mdash; це доказ здійсненності, а не завершений продукт.</p><h2>Чому це важливо</h2><p>Ідеться не про те, що правила перемагають transformer’и. Ідеться про те, що &laquo;який метод&raquo; &mdash; це питання, на яке можна відповісти для кожної сутності, виходячи з вимірних властивостей тексту, а не обирати за замовчуванням найважчу модель і сподіватися. Для клінічного NLP &mdash; де вартість, аудитованість і довіра важливі водночас &mdash; таке формулювання варте більше, ніж іще один відсотковий пункт на бенчмарку.</p><p>Код і повний метод &mdash; на <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; рукопис готується.</p>` },
-      { status: 'Чернетка — незабаром', title: 'Поетапне вилучення проти однієї великої моделі', body: 'Аргументація на користь маршрутизації сутностей через правила та донавчений трансформер, перш ніж взагалі викликати LLM — і якою є ціна помилки в цьому.' },
+      { status: 'Опубліковано · жовт. 2026', title: 'Поетапне вилучення проти однієї великої моделі', body: 'Аргументація на користь маршрутизації сутностей через правила та донавчений трансформер, перш ніж взагалі викликати LLM — і якою є ціна помилки в цьому.', content: `<p>Передайте сьогодні команді складну задачу NLP &mdash; і рефлекс полягає в тому, щоб узяти найбільшу доступну модель і дати їй усе розв’язати. На французькому клінічному тексті цей рефлекс дорогий, повільний і важкий для аудиту &mdash; і, як виявляється, навіть не найточніший. DEMNE робить протилежну ставку: надсилати кожен тип сутності до найлегшого інструмента, що з нею впорається, і підвищувати рівень лише тоді, коли текст справді цього вимагає.</p><h2>Сходи, а не молоток</h2><p>Конвеєр має три рівні. Детерміновані правила &mdash; регулярні вирази та відібрані лексикони &mdash; беруть сутності, записані кількома сталими способами: дати, дозування, стандартні скорочення біомаркерів. Трансформер, донавчений на французькому онкологічному тексті, опрацьовує сутності, що потребують справжнього семантичного й доменного розуміння. LLM стоїть на вершині, залишений для справді неоднозначних випадків, що пережили обидва попередні етапи. Ніщо не піднімається вище, ніж потрібно.</p><h2>Чому не лише LLM?</h2><p>Бо одна велика модель платить ціну LLM за кожну сутність, зокрема за ті, що регулярний вираз розв’язав би миттєво. Вона повільніша, потребує бюджету GPU, якого більшість лікарень не має, і кожне рішення &mdash; чорна скринька, яку все одно треба обґрунтувати перед клініцистом чи аудитором. А на самій задачі маршрутизації базова стратегія завжди-LLM була найгіршою, збігаючись з експертним рівнем лише у 0,148 випадків. Найважчий інструмент не є автоматично найнадійнішим.</p><h2>Ціна хибної маршрутизації</h2><p>Поетапне вилучення окупається лише за доброї маршрутизації, тож саме туди DEMNE вкладає свою ретельність. П’ять метрик, виміряних з анотацій, живлять детермінований граф рішень, 17 порогів якого калібрує багатокритеріальний пошук. Ціль навмисно асиметрична: надіслати сутність до заслабкого методу карається вдвічі суворіше, ніж до просто задорогого &mdash; адже пропущене вилучення в клінічному звіті коштує більше, ніж змарнована секунда GPU.</p><h2>Що кажуть цифри</h2><p>На онкологічному калібрувальному наборі маршрутизація збігається з експертним еталонним рівнем у 0,954 проти 0,729 у завжди-правил і 0,148 у завжди-LLM. Застосована без змін до 300 не бачених раніше звітів AP-HP, вона спрямувала 99,5 % згадок до детермінованих правил, що досягли середнього F1 0,941 &mdash; тоді як трансформер, донавчений за реалістичного лікарняного бюджету, дійшов лише до 0,358. Для стандартизованих сутностей, що домінують у цих звітах, найдешевший рівень був і найточнішим.</p><h2>Коли одна модель &mdash; правильна відповідь</h2><p>Етапність не безкоштовна: вона додає шар маршрутизації, який треба побудувати, виміряти й підтримувати, а пороги доводиться перекалібровувати для кожного нового домену. Якщо текст однорідний, сутності однаково складні або є бюджет і аудиторська терпимість до однієї великої моделі, сходи &mdash; лише накладні витрати. Твердження тут вузьке &mdash; коли вартість, затримка та простежуваність важливі водночас, як у клінічному NLP, рішення щодо кожної сутності краще, ніж за замовчуванням брати найважчу модель і сподіватися.</p><p>Код і повний метод &mdash; на <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a>; рукопис готується.</p>` },
     ],
   },
   contact: {
@@ -5816,6 +5853,7 @@ const uk: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'Запланувати дзвінок',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',
@@ -5843,11 +5881,11 @@ const th: Dictionary = {
     menuToggleLabel: 'เปิดเมนู',
   },
   hero: {
-    kicker: 'ESIEE Paris · DSIA · Tremplin Recherche · Open to a research internship, Feb 2027',
+    kicker: 'ESIEE Paris · กำลังหาการฝึกงานวิจัย 6 เดือน · NLP ทางคลินิก & AI ชีวการแพทย์ · ตั้งแต่ ก.พ. 2027',
     h1Pre: 'สกัดไบโอมาร์กเกอร์จากข้อความทางคลินิก ',
     h1Accent: 'โดยไม่ต้องปลุก GPU',
     h1Post: '',
-    sub: 'ผมชื่อ Clément Longeac ผมกำลังพัฒนา DEMNE ซึ่งเป็นเฟรมเวิร์กสำหรับจัดเส้นทางที่ตัดสินใจ — สำหรับเอนทิตีแต่ละประเภท — ว่า regex, CRF, transformer หรือ LLM คือเครื่องมือที่ซื่อตรงที่สุดสำหรับงานนั้น ผลลัพธ์แรก: สกัดเอนทิตีทางคลินิกได้ 99.5% โดยไม่ใช้ GPU ด้วยค่า F1 = 0.941 จากบันทึก AP-HP จำนวน 300 รายการ',
+    sub: "ผมคือ Clément Longeac ผมสร้าง DEMNE เฟรมเวิร์กการกำหนดเส้นทางที่เลือกวิธีที่เบาที่สุดซึ่งยังคงเชื่อถือได้สำหรับเอนทิตีแต่ละประเภท ได้แก่ กฎเกณฑ์ transformer หรือ LLM บนคอฮอร์ต AP-HP ที่ไม่เคยเห็นมาก่อน มันกำหนดเส้นทาง 99.5% ของการกล่าวถึงไปยังกฎที่ตรวจสอบได้ด้วย F1 0.941 ขณะที่ transformer ที่ปรับละเอียดทำได้เพียง 0.358",
     ctaResearch: 'ดูงานวิจัย',
     ctaCV: 'ดาวน์โหลดเรซูเม่',
     caption: 'DEMNE — Rules → Transformer → LLM แผนผังแบบสด',
@@ -5888,7 +5926,7 @@ const th: Dictionary = {
       title: 'ความสอดคล้องด้านกฎระเบียบ — EU AI Act',
       body: 'การสกัดเอนทิตีทางคลินิกจากเวชระเบียนผู้ป่วยจัดอยู่ในหมวดความเสี่ยงสูงของ EU AI Act อย่างชัดเจน การออกแบบแบบขั้นตอนของ DEMNE คำนึงถึงมาตรา 12 และ 14 ตั้งแต่ต้น ไม่ใช่เพิ่มเข้ามาภายหลัง',
       articles: [
-        { code: 'มาตรา 12', label: 'การเก็บบันทึก', desc: 'ทุกการตัดสินใจในการสกัดข้อมูลสามารถตรวจสอบย้อนกลับไปยังขั้นตอน (กฎเกณฑ์, CRF, Transformer หรือ LLM) และคะแนนความเชื่อมั่นที่สร้างมันขึ้นมา ทำให้สามารถบันทึกข้อมูลตรวจสอบได้โดยอัตโนมัติ' },
+        { code: 'มาตรา 12', label: 'การเก็บบันทึก', desc: 'ทุกการตัดสินใจในการสกัดข้อมูลสามารถตรวจสอบย้อนกลับไปยังขั้นตอน (กฎเกณฑ์, Transformer หรือ LLM) และคะแนนความเชื่อมั่นที่สร้างมันขึ้นมา ทำให้สามารถบันทึกข้อมูลตรวจสอบได้โดยอัตโนมัติ' },
         { code: 'มาตรา 14', label: 'การกำกับดูแลโดยมนุษย์', desc: 'ผลลัพธ์จากการตัดสินของ LLM จะถูกทำเครื่องหมายเพื่อให้แพทย์ตรวจสอบ แทนที่จะยอมรับโดยเงียบๆ ทำให้มนุษย์ยังคงมีบทบาทในกรณีที่กำกวม' },
       ],
     },
@@ -6028,10 +6066,11 @@ const th: Dictionary = {
         description:
           'สคริปต์ autopkgtest ที่ตรวจสอบซอฟต์แวร์วิทยาศาสตร์บน GPU ของ AMD บนโครงสร้างพื้นฐาน CI ของ Debian',
         longBody:
-          'ส่วนหนึ่งของการฝึกงานที่ Synchrotron SOLEIL: autopkgtest ที่เขียนด้วย OpenCL เพื่อตรวจสอบความเข้ากันได้ของ GPU AMD (pyopencl, nabu, ufo-filters, pyvkfft) บนโครงสร้างพื้นฐานการบูรณาการต่อเนื่อง Debian/ROCm รันผ่าน GitLab Salsa สคริปต์ติดตั้งและถอนการติดตั้งแพ็กเกจบนเครื่องเสมือนที่สะอาด และรายงานความเข้ากันได้ระหว่าง GPU',
-        tags: ['OpenCL', 'Bash', 'Debian', 'GitLab CI', 'ROCm'],
+          'การฝึกงาน 4 เดือนในแผนก Div/Exp GRADES ที่ Synchrotron SOLEIL ภายใต้การดูแลของ Emmanuel Farhi และ Frédéric-Emmanuel Picca เป้าหมายคือลดการพึ่งพา NVIDIA/CUDA ของสแต็กการคำนวณเชิงวิทยาศาสตร์ โดยทดสอบว่าแพ็กเกจวิทยาศาสตร์ของ Debian ทำงานบน GPU ของ AMD ผ่าน ROCm ได้หรือไม่\nผมเขียน autopkgtest ด้วย OpenCL และตรวจสอบการ build ในคอนเทนเนอร์ podman+ROCm (ผ่าน sbuild) จากนั้นส่งขึ้น upstream ไปยัง GitLab Salsa ของ Debian มีการเพิ่มออโตเทสต์ ROCm ให้กับ PyOpenCL, Nabu, Ufo-filters, clpeak, pyvkfft, gpyfft, silx และ sasmodels ส่วนแพ็กเกจที่ไม่มีโค้ด OpenCL (genx, examl) หรือติดอยู่กับการย้าย Python 2→3 ที่ยังไม่เสร็จ (pysph) ถูกคัดออก นี่คือชุดชิ้นส่วนพื้นฐานชุดแรกที่ช่วยให้ชุมชนวิทยาศาสตร์ Debian ทั้งหมดย้ายจาก NVIDIA ไปยัง AMD',
+        tags: ['OpenCL', 'ROCm', 'autopkgtest', 'sbuild', 'Debian', 'GitLab Salsa'],
         url: 'https://salsa.debian.org/Clement_LONGEAC',
-        image: '/images/projects/debian.svg',
+        image: '/images/projects/debian-rocm-ci.svg',
+        report: '/Longeac_2025_RapportStage_SynchrotronSOLEIL.pdf',
       },
     ],
   },
@@ -6044,7 +6083,7 @@ const th: Dictionary = {
         title: 'NLP ทางคลินิกและ AI ชีวการแพทย์',
         lines: [
           ['DrBERT-7GB', 'CamemBERT', 'spaCy', 'HuggingFace Transformers'],
-          ['CRF Suite', 'sklearn-crfsuite', 'Regex/lexicon design'],
+          ['Regex/lexicon design', 'Optuna (NSGA-II)', 'BRAT / CoNLL'],
           ['Clinical text preprocessing', 'Domain adaptation'],
         ],
       },
@@ -6101,7 +6140,7 @@ const th: Dictionary = {
     subtitle: 'บทความเชิงลึกเกี่ยวกับวิธีการ ทางตัน และการตัดสินใจเบื้องหลังงานข้างต้น',
     posts: [
       { status: 'เผยแพร่ · ต.ค. 2026', title: 'ทำไม NER ทางคลินิกภาษาฝรั่งเศสจึงทำให้โมเดลทั่วไปล้มเหลว', body: 'ภาพรวมของจุดที่ไปป์ไลน์ NER มาตรฐานล้มเหลวในรายงานมะเร็งวิทยาภาษาฝรั่งเศส และความหมายของสิ่งนี้ต่อโครงสร้างของ DEMNE', content: `<p>เปิดรายงานมะเร็งวิทยาภาษาฝรั่งเศสขึ้นมา โมเดล NER สำเร็จรูปส่วนใหญ่สะดุดตั้งแต่ประโยคแรก คำศัพท์หนาแน่นและใช้ตัวย่อ (ER, PR, HER2, Ki67, FISH) รูปแบบการจัดพิมพ์เปลี่ยนไปในแต่ละโรงพยาบาล และคำศัพท์ตัวบ่งชี้ทางชีวภาพที่สำคัญแทบไม่ปรากฏในคลังข้อมูลที่ใช้ฝึกโมเดลเหล่านี้ ปฏิกิริยาที่คุ้นเคย&mdash;&mdash;โยนโมเดลขนาดใหญ่เข้าใส่&mdash;&mdash;ก็ได้ผล แต่มีต้นทุนสูง ไม่โปร่งใส และยากจะอธิบายต่อแพทย์หรือผู้ตรวจสอบ</p><h2>ไม่ใช่ทุกเอนทิตีที่ต้องใช้ LLM</h2><p>DEMNE เริ่มจากข้อสังเกตตรงไปตรงมา: เอนทิตีในรายงานเหล่านี้ยากไม่เท่ากัน การกล่าวถึงการตัดชิ้นเนื้อเขียนได้ไม่กี่รูปแบบที่คงที่ ขณะที่ชื่อยาอาจปรากฏได้นับร้อยรูปแบบ ดังนั้นแทนที่จะใช้โมเดลเดียวกับทุกอย่าง DEMNE วัดเอนทิตีแต่ละประเภทแล้วส่งไปยังวิธีที่เบาที่สุดเท่าที่ยังเชื่อถือได้&mdash;&mdash;กฎเชิงกำหนด, transformer ที่ปรับละเอียด, หรือ LLM เป็นทางเลือกสุดท้ายเท่านั้น</p><p>การวัดคือห้าเมตริกคลังข้อมูลที่คำนวณจากคำอธิบายประกอบ: รูปผิวมีความเป็นแม่แบบเพียงใด คำศัพท์เป็นเอกพันธ์เพียงใด ชุดคำสำคัญเล็ก ๆ จำแนกได้หรือไม่ การกล่าวถึงอยู่ภายใต้การปฏิเสธหรือความขัดแย้งบ่อยเพียงใด และมีข้อมูลที่ติดป้ายกำกับเพียงพอจะฝึกโมเดลแบบมีผู้สอนหรือไม่ กราฟการตัดสินใจเชิงกำหนดจะแปลงตัวเลขเหล่านี้เป็นชั้น และ 17 ค่าขีดแบ่งของมันถูกปรับเทียบด้วยการค้นหาแบบหลายวัตถุประสงค์ ซึ่งลงโทษการส่งเอนทิตีไปยังวิธีที่อ่อนเกินไปหนักเป็นสองเท่าของการส่งไปยังวิธีที่เพียงแค่แพงเกินไป</p><h2>มันให้อะไร</h2><p>บนชุดปรับเทียบด้านมะเร็งวิทยา (เอนทิตี 59 ประเภท) การกำหนดเส้นทางสอดคล้องกับชั้นอ้างอิงของผู้เชี่ยวชาญด้วยความสอดคล้อง 0.954 และค่าประมาณแบบ leave-one-corpus-out ที่ 0.866&mdash;&mdash;สูงกว่าเส้นฐานชั้นคงที่ใด ๆ มาก (ใช้กฎเสมอได้ 0.729, ใช้ LLM เสมอได้ 0.148) การทดสอบที่น่าเชื่อถือกว่าคือการทดสอบภายนอก: เมื่อนำไปใช้โดยไม่ปรับจูนใหม่กับรายงาน CT ของ AP-HP จำนวน 300 ฉบับ ในตำแหน่งมะเร็งที่โมเดลไม่เคยเห็น DEMNE กำหนดเส้นทาง 99.5% ของการกล่าวถึงที่ถูกเน้น (411 จาก 413) ไปยังกฎเชิงกำหนด กฎเหล่านั้นได้ค่า F1 เฉลี่ย 0.941 ขณะที่ transformer ที่ปรับละเอียดบนเอนทิตีเดียวกันภายใต้งบประมาณโรงพยาบาลที่สมจริงทำได้เพียง 0.358</p><p>กล่าวอีกนัยหนึ่ง: สำหรับเอนทิตีมาตรฐานที่ครองรายงานมะเร็งวิทยา กฎไม่เพียงถูกกว่า&mdash;&mdash;แต่ยังดีกว่า และทุกการตัดสินใจของกฎสามารถสืบย้อนไปถึงเงื่อนไขที่ชัดเจน ซึ่งเป็นสิ่งที่มาตรา 12 และ 14 ของ EU AI Act เรียกร้องพอดี</p><h2>มันหยุดตรงไหน</h2><p>ผมอยากซื่อตรงเรื่องข้อจำกัด มาตรฐานอ้างอิงมีขนาดเล็ก&mdash;&mdash;เอนทิตี 92 ประเภท โดย 59 ประเภทอยู่ในมะเร็งวิทยา&mdash;&mdash;ดังนั้นคะแนนบนคลังข้อมูลเดียวจึงมองโลกในแง่ดีเกินไป และมีเพียงการเปรียบเทียบเชิงสัมพัทธ์เท่านั้นที่ยืนได้ ชั้น LLM ไม่เคยถูกประเมินแบบครบวงจรบนกลุ่มภายนอก เอนทิตีเดียวที่ถูกส่งไปนั้นหายากเกินไป และการปรับเทียบไม่ถ่ายโอนข้ามโดเมน: เมื่อย้ายไปยังประเภทคลินิกหรือภาษาอื่น ความสอดคล้องลดลงเหลือ 0.45&ndash;0.73 จึงต้องปรับค่าขีดแบ่งใหม่ DEMNE เป็นข้อพิสูจน์ความเป็นไปได้ ไม่ใช่ผลิตภัณฑ์สำเร็จรูป</p><h2>ทำไมจึงสำคัญ</h2><p>ประเด็นไม่ได้อยู่ที่กฎเอาชนะ transformer แต่อยู่ที่ &ldquo;จะใช้วิธีใด&rdquo; เป็นคำถามที่ตอบได้เป็นรายเอนทิตี จากคุณสมบัติของข้อความที่วัดได้ แทนที่จะเลือกโมเดลที่หนักที่สุดเป็นค่าตั้งต้นแล้วหวังผล สำหรับ NLP ทางคลินิก&mdash;&mdash;ที่ต้นทุน การตรวจสอบย้อนหลัง และความไว้วางใจสำคัญพร้อมกัน&mdash;&mdash;กรอบคิดนี้มีค่ามากกว่าการได้เปอร์เซ็นต์เพิ่มอีกจุดหนึ่งบนเกณฑ์มาตรฐาน</p><p>โค้ดและวิธีการฉบับเต็มอยู่ที่ <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> ส่วนต้นฉบับบทความกำลังอยู่ระหว่างการจัดทำ</p>` },
-      { status: 'ฉบับร่าง — เร็วๆ นี้', title: 'การสกัดแบบขั้นตอนเทียบกับโมเดลขนาดใหญ่เดี่ยว', body: 'เหตุผลในการส่งเอนทิตีผ่านกฎเกณฑ์และ Transformer ที่ปรับแต่งแล้ว ก่อนที่จะเรียกใช้ LLM เลย — และต้นทุนของความผิดพลาดในเรื่องนี้' },
+      { status: 'เผยแพร่ · ต.ค. 2026', title: 'การสกัดแบบขั้นตอนเทียบกับโมเดลขนาดใหญ่เดี่ยว', body: 'เหตุผลในการส่งเอนทิตีผ่านกฎเกณฑ์และ Transformer ที่ปรับแต่งแล้ว ก่อนที่จะเรียกใช้ LLM เลย — และต้นทุนของความผิดพลาดในเรื่องนี้', content: `<p>วันนี้ถ้ายื่นปัญหา NLP ที่ยากให้ทีมหนึ่ง ปฏิกิริยาอัตโนมัติคือคว้าโมเดลที่ใหญ่ที่สุดเท่าที่มีแล้วปล่อยให้มันจัดการทุกอย่าง บนข้อความคลินิกภาษาฝรั่งเศส ปฏิกิริยานั้นมีต้นทุนสูง ช้า และตรวจสอบยาก &mdash; และสุดท้ายแล้วก็ไม่ได้แม่นยำที่สุดด้วยซ้ำ DEMNE เดิมพันตรงกันข้าม: ส่งเอนทิตีแต่ละประเภทไปยังเครื่องมือที่เบาที่สุดที่รับมือไหว และยกระดับก็ต่อเมื่อข้อความเรียกร้องจริง ๆ</p><h2>บันได ไม่ใช่ค้อน</h2><p>ไปป์ไลน์มีสามชั้น กฎเชิงกำหนด &mdash; regex และพจนานุกรมที่คัดสรร &mdash; รับเอนทิตีที่เขียนได้เพียงไม่กี่รูปแบบที่คงที่ เช่น วันที่ ขนาดยา และคำย่อมาตรฐานของตัวบ่งชี้ทางชีวภาพ ส่วน transformer ที่ปรับละเอียดบนข้อความมะเร็งวิทยาภาษาฝรั่งเศสรับเอนทิตีที่ต้องการความเข้าใจเชิงความหมายและเชิงโดเมนอย่างแท้จริง และ LLM อยู่บนยอด สงวนไว้สำหรับกรณีที่คลุมเครือจริง ๆ ซึ่งรอดผ่านสองขั้นก่อนหน้า ไม่มีอะไรไต่สูงเกินกว่าที่จำเป็น</p><h2>ทำไมไม่ใช้แค่ LLM?</h2><p>เพราะโมเดลใหญ่ตัวเดียวต้องจ่ายต้นทุนของ LLM ให้ทุกเอนทิตี รวมถึงอันที่ regex จัดการได้ในพริบตา มันช้ากว่า ต้องใช้งบ GPU ที่โรงพยาบาลส่วนใหญ่ไม่มี และทุกการตัดสินใจคือกล่องดำที่คุณยังต้องอธิบายต่อแพทย์หรือผู้ตรวจสอบอยู่ดี และบนงานกำหนดเส้นทางเอง เส้นฐานใช้-LLM-เสมอกลับแย่ที่สุด สอดคล้องกับชั้นผู้เชี่ยวชาญเพียง 0.148 เท่านั้น เครื่องมือที่หนักที่สุดไม่ได้เชื่อถือได้ที่สุดโดยอัตโนมัติ</p><h2>ต้นทุนของการกำหนดเส้นทางผิด</h2><p>การสกัดเป็นขั้นจะคุ้มก็ต่อเมื่อการกำหนดเส้นทางดี ดังนั้น DEMNE จึงทุ่มความใส่ใจไว้ตรงนั้น ห้าเมตริกที่วัดจากคำอธิบายประกอบป้อนเข้าสู่กราฟการตัดสินใจเชิงกำหนด ซึ่ง 17 ค่าขีดแบ่งของมันถูกปรับเทียบด้วยการค้นหาแบบหลายวัตถุประสงค์ วัตถุประสงค์ถูกออกแบบให้ไม่สมมาตรโดยตั้งใจ: การส่งเอนทิตีไปยังวิธีที่อ่อนเกินไปถูกลงโทษหนักเป็นสองเท่าของการส่งไปยังวิธีที่เพียงแค่แพงเกินไป &mdash; เพราะการสกัดที่พลาดไปในรายงานคลินิกมีราคาแพงกว่าหนึ่งวินาที GPU ที่เสียเปล่า</p><h2>ตัวเลขบอกอะไร</h2><p>บนชุดปรับเทียบด้านมะเร็งวิทยา การกำหนดเส้นทางตรงกับชั้นอ้างอิงของผู้เชี่ยวชาญที่ 0.954 เทียบกับ 0.729 ของใช้-กฎ-เสมอ และ 0.148 ของใช้-LLM-เสมอ เมื่อนำไปใช้กับรายงาน AP-HP ที่ไม่เคยเห็น 300 ฉบับโดยไม่แก้ไข มันกำหนดเส้นทาง 99.5% ของการกล่าวถึงไปยังกฎเชิงกำหนด ซึ่งได้ค่า F1 เฉลี่ย 0.941 &mdash; ขณะที่ transformer ที่ปรับละเอียดภายใต้งบประมาณโรงพยาบาลที่สมจริงทำได้เพียง 0.358 สำหรับเอนทิตีมาตรฐานที่ครองรายงานเหล่านี้ ชั้นที่ถูกที่สุดก็เป็นชั้นที่แม่นยำที่สุดด้วย</p><h2>เมื่อโมเดลเดียวคือคำตอบที่ถูกต้อง</h2><p>การแบ่งขั้นไม่ได้มาฟรี: มันเพิ่มชั้นการกำหนดเส้นทางที่ต้องสร้าง วัดผล และบำรุงรักษา และค่าขีดแบ่งต้องปรับเทียบใหม่สำหรับทุกโดเมนใหม่ หากข้อความเป็นเนื้อเดียวกัน เอนทิตียากเท่า ๆ กัน หรือมีงบและการยอมรับด้านการตรวจสอบสำหรับโมเดลใหญ่ตัวเดียว บันไดนี้ก็เป็นเพียงภาระส่วนเกิน ข้อกล่าวอ้างตรงนี้แคบ &mdash; เมื่อต้นทุน ความหน่วง และการตรวจสอบย้อนกลับสำคัญพร้อมกัน อย่างใน NLP ทางคลินิก การตัดสินใจเป็นรายเอนทิตีย่อมเหนือกว่าการเลือกโมเดลที่หนักที่สุดเป็นค่าตั้งต้นแล้วหวังผล</p><p>โค้ดและวิธีการฉบับเต็มอยู่ที่ <a href="https://github.com/longeacc/DEMNE-Determination-of-Extraction-Methode-for-Named-Entity" target="_blank" rel="noopener">GitHub</a> ส่วนต้นฉบับบทความกำลังอยู่ระหว่างการจัดทำ</p>` },
     ],
   },
   contact: {
@@ -6111,6 +6150,7 @@ const th: Dictionary = {
     email: 'contact@clement-longeac.com',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    bookCall: 'นัดหมายการโทร',
   },
   footer: {
     copyright: '© 2026 Clément Longeac',

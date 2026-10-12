@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { dictionaries } from '@/lib/dictionaries';
-import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
+import { LANG_CODES, isLang, pathForLang, hreflangLanguages } from '@/lib/languages';
 import { slugForPost, tagsForPost } from '@/lib/blog';
 
 export function generateStaticParams() {
@@ -20,10 +20,29 @@ export async function generateMetadata({
   if (!isLang(locale)) return {};
   const dict = dictionaries[locale];
   const url = `https://clement-longeac.com${pathForLang(locale)}blog/`;
+  const title = `${dict.writing.title} — Clément Longeac`;
   return {
-    title: `${dict.writing.title} — Clément Longeac`,
+    title,
     description: dict.writing.subtitle,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: hreflangLanguages(() => 'blog/'),
+    },
+    openGraph: {
+      title,
+      description: dict.writing.subtitle,
+      url,
+      siteName: 'Clément Longeac',
+      locale: dict.htmlLang,
+      type: 'website',
+      images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: dict.writing.subtitle,
+      images: ['/images/og-image.png'],
+    },
   };
 }
 
@@ -37,10 +56,6 @@ export default async function BlogIndex({
   const dict = dictionaries[locale];
   const home = pathForLang(locale);
 
-  const published = dict.writing.posts
-    .map((post, i) => ({ post, i }))
-    .filter((x) => x.post.content);
-
   return (
     <>
       <Nav dict={dict} lang={locale} />
@@ -48,7 +63,7 @@ export default async function BlogIndex({
         <div className="wrap blog-index-wrap">
           <h1 className="blog-index-title">Blog</h1>
           <div className="blog-list">
-            {published.map(({ post, i }) => (
+            {dict.writing.posts.map((post, i) => (
               <Link
                 key={post.title}
                 href={`${home}blog/${slugForPost(locale, i)}/`}

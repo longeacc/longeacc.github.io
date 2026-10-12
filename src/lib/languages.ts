@@ -66,3 +66,20 @@ export function langMeta(code: Lang): LangMeta {
 export function pathForLang(code: Lang): string {
   return `/${code}/`;
 }
+
+export const ORIGIN = 'https://clement-longeac.com';
+
+/**
+ * Build an hreflang `languages` map for a route, given a function that returns
+ * the path suffix (after `/<code>/`) for each language — e.g. '' for home,
+ * 'blog/' for the blog index, or 'blog/<localised-slug>/' for a post.
+ */
+export function hreflangLanguages(suffixFor: (code: Lang) => string): Record<string, string> {
+  const languages: Record<string, string> = {
+    'x-default': `${ORIGIN}${pathForLang(REDIRECT_LANG)}${suffixFor(REDIRECT_LANG)}`,
+  };
+  LANG_CODES.forEach((code) => {
+    languages[code] = `${ORIGIN}${pathForLang(code)}${suffixFor(code)}`;
+  });
+  return languages;
+}

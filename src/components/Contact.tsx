@@ -1,6 +1,9 @@
 import type { Dictionary } from '@/lib/dictionaries';
 import { ConstellationBackground } from './ConstellationBackground';
 
+// Replace with your own Cal.com / Calendly link once the account exists.
+const BOOK_CALL_URL = 'https://cal.com/clement-longeac';
+
 export default function Contact({ dict }: { dict: Dictionary }) {
   const { contact } = dict;
   return (
@@ -11,6 +14,9 @@ export default function Contact({ dict }: { dict: Dictionary }) {
       </div>
       <div className="wrap contact-inner">
         <h2>{contact.title}</h2>
+        <a className="contact-book" href={BOOK_CALL_URL} target="_blank" rel="noopener">
+          {contact.bookCall} →
+        </a>
         <div className="contact-columns">
           <div className="contact-column">
             <div className="contact-column-label">{contact.directLabel}</div>

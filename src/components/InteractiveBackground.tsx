@@ -124,10 +124,18 @@ export default function InteractiveBackground() {
       if (reduce) draw();
     };
 
+    // pause the loop while the tab is hidden (battery / CPU)
+    const onVisibility = () => {
+      if (reduce) return;
+      cancelAnimationFrame(raf);
+      if (!document.hidden) raf = requestAnimationFrame(loop);
+    };
+
     resize();
     window.addEventListener('resize', resize);
     parent.addEventListener('pointermove', onMove);
     parent.addEventListener('pointerleave', onLeave);
+    document.addEventListener('visibilitychange', onVisibility);
 
     if (reduce) {
       draw();
@@ -140,6 +148,7 @@ export default function InteractiveBackground() {
       window.removeEventListener('resize', resize);
       parent.removeEventListener('pointermove', onMove);
       parent.removeEventListener('pointerleave', onLeave);
+      document.removeEventListener('visibilitychange', onVisibility);
       mo.disconnect();
     };
   }, []);

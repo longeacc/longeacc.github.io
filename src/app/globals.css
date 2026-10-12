@@ -8,7 +8,7 @@
   --line-soft: #1C1E25;
   --text: #ECECEF;
   --text-muted: #9A9AA6;
-  --text-faint: #64646F;
+  --text-faint: #808089;  /* lightened for WCAG AA (~4.8:1 on --bg) */
   --cyan: #9FB0E8;        /* accent (name kept for component vars) */
   --cyan-dim: #39415E;
   --violet: #AEB2C2;      /* muted slate, no longer purple */
@@ -29,7 +29,7 @@
   --line-soft: #ECEBE5;
   --text: #17181C;
   --text-muted: #55565F;
-  --text-faint: #92929C;
+  --text-faint: #6C6C77;  /* darkened for WCAG AA (~4.5:1 on --bg) */
   --cyan: #36457C;        /* deep slate-indigo accent */
   --cyan-dim: #C8CEE2;
   --violet: #5A6073;
@@ -678,6 +678,26 @@ section { position: relative; z-index: 1; padding: 88px 0; }
   gap: 32px;
 }
 .contact-inner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); max-width: 14ch; }
+.contact-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 22px 0 36px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--cyan);
+  color: var(--on-accent);
+  font-family: var(--grotesk);
+  font-weight: 600;
+  font-size: 0.98rem;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.contact-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--cyan) 40%, transparent);
+  filter: brightness(1.05);
+}
 .contact-columns { display: flex; gap: 48px; flex-wrap: wrap; }
 .contact-column-label {
   font-family: var(--mono);

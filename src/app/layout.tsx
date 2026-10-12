@@ -80,6 +80,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(scholarlyArticleJsonLd) }}
         />
+        {/* Privacy-friendly analytics — loads only when NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set at build time (no cookies, GDPR-friendly, off by default). */}
+        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ? (
+          <script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+            src={process.env.NEXT_PUBLIC_PLAUSIBLE_SRC || 'https://plausible.io/js/script.js'}
+          />
+        ) : null}
       </head>
       <body>
         {children}

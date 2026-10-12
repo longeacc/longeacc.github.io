@@ -166,9 +166,17 @@ export default function NodeField({
       stop();
     };
 
+    // pause the ambient (always-on) field while the tab is hidden
+    const onVisibility = () => {
+      if (hoverParent || reduce) return;
+      if (document.hidden) stop();
+      else start();
+    };
+
     resize();
     window.addEventListener('resize', resize);
     (pointerTarget as HTMLElement).addEventListener('pointermove', onMove as EventListener);
+    document.addEventListener('visibilitychange', onVisibility);
 
     if (hoverParent) {
       parent.addEventListener('pointerenter', onEnter);
@@ -184,6 +192,7 @@ export default function NodeField({
       stop();
       window.removeEventListener('resize', resize);
       (pointerTarget as HTMLElement).removeEventListener('pointermove', onMove as EventListener);
+      document.removeEventListener('visibilitychange', onVisibility);
       if (hoverParent) {
         parent.removeEventListener('pointerenter', onEnter);
         parent.removeEventListener('pointerleave', onParentLeave);

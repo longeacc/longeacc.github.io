@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { dictionaries } from '@/lib/dictionaries';
-import { LANG_CODES, isLang, pathForLang } from '@/lib/languages';
+import { LANG_CODES, isLang, pathForLang, hreflangLanguages } from '@/lib/languages';
 import { PROJECT_SLUGS, projectIndexForSlug } from '@/lib/projects';
 
 export function generateStaticParams() {
@@ -24,10 +24,29 @@ export async function generateMetadata({
   const project = dict.projects.items[projectIndexForSlug(slug)];
   if (!project) return {};
   const url = `https://clement-longeac.com${pathForLang(locale)}projects/${slug}/`;
+  const title = `${project.title} — Clément Longeac`;
   return {
-    title: `${project.title} — Clément Longeac`,
+    title,
     description: project.description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: hreflangLanguages(() => `projects/${slug}/`),
+    },
+    openGraph: {
+      title,
+      description: project.description,
+      url,
+      siteName: 'Clément Longeac',
+      locale: dict.htmlLang,
+      type: 'article',
+      images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: project.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: project.description,
+      images: ['/images/og-image.png'],
+    },
   };
 }
 
@@ -81,6 +100,11 @@ export default async function ProjectPage({
             <a href={project.url} target="_blank" rel="noopener">
               {research.viewRepo} →
             </a>
+            {project.report && (
+              <a href={project.report} target="_blank" rel="noopener" download>
+                {fr ? 'Télécharger le rapport de stage (PDF)' : 'Download internship report (PDF)'} ↓
+              </a>
+            )}
             {project.demo && (
               <a href={project.demo} target="_blank" rel="noopener">
                 Demo →
