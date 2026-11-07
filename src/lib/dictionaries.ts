@@ -150,9 +150,9 @@ export type Dictionary = {
 const en: Dictionary = {
   htmlLang: 'en',
   meta: {
-    title: 'Clément Longeac — AI Research, Clinical NLP & Biomedical AI',
+    title: 'Clément Longeac — Efficient AI Research, Clinical NLP & LLM Inference',
     description:
-      'Clinical NLP & biomedical AI researcher at ESIEE Paris, building toward a PhD in AI for biomedical research.',
+      'AI researcher at ESIEE Paris working on efficient, frugal AI: routing between rules, fine-tuned transformers and LLMs for reliable, auditable inference. Applied to clinical NLP.',
   },
   nav: {
     about: 'About',
@@ -167,7 +167,7 @@ const en: Dictionary = {
     menuToggleLabel: 'Toggle menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · Open to a 6-month research internship · Clinical NLP & Biomedical AI · from Feb 2027',
+    kicker: 'ESIEE Paris · Open to a 6-month research internship · Efficient AI, Fine-tuning & Inference · from Feb 2027',
     h1Pre: 'Extracting biomarkers from clinical text ',
     h1Accent: 'without waking the GPU',
     h1Post: '',
@@ -180,14 +180,14 @@ const en: Dictionary = {
     label: '01 — About',
     title: 'From tutoring math to modeling tumor markers',
     p1: "I'm a fifth-year student at ESIEE Paris, specializing in Data Science & AI, and enrolled in the school's Tremplin Recherche track — a program built for students heading toward doctoral research rather than a standard industry placement.",
-    p2: 'My work centers on making unstructured clinical text usable for research: extracting the biomarkers, staging information, and treatment details buried in French oncology reports, where general-purpose NLP tools consistently fail on domain vocabulary and document structure.',
-    p3: "Alongside my studies I tutor mathematics and physics-chemistry through Complétude, and I'm preparing applications for a CIFRE industrial PhD in biomedical AI at Sorbonne University.",
+    p2: 'My research is about efficient, frugal AI: choosing the lightest model that stays reliable, and knowing when a fine-tuned transformer or an LLM is actually worth its compute. I apply it to making unstructured clinical text usable for research: extracting the biomarkers, staging information, and treatment details buried in French oncology reports, where general-purpose NLP tools consistently fail on domain vocabulary and document structure.',
+    p3: "Alongside my studies I tutor mathematics and physics-chemistry through Complétude, and I'm looking for research internships and doctoral opportunities in efficient AI, fine-tuning and inference.",
     visionLine: '',
     facts: [
       { dt: 'Institution', dd: 'ESIEE Paris' },
       { dt: 'Program', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Track', dd: 'Tremplin Recherche' },
-      { dt: 'Next step', dd: 'PhD, biomedical AI — Sorbonne' },
+      { dt: 'Next step', dd: "Research internship or PhD in AI" },
       { dt: 'Languages', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -211,7 +211,7 @@ const en: Dictionary = {
       {
         num: '02',
         title: 'Transformer extraction',
-        body: 'DrBERT-7BG, fine-tuned across three oncology corpora, handles the entities that need real semantic and domain understanding.',
+        body: 'DrBERT-7GB, fine-tuned across three oncology corpora, handles the entities that need real semantic and domain understanding.',
       },
       {
         num: '03',
@@ -412,9 +412,9 @@ const en: Dictionary = {
     languagesTitle: 'Languages',
     languages: [
       { flag: '🇫🇷', level: 'Native' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Intermediate' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'In progress' },
     ],
   },
@@ -458,10 +458,10 @@ const en: Dictionary = {
     ],
   },
   contact: {
-    title: "Let's talk about clinical NLP, biomedical AI, or a PhD collaboration.",
+    title: "Let's talk about efficient AI, fine-tuning and inference, clinical NLP, or a research collaboration.",
     directLabel: 'Direct',
     elsewhereLabel: 'Elsewhere',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Book a call',
@@ -475,9 +475,9 @@ const en: Dictionary = {
 const fr: Dictionary = {
   htmlLang: 'fr',
   meta: {
-    title: 'Clément Longeac — NLP clinique & IA biomédicale',
+    title: 'Clément Longeac — IA frugale, fine-tuning & inférence efficace',
     description:
-      'Recherche en NLP clinique et IA biomédicale à ESIEE Paris, en route vers un doctorat en IA biomédicale.',
+      'Recherche en IA frugale à ESIEE Paris : routage entre règles, transformers affinés et LLM pour une inférence fiable et auditable. Appliqué au NLP clinique.',
   },
   nav: {
     about: 'À propos',
@@ -492,7 +492,7 @@ const fr: Dictionary = {
     menuToggleLabel: 'Ouvrir le menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · En recherche d’un stage recherche de 6 mois · NLP clinique & IA biomédicale · dès févr. 2027',
+    kicker: 'ESIEE Paris · En recherche d’un stage recherche de 6 mois · IA frugale, fine-tuning & inférence · dès févr. 2027',
     h1Pre: 'Extraire des biomarqueurs depuis du texte clinique ',
     h1Accent: 'sans réveiller le GPU',
     h1Post: '',
@@ -505,15 +505,14 @@ const fr: Dictionary = {
     label: '01 — À propos',
     title: 'Du soutien scolaire en maths à la modélisation de biomarqueurs tumoraux',
     p1: "Je suis étudiant en cinquième année à ESIEE Paris, spécialisation Data Science & IA, inscrit dans le parcours Tremplin Recherche de l'école — un programme conçu pour les étudiants visant une thèse plutôt qu'un stage classique en entreprise.",
-    p2: "Mon travail consiste à rendre exploitable le texte clinique non structuré : extraire les biomarqueurs, les informations de stadification et les détails de traitement enfouis dans les comptes rendus d'oncologie français, là où les outils NLP génériques échouent systématiquement face au vocabulaire et à la structure documentaire du domaine.",
-    p3: "En parallèle de mes études, je donne des cours de mathématiques et de physique-chimie via Complétude, et je prépare des candidatures pour une thèse CIFRE en IA biomédicale à Sorbonne Université.",
-    visionLine:
-      '',
+    p2: "Ma recherche porte sur l'IA frugale : choisir le modèle le plus léger qui reste fiable, et savoir quand un transformer affiné ou un LLM justifie vraiment son coût de calcul. Je l'applique à rendre exploitable le texte clinique non structuré : extraire les biomarqueurs, les informations de stadification et les détails de traitement enfouis dans les comptes rendus d'oncologie français, là où les outils NLP génériques échouent systématiquement face au vocabulaire et à la structure documentaire du domaine.",
+    p3: "En parallèle de mes études, je donne des cours de mathématiques et de physique-chimie via Complétude, et je recherche des stages de recherche et opportunités doctorales en IA frugale, fine-tuning et inférence.",
+    visionLine: '',
     facts: [
       { dt: 'Établissement', dd: 'ESIEE Paris' },
       { dt: 'Programme', dd: 'Data Science & IA (DSIA)' },
       { dt: 'Parcours', dd: 'Tremplin Recherche' },
-      { dt: 'Prochaine étape', dd: 'Doctorat, IA biomédicale — Sorbonne' },
+      { dt: 'Prochaine étape', dd: "Stage de recherche ou doctorat en IA" },
       { dt: 'Langues', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -740,9 +739,9 @@ const fr: Dictionary = {
     languagesTitle: 'Langues',
     languages: [
       { flag: '🇫🇷', level: 'Langue maternelle' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Intermédiaire' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: "En cours d'apprentissage" },
     ],
   },
@@ -786,10 +785,10 @@ const fr: Dictionary = {
     ],
   },
   contact: {
-    title: 'Parlons NLP clinique, IA biomédicale, ou collaboration doctorale.',
+    title: 'Parlons IA frugale, fine-tuning et inférence, NLP clinique ou collaboration de recherche.',
     directLabel: 'Direct',
     elsewhereLabel: 'Ailleurs',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Réserver un appel',
@@ -803,9 +802,9 @@ const fr: Dictionary = {
 const es: Dictionary = {
   htmlLang: 'es',
   meta: {
-    title: 'Clément Longeac — NLP clínico e IA biomédica',
+    title: "Clément Longeac — IA eficiente, fine-tuning e inferencia",
     description:
-      'Investigación en PLN clínico e IA biomédica en ESIEE Paris, rumbo a un doctorado en IA biomédica.',
+      "Investigación en IA eficiente en ESIEE Paris: enrutamiento entre reglas, transformers ajustados y LLM para una inferencia fiable y auditable. Aplicada al PLN clínico.",
   },
   nav: {
     about: 'Sobre mí',
@@ -820,7 +819,7 @@ const es: Dictionary = {
     menuToggleLabel: 'Abrir el menú',
   },
   hero: {
-    kicker: 'ESIEE Paris · Busco unas prácticas de investigación de 6 meses · PLN clínico e IA biomédica · desde feb. 2027',
+    kicker: "ESIEE Paris · Busco unas prácticas de investigación de 6 meses · IA eficiente, fine-tuning e inferencia · desde feb. 2027",
     h1Pre: 'Extrayendo biomarcadores de texto clínico ',
     h1Accent: 'sin despertar la GPU',
     h1Post: '',
@@ -832,16 +831,15 @@ const es: Dictionary = {
   about: {
     label: '01 — Sobre mí',
     title: 'De dar clases de matemáticas a modelar biomarcadores tumorales',
-    p1: 'Soy estudiante de cuarto año en ESIEE Paris, especialización Data Science & IA, inscrito en el itinerario Tremplin Recherche de la escuela — un programa pensado para estudiantes que se dirigen hacia un doctorado en lugar de unas prácticas industriales estándar.',
-    p2: 'Mi trabajo se centra en hacer utilizable el texto clínico no estructurado: extraer los biomarcadores, la información de estadificación y los detalles de tratamiento ocultos en informes de oncología franceses, donde las herramientas de PLN genéricas fallan sistemáticamente ante el vocabulario y la estructura documental del dominio.',
-    p3: 'Además de mis estudios, doy clases de matemáticas y física-química a través de Complétude, y preparo solicitudes para un doctorado industrial CIFRE en IA biomédica en la Universidad de la Sorbona.',
-    visionLine:
-      'A más largo plazo, esa misma disciplina — extraer una estructura fiable de un texto desordenado y de alto riesgo — es lo que me atrae hacia la investigación en seguridad de la IA: construir y evaluar world models a través de AMI Labs y el programa Anthropic Fellows. (Frase provisional — reemplázala por tu redacción definitiva.)',
+    p1: 'Soy estudiante de quinto año en ESIEE Paris, especialización Data Science & IA, inscrito en el itinerario Tremplin Recherche de la escuela — un programa pensado para estudiantes que se dirigen hacia un doctorado en lugar de unas prácticas industriales estándar.',
+    p2: "Mi investigación se centra en la IA eficiente y frugal: elegir el modelo más ligero que siga siendo fiable y saber cuándo un transformer ajustado o un LLM compensa realmente su coste de cómputo. La aplico al texto clínico. Mi trabajo se centra en hacer utilizable el texto clínico no estructurado: extraer los biomarcadores, la información de estadificación y los detalles de tratamiento ocultos en informes de oncología franceses, donde las herramientas de PLN genéricas fallan sistemáticamente ante el vocabulario y la estructura documental del dominio.",
+    p3: "Además de mis estudios, doy clases de matemáticas y física-química a través de Complétude, y busco prácticas de investigación y oportunidades doctorales en IA eficiente, fine-tuning e inferencia.",
+    visionLine: '',
     facts: [
       { dt: 'Institución', dd: 'ESIEE Paris' },
       { dt: 'Programa', dd: 'Data Science & IA (DSIA)' },
       { dt: 'Itinerario', dd: 'Tremplin Recherche' },
-      { dt: 'Siguiente paso', dd: 'Doctorado, IA biomédica — Sorbona' },
+      { dt: 'Siguiente paso', dd: "Prácticas de investigación o doctorado en IA" },
       { dt: 'Idiomas', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -1047,9 +1045,9 @@ const es: Dictionary = {
     languagesTitle: 'Idiomas',
     languages: [
       { flag: '🇫🇷', level: 'Nativo' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Intermedio' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'En progreso' },
     ],
   },
@@ -1085,10 +1083,10 @@ const es: Dictionary = {
     ],
   },
   contact: {
-    title: 'Hablemos de PLN clínico, IA biomédica, o una colaboración doctoral.',
+    title: "Hablemos de IA eficiente, fine-tuning e inferencia, PLN clínico o una colaboración de investigación.",
     directLabel: 'Directo',
     elsewhereLabel: 'En otros lugares',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Reservar una llamada',
@@ -1102,9 +1100,9 @@ const es: Dictionary = {
 const de: Dictionary = {
   htmlLang: 'de',
   meta: {
-    title: 'Clément Longeac — klinisches NLP & biomedizinische KI',
+    title: "Clément Longeac — effiziente KI, Fine-Tuning & Inferenz",
     description:
-      'Forschung zu klinischem NLP und biomedizinischer KI an der ESIEE Paris, auf dem Weg zur Promotion.',
+      "KI-Forschung zu effizienter, ressourcenschonender KI an der ESIEE Paris: Routing zwischen Regeln, feinabgestimmten Transformern und LLMs für verlässliche, nachvollziehbare Inferenz. Angewandt auf klinisches NLP.",
   },
   nav: {
     about: 'Über mich',
@@ -1119,7 +1117,7 @@ const de: Dictionary = {
     menuToggleLabel: 'Menü öffnen',
   },
   hero: {
-    kicker: 'ESIEE Paris · Suche ein 6-monatiges Forschungspraktikum · Klinische NLP & biomedizinische KI · ab Feb. 2027',
+    kicker: "ESIEE Paris · Suche ein 6-monatiges Forschungspraktikum · Effiziente KI, Fine-Tuning & Inferenz · ab Feb. 2027",
     h1Pre: 'Biomarker aus klinischem Text extrahieren ',
     h1Accent: 'ohne die GPU zu wecken',
     h1Post: '',
@@ -1132,15 +1130,14 @@ const de: Dictionary = {
     label: '01 — Über mich',
     title: 'Von Mathe-Nachhilfe zur Modellierung von Tumormarkern',
     p1: 'Ich bin Student im vierten Jahr an der ESIEE Paris, Schwerpunkt Data Science & KI, eingeschrieben im Tremplin-Recherche-Programm der Schule — einem Programm für Studierende, die eine Promotion anstreben statt eines klassischen Industriepraktikums.',
-    p2: 'Meine Arbeit dreht sich darum, unstrukturierten klinischen Text für die Forschung nutzbar zu machen: Extraktion von Biomarkern, Staging-Informationen und Behandlungsdetails aus französischen Onkologieberichten, wo generische NLP-Tools an domänenspezifischem Vokabular und Dokumentstruktur systematisch scheitern.',
-    p3: 'Neben dem Studium unterrichte ich Mathematik und Physik-Chemie bei Complétude und bereite Bewerbungen für eine CIFRE-Industriepromotion in biomedizinischer KI an der Sorbonne-Universität vor.',
-    visionLine:
-      'Langfristig ist es genau diese Disziplin — verlässliche Struktur aus unordentlichem, hochriskantem Text zu ziehen —, die mich zur KI-Sicherheitsforschung zieht: den Aufbau und die Evaluierung von World Models über AMI Labs und das Anthropic Fellows Program. (Entwurfszeile — durch deine endgültige Formulierung ersetzen.)',
+    p2: "Meine Forschung gilt effizienter, ressourcenschonender KI: das leichteste Modell zu wählen, das verlässlich bleibt, und zu wissen, wann sich ein feinabgestimmter Transformer oder ein LLM den Rechenaufwand wirklich lohnt. Ich wende das auf klinische Texte an. Meine Arbeit dreht sich darum, unstrukturierten klinischen Text für die Forschung nutzbar zu machen: Extraktion von Biomarkern, Staging-Informationen und Behandlungsdetails aus französischen Onkologieberichten, wo generische NLP-Tools an domänenspezifischem Vokabular und Dokumentstruktur systematisch scheitern.",
+    p3: "Neben dem Studium unterrichte ich Mathematik und Physik-Chemie bei Complétude und suche Forschungspraktika und Promotionsmöglichkeiten in effizienter KI, Fine-Tuning und Inferenz.",
+    visionLine: '',
     facts: [
       { dt: 'Institution', dd: 'ESIEE Paris' },
       { dt: 'Programm', dd: 'Data Science & KI (DSIA)' },
       { dt: 'Schwerpunkt', dd: 'Tremplin Recherche' },
-      { dt: 'Nächster Schritt', dd: 'Promotion, biomedizinische KI — Sorbonne' },
+      { dt: 'Nächster Schritt', dd: "Forschungspraktikum oder Promotion in KI" },
       { dt: 'Sprachen', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -1345,9 +1342,9 @@ const de: Dictionary = {
     languagesTitle: 'Sprachen',
     languages: [
       { flag: '🇫🇷', level: 'Muttersprache' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Mittelstufe' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'Im Aufbau' },
     ],
   },
@@ -1383,10 +1380,10 @@ const de: Dictionary = {
     ],
   },
   contact: {
-    title: 'Lass uns über klinisches NLP, biomedizinische KI oder eine Promotionskooperation sprechen.',
+    title: "Lass uns über effiziente KI, Fine-Tuning und Inferenz, klinisches NLP oder eine Forschungskooperation sprechen.",
     directLabel: 'Direkt',
     elsewhereLabel: 'Anderswo',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Gespräch buchen',
@@ -1400,9 +1397,9 @@ const de: Dictionary = {
 const it: Dictionary = {
   htmlLang: 'it',
   meta: {
-    title: 'Clément Longeac — NLP clinico e IA biomedica',
+    title: "Clément Longeac — IA efficiente, fine-tuning e inferenza",
     description:
-      'Ricerca in NLP clinico e IA biomedica a ESIEE Paris, verso un dottorato in IA biomedica.',
+      "Ricerca sull'IA efficiente a ESIEE Paris: routing tra regole, transformer affinati e LLM per un'inferenza affidabile e verificabile. Applicata al NLP clinico.",
   },
   nav: {
     about: 'Chi sono',
@@ -1417,7 +1414,7 @@ const it: Dictionary = {
     menuToggleLabel: 'Apri il menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · Cerco un tirocinio di ricerca di 6 mesi · NLP clinico e IA biomedica · da feb. 2027',
+    kicker: "ESIEE Paris · Cerco un tirocinio di ricerca di 6 mesi · IA efficiente, fine-tuning e inferenza · da feb. 2027",
     h1Pre: 'Estraggo biomarcatori da testo clinico ',
     h1Accent: 'senza svegliare la GPU',
     h1Post: '',
@@ -1430,15 +1427,14 @@ const it: Dictionary = {
     label: '01 — Chi sono',
     title: 'Dal ripetizioni di matematica alla modellazione di biomarcatori tumorali',
     p1: 'Sono uno studente del quarto anno a ESIEE Paris, specializzazione Data Science & IA, iscritto al percorso Tremplin Recherche della scuola — un programma pensato per studenti orientati verso il dottorato piuttosto che verso uno stage aziendale standard.',
-    p2: 'Il mio lavoro consiste nel rendere utilizzabile il testo clinico non strutturato: estrarre biomarcatori, informazioni di stadiazione e dettagli di trattamento sepolti nei referti di oncologia francesi, dove gli strumenti NLP generici falliscono sistematicamente di fronte al vocabolario e alla struttura documentale del dominio.',
-    p3: 'Parallelamente agli studi, insegno matematica e fisica-chimica tramite Complétude, e sto preparando candidature per un dottorato industriale CIFRE in IA biomedica alla Sorbona.',
-    visionLine:
-      'Nel lungo periodo, la stessa disciplina — estrarre una struttura affidabile da un testo disordinato e ad alto rischio — è ciò che mi attira verso la ricerca sulla sicurezza dell\'IA: costruire e valutare world model tramite AMI Labs e l\'Anthropic Fellows Program. (Frase provvisoria — sostituiscila con la tua formulazione definitiva.)',
+    p2: "La mia ricerca riguarda l'IA efficiente e frugale: scegliere il modello più leggero che resti affidabile e sapere quando un transformer affinato o un LLM giustifica davvero il proprio costo di calcolo. La applico al testo clinico. Il mio lavoro consiste nel rendere utilizzabile il testo clinico non strutturato: estrarre biomarcatori, informazioni di stadiazione e dettagli di trattamento sepolti nei referti di oncologia francesi, dove gli strumenti NLP generici falliscono sistematicamente di fronte al vocabolario e alla struttura documentale del dominio.",
+    p3: "Parallelamente agli studi, insegno matematica e fisica-chimica tramite Complétude, e cerco tirocini di ricerca e opportunità di dottorato in IA efficiente, fine-tuning e inferenza.",
+    visionLine: '',
     facts: [
       { dt: 'Istituzione', dd: 'ESIEE Paris' },
       { dt: 'Programma', dd: 'Data Science & IA (DSIA)' },
       { dt: 'Percorso', dd: 'Tremplin Recherche' },
-      { dt: 'Prossimo passo', dd: 'Dottorato, IA biomedica — Sorbona' },
+      { dt: 'Prossimo passo', dd: "Tirocinio di ricerca o dottorato in IA" },
       { dt: 'Lingue', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -1644,9 +1640,9 @@ const it: Dictionary = {
     languagesTitle: 'Lingue',
     languages: [
       { flag: '🇫🇷', level: 'Madrelingua' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Intermedio' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'In corso' },
     ],
   },
@@ -1682,10 +1678,10 @@ const it: Dictionary = {
     ],
   },
   contact: {
-    title: 'Parliamo di NLP clinico, IA biomedica, o di una collaborazione dottorale.',
+    title: "Parliamo di IA efficiente, fine-tuning e inferenza, NLP clinico o di una collaborazione di ricerca.",
     directLabel: 'Diretto',
     elsewhereLabel: 'Altrove',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Prenota una call',
@@ -1699,9 +1695,9 @@ const it: Dictionary = {
 const pt: Dictionary = {
   htmlLang: 'pt',
   meta: {
-    title: 'Clément Longeac — PLN clínico e IA biomédica',
+    title: "Clément Longeac — IA eficiente, fine-tuning e inferência",
     description:
-      'Pesquisa em PLN clínico e IA biomédica na ESIEE Paris, rumo a um doutorado em IA biomédica.',
+      "Pesquisa em IA eficiente na ESIEE Paris: roteamento entre regras, transformers ajustados e LLMs para uma inferência confiável e auditável. Aplicada ao PLN clínico.",
   },
   nav: {
     about: 'Sobre mim',
@@ -1716,7 +1712,7 @@ const pt: Dictionary = {
     menuToggleLabel: 'Abrir menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · Procuro um estágio de investigação de 6 meses · PLN clínico e IA biomédica · a partir de fev. 2027',
+    kicker: "ESIEE Paris · Procuro um estágio de investigação de 6 meses · IA eficiente, fine-tuning e inferência · a partir de fev. 2027",
     h1Pre: 'Extraindo biomarcadores de texto clínico ',
     h1Accent: 'sem acordar a GPU',
     h1Post: '',
@@ -1729,15 +1725,14 @@ const pt: Dictionary = {
     label: '01 — Sobre mim',
     title: 'De dar aulas de matemática à modelagem de biomarcadores tumorais',
     p1: 'Sou estudante do quarto ano na ESIEE Paris, especialização em Data Science & IA, matriculado na trilha Tremplin Recherche da escola — um programa voltado a estudantes que buscam o doutorado em vez de um estágio industrial padrão.',
-    p2: 'Meu trabalho é centrado em tornar o texto clínico não estruturado utilizável: extrair biomarcadores, informações de estadiamento e detalhes de tratamento enterrados em laudos de oncologia franceses, onde ferramentas de PLN genéricas falham sistematicamente diante do vocabulário e da estrutura documental do domínio.',
-    p3: 'Paralelamente aos estudos, dou aulas de matemática e físico-química pela Complétude, e estou preparando candidaturas para um doutorado industrial CIFRE em IA biomédica na Universidade Sorbonne.',
-    visionLine:
-      'A longo prazo, essa mesma disciplina — extrair estrutura confiável de um texto desorganizado e de alto risco — é o que me atrai para a pesquisa em segurança de IA: construir e avaliar world models via AMI Labs e o Anthropic Fellows Program. (Linha provisória — substitua pela sua formulação definitiva.)',
+    p2: "Minha pesquisa trata de IA eficiente e frugal: escolher o modelo mais leve que continue confiável e saber quando um transformer ajustado ou um LLM realmente compensa o custo computacional. Aplico isso ao texto clínico. Meu trabalho é centrado em tornar o texto clínico não estruturado utilizável: extrair biomarcadores, informações de estadiamento e detalhes de tratamento enterrados em laudos de oncologia franceses, onde ferramentas de PLN genéricas falham sistematicamente diante do vocabulário e da estrutura documental do domínio.",
+    p3: "Paralelamente aos estudos, dou aulas de matemática e físico-química pela Complétude, e procuro estágios de pesquisa e oportunidades de doutorado em IA eficiente, fine-tuning e inferência.",
+    visionLine: '',
     facts: [
       { dt: 'Instituição', dd: 'ESIEE Paris' },
       { dt: 'Programa', dd: 'Data Science & IA (DSIA)' },
       { dt: 'Trilha', dd: 'Tremplin Recherche' },
-      { dt: 'Próximo passo', dd: 'Doutorado, IA biomédica — Sorbonne' },
+      { dt: 'Próximo passo', dd: "Estágio de pesquisa ou doutorado em IA" },
       { dt: 'Idiomas', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -1942,9 +1937,9 @@ const pt: Dictionary = {
     languagesTitle: 'Idiomas',
     languages: [
       { flag: '🇫🇷', level: 'Nativo' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Intermediário' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'Em progresso' },
     ],
   },
@@ -1980,10 +1975,10 @@ const pt: Dictionary = {
     ],
   },
   contact: {
-    title: 'Vamos falar sobre PLN clínico, IA biomédica, ou uma colaboração de doutorado.',
+    title: "Vamos falar sobre IA eficiente, fine-tuning e inferência, PLN clínico ou uma colaboração de pesquisa.",
     directLabel: 'Direto',
     elsewhereLabel: 'Em outros lugares',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Agendar uma chamada',
@@ -1997,9 +1992,9 @@ const pt: Dictionary = {
 const nl: Dictionary = {
   htmlLang: 'nl',
   meta: {
-    title: 'Clément Longeac — klinische NLP & biomedische AI',
+    title: "Clément Longeac — efficiënte AI, fine-tuning & inferentie",
     description:
-      'Onderzoek in klinische NLP en biomedische AI aan ESIEE Paris, op weg naar een PhD.',
+      "Onderzoek naar efficiënte, zuinige AI aan ESIEE Paris: routering tussen regels, gefinetunede transformers en LLM's voor betrouwbare, controleerbare inferentie. Toegepast op klinische NLP.",
   },
   nav: {
     about: 'Over mij',
@@ -2014,7 +2009,7 @@ const nl: Dictionary = {
     menuToggleLabel: 'Menu openen',
   },
   hero: {
-    kicker: 'ESIEE Paris · Op zoek naar een onderzoeksstage van 6 maanden · Klinische NLP & biomedische AI · vanaf feb. 2027',
+    kicker: "ESIEE Paris · Op zoek naar een onderzoeksstage van 6 maanden · Efficiënte AI, fine-tuning & inferentie · vanaf feb. 2027",
     h1Pre: 'Biomarkers uit klinische tekst halen ',
     h1Accent: 'zonder de GPU wakker te maken',
     h1Post: '',
@@ -2027,15 +2022,14 @@ const nl: Dictionary = {
     label: '01 — Over mij',
     title: 'Van bijles wiskunde tot het modelleren van tumormarkers',
     p1: 'Ik ben een vierdejaars student aan ESIEE Paris, specialisatie Data Science & AI, ingeschreven in het Tremplin Recherche-traject van de school — een programma voor studenten die op een doctoraat mikken in plaats van een standaard bedrijfsstage.',
-    p2: 'Mijn werk draait om ongestructureerde klinische tekst bruikbaar te maken voor onderzoek: het extraheren van biomarkers, stadiëringsinformatie en behandelingsdetails verborgen in Franse oncologierapporten, waar generieke NLP-tools stelselmatig falen op domeinspecifieke woordenschat en documentstructuur.',
-    p3: 'Naast mijn studie geef ik bijles wiskunde en natuurkunde-scheikunde via Complétude, en bereid ik sollicitaties voor een CIFRE-industrieel doctoraat in biomedische AI aan de Sorbonne-universiteit voor.',
-    visionLine:
-      'Op langere termijn is het diezelfde discipline — betrouwbare structuur halen uit rommelige, hoog-risicotekst — die me naar AI-veiligheidsonderzoek trekt: het bouwen en evalueren van world models via AMI Labs en het Anthropic Fellows Program. (Concepttekst — vervang door je eigen definitieve formulering.)',
+    p2: "Mijn onderzoek gaat over efficiënte, zuinige AI: het lichtste model kiezen dat betrouwbaar blijft, en weten wanneer een gefinetunede transformer of een LLM zijn rekenkosten echt waard is. Ik pas dat toe op klinische tekst. Mijn werk draait om ongestructureerde klinische tekst bruikbaar te maken voor onderzoek: het extraheren van biomarkers, stadiëringsinformatie en behandelingsdetails verborgen in Franse oncologierapporten, waar generieke NLP-tools stelselmatig falen op domeinspecifieke woordenschat en documentstructuur.",
+    p3: "Naast mijn studie geef ik bijles wiskunde en natuurkunde-scheikunde via Complétude, en ben ik op zoek naar onderzoeksstages en doctoraatsmogelijkheden in efficiënte AI, fine-tuning en inferentie.",
+    visionLine: '',
     facts: [
       { dt: 'Instelling', dd: 'ESIEE Paris' },
       { dt: 'Programma', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Traject', dd: 'Tremplin Recherche' },
-      { dt: 'Volgende stap', dd: 'PhD, biomedische AI — Sorbonne' },
+      { dt: 'Volgende stap', dd: "Onderzoeksstage of PhD in AI" },
       { dt: 'Talen', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -2240,9 +2234,9 @@ const nl: Dictionary = {
     languagesTitle: 'Talen',
     languages: [
       { flag: '🇫🇷', level: 'Moedertaal' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Gemiddeld' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'In ontwikkeling' },
     ],
   },
@@ -2278,10 +2272,10 @@ const nl: Dictionary = {
     ],
   },
   contact: {
-    title: 'Laten we praten over klinische NLP, biomedische AI, of een doctoraatssamenwerking.',
+    title: "Laten we praten over efficiënte AI, fine-tuning en inferentie, klinische NLP of een onderzoekssamenwerking.",
     directLabel: 'Direct',
     elsewhereLabel: 'Elders',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Plan een gesprek',
@@ -2295,9 +2289,9 @@ const nl: Dictionary = {
 const zh: Dictionary = {
   htmlLang: 'zh',
   meta: {
-    title: 'Clément Longeac — 人工智能研究、临床自然语言处理与生物医学人工智能',
+    title: "Clément Longeac — 高效人工智能、微调与推理",
     description:
-      '临床自然语言处理与生物医学人工智能研究，就读于巴黎ESIEE工程学院，目标是攻读生物医学人工智能博士。',
+      "巴黎ESIEE工程学院的高效、节俭型人工智能研究：在规则、微调 transformer 与 LLM 之间路由，实现可靠、可审计的推理，并应用于临床自然语言处理。",
   },
   nav: {
     about: '关于我',
@@ -2312,7 +2306,7 @@ const zh: Dictionary = {
     menuToggleLabel: '打开菜单',
   },
   hero: {
-    kicker: 'ESIEE Paris · 寻找 6 个月研究实习 · 临床 NLP 与生物医学 AI · 2027 年 2 月起',
+    kicker: "ESIEE Paris · 寻找 6 个月研究实习 · 高效 AI、微调与推理 · 2027 年 2 月起",
     h1Pre: '从临床文本中提取生物标志物，',
     h1Accent: '却不必唤醒GPU',
     h1Post: '。',
@@ -2325,15 +2319,14 @@ const zh: Dictionary = {
     label: '01 — 关于我',
     title: '从数学家教到肿瘤标志物建模',
     p1: '我是巴黎ESIEE工程学院四年级学生，专攻数据科学与人工智能，就读于学校的Tremplin Recherche项目——该项目面向以博士研究为目标而非常规企业实习的学生。',
-    p2: '我的工作核心是让非结构化的临床文本可用于研究：从法语肿瘤学报告中提取生物标志物、分期信息和治疗细节，而通用自然语言处理工具在面对该领域的专业词汇和文档结构时往往表现不佳。',
-    p3: '在学习之余，我通过Complétude机构教授数学和物理化学课程，并正在准备申请索邦大学生物医学人工智能方向的CIFRE产学合作博士项目。',
-    visionLine:
-      '从长远看，正是这种从混乱、高风险文本中提取可靠结构的能力，吸引我投身于人工智能安全研究：通过AMI Labs和Anthropic Fellows项目构建并评估world model。（此句为草稿——请替换为你自己的最终表述。）',
+    p2: "我的研究聚焦于高效、节俭的人工智能：选择仍然可靠的最轻量模型，并判断微调后的 transformer 或 LLM 何时真正值得其算力开销。我将其应用于临床文本。 我的工作核心是让非结构化的临床文本可用于研究：从法语肿瘤学报告中提取生物标志物、分期信息和治疗细节，而通用自然语言处理工具在面对该领域的专业词汇和文档结构时往往表现不佳。",
+    p3: "在学习之余，我通过Complétude机构教授数学和物理化学课程，并正在寻找高效人工智能、微调与推理方向的研究实习和博士机会。",
+    visionLine: '',
     facts: [
       { dt: '院校', dd: 'ESIEE Paris' },
       { dt: '专业', dd: '数据科学与人工智能 (DSIA)' },
       { dt: '项目', dd: 'Tremplin Recherche' },
-      { dt: '下一步', dd: '生物医学人工智能博士 — 索邦大学' },
+      { dt: '下一步', dd: "人工智能研究实习或博士" },
       { dt: '语言', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -2537,9 +2530,9 @@ const zh: Dictionary = {
     languagesTitle: '语言',
     languages: [
       { flag: '🇫🇷', level: '母语' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: '中级' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: '学习中' },
     ],
   },
@@ -2575,10 +2568,10 @@ const zh: Dictionary = {
     ],
   },
   contact: {
-    title: '欢迎交流临床自然语言处理、生物医学人工智能，或博士合作事宜。',
+    title: "欢迎交流高效人工智能、微调与推理、临床自然语言处理，或科研合作。",
     directLabel: '直接联系',
     elsewhereLabel: '其他平台',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: '预约通话',
@@ -2592,9 +2585,9 @@ const zh: Dictionary = {
 const ja: Dictionary = {
   htmlLang: 'ja',
   meta: {
-    title: 'Clément Longeac — AI研究、臨床NLP・生物医学AI',
+    title: "Clément Longeac — 高効率AI・ファインチューニング・推論",
     description:
-      '臨床NLPと生物医学AIの研究。パリESIEE工科大学に在籍し、生物医学AIの博士号取得を目指しています。',
+      "パリESIEE工科大学での高効率・省資源AIの研究。ルール、ファインチューニング済みtransformer、LLMを使い分けるルーティングで、信頼でき監査可能な推論を実現し、臨床NLPに応用しています。",
   },
   nav: {
     about: 'プロフィール',
@@ -2609,7 +2602,7 @@ const ja: Dictionary = {
     menuToggleLabel: 'メニューを開く',
   },
   hero: {
-    kicker: 'ESIEE Paris · 6 か月の研究インターンを希望 · 臨床 NLP & 生物医学 AI · 2027 年 2 月から',
+    kicker: "ESIEE Paris · 6 か月の研究インターンを希望 · 高効率 AI・ファインチューニング・推論 · 2027 年 2 月から",
     h1Pre: 'GPUを起こさずに、',
     h1Accent: '臨床テキストからバイオマーカーを抽出する',
     h1Post: '。',
@@ -2622,15 +2615,14 @@ const ja: Dictionary = {
     label: '01 — プロフィール',
     title: '数学の家庭教師から腫瘍マーカーのモデリングへ',
     p1: '私はパリESIEE工科大学の4年生で、データサイエンス・AIを専攻し、学校のTremplin Rechercheコースに在籍しています。これは標準的な企業インターンではなく、博士研究を目指す学生向けのプログラムです。',
-    p2: '私の仕事は、非構造化された臨床テキストを研究に活用できるようにすることです。フランス語の腫瘍学レポートに埋もれた生体マーカー、病期情報、治療の詳細を抽出しますが、汎用のNLPツールはこの分野特有の語彙や文書構造に対して一貫して機能不全に陥ります。',
-    p3: '学業と並行して、Complétudeで数学・物理化学の家庭教師をしており、ソルボンヌ大学の生物医学AI分野でのCIFRE産学連携博士課程への出願準備を進めています。',
-    visionLine:
-      '長期的には、乱雑でリスクの高いテキストから信頼できる構造を引き出すという同じ規律が、AMI LabsやAnthropic Fellowsプログラムを通じたworld modelの構築・評価というAI安全性研究への関心につながっています。（この文章は下書きです。最終的な表現に置き換えてください。）',
+    p2: "私の研究テーマは高効率で省資源なAIです。信頼性を保てる最も軽量なモデルを選び、ファインチューニング済みtransformerやLLMが計算コストに見合うのはどんなときかを見極めます。これを臨床テキストに応用しています。 私の仕事は、非構造化された臨床テキストを研究に活用できるようにすることです。フランス語の腫瘍学レポートに埋もれた生体マーカー、病期情報、治療の詳細を抽出しますが、汎用のNLPツールはこの分野特有の語彙や文書構造に対して一貫して機能不全に陥ります。",
+    p3: "学業と並行して、Complétudeで数学・物理化学の家庭教師をしており、高効率AI、ファインチューニング、推論分野の研究インターンシップや博士課程の機会を探しています。",
+    visionLine: '',
     facts: [
       { dt: '所属', dd: 'ESIEE Paris' },
       { dt: '専攻', dd: 'データサイエンス・AI（DSIA）' },
       { dt: 'コース', dd: 'Tremplin Recherche' },
-      { dt: '次のステップ', dd: '生物医学AI博士号 — ソルボンヌ大学' },
+      { dt: '次のステップ', dd: "AI分野の研究インターンまたは博士課程" },
       { dt: '言語', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -2834,9 +2826,9 @@ const ja: Dictionary = {
     languagesTitle: '言語',
     languages: [
       { flag: '🇫🇷', level: '母語' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: '中級' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: '学習中' },
     ],
   },
@@ -2872,10 +2864,10 @@ const ja: Dictionary = {
     ],
   },
   contact: {
-    title: '臨床NLP、生物医学AI、または博士課程での共同研究についてお話ししましょう。',
+    title: "高効率AI、ファインチューニングと推論、臨床NLP、または共同研究についてお話ししましょう。",
     directLabel: '直接連絡',
     elsewhereLabel: 'その他',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: '通話を予約',
@@ -2889,9 +2881,9 @@ const ja: Dictionary = {
 const ko: Dictionary = {
   htmlLang: 'ko',
   meta: {
-    title: 'Clément Longeac — AI 연구, 임상 NLP 및 생물의학 AI',
+    title: "Clément Longeac — 효율적 AI, 파인튜닝 및 추론",
     description:
-      '임상 NLP와 생물의학 AI 연구자. 파리 ESIEE 공과대학 재학 중이며 생물의학 AI 박사 학위를 목표로 합니다.',
+      "파리 ESIEE에서 수행하는 효율적·절약형 AI 연구: 규칙, 파인튜닝된 transformer, LLM 사이를 라우팅하여 신뢰할 수 있고 감사 가능한 추론을 구현하며, 임상 NLP에 적용합니다.",
   },
   nav: {
     about: '소개',
@@ -2906,7 +2898,7 @@ const ko: Dictionary = {
     menuToggleLabel: '메뉴 열기',
   },
   hero: {
-    kicker: 'ESIEE Paris · 6개월 연구 인턴십을 찾는 중 · 임상 NLP & 생물의학 AI · 2027년 2월부터',
+    kicker: "ESIEE Paris · 6개월 연구 인턴십을 찾는 중 · 효율적 AI, 파인튜닝 & 추론 · 2027년 2월부터",
     h1Pre: 'GPU를 깨우지 않고 ',
     h1Accent: '임상 텍스트에서 바이오마커를 추출합니다',
     h1Post: '',
@@ -2919,15 +2911,14 @@ const ko: Dictionary = {
     label: '01 — 소개',
     title: '수학 과외에서 종양 마커 모델링까지',
     p1: '저는 파리 ESIEE 공과대학 4학년 학생으로, 데이터 사이언스 & AI를 전공하며 학교의 Tremplin Recherche 트랙에 소속되어 있습니다. 이는 일반적인 기업 인턴십이 아니라 박사 연구를 목표로 하는 학생들을 위한 프로그램입니다.',
-    p2: '제 연구는 비정형 임상 텍스트를 연구에 활용 가능하도록 만드는 데 중점을 둡니다. 프랑스어 종양학 보고서에 묻혀 있는 생체표지자, 병기 정보, 치료 세부사항을 추출하는데, 범용 NLP 도구는 이 분야의 전문 어휘와 문서 구조 앞에서 일관되게 실패합니다.',
-    p3: '학업과 병행하여 Complétude를 통해 수학과 물리화학을 가르치고 있으며, 소르본 대학교 생물의학 AI 분야의 CIFRE 산학협력 박사과정 지원을 준비하고 있습니다.',
-    visionLine:
-      '장기적으로, 어수선하고 위험도가 높은 텍스트에서 신뢰할 수 있는 구조를 추출하는 이 동일한 규율이 저를 AI 안전 연구로 이끕니다: AMI Labs와 Anthropic Fellows 프로그램을 통해 world model을 구축하고 평가하는 일입니다. (초안 문장입니다 — 최종 문구로 교체해 주세요.)',
+    p2: "제 연구는 효율적이고 절약형인 AI를 다룹니다. 신뢰성을 유지하는 가장 가벼운 모델을 고르고, 파인튜닝된 transformer나 LLM이 연산 비용만큼의 가치가 있는 때를 판단합니다. 이를 임상 텍스트에 적용합니다. 제 연구는 비정형 임상 텍스트를 연구에 활용 가능하도록 만드는 데 중점을 둡니다. 프랑스어 종양학 보고서에 묻혀 있는 생체표지자, 병기 정보, 치료 세부사항을 추출하는데, 범용 NLP 도구는 이 분야의 전문 어휘와 문서 구조 앞에서 일관되게 실패합니다.",
+    p3: "학업과 병행하여 Complétude를 통해 수학과 물리화학을 가르치고 있으며, 효율적 AI, 파인튜닝, 추론 분야의 연구 인턴십과 박사과정 기회를 찾고 있습니다.",
+    visionLine: '',
     facts: [
       { dt: '소속', dd: 'ESIEE Paris' },
       { dt: '전공', dd: '데이터 사이언스 & AI (DSIA)' },
       { dt: '트랙', dd: 'Tremplin Recherche' },
-      { dt: '다음 단계', dd: '생물의학 AI 박사 — 소르본 대학교' },
+      { dt: '다음 단계', dd: "AI 분야 연구 인턴십 또는 박사과정" },
       { dt: '언어', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -3131,9 +3122,9 @@ const ko: Dictionary = {
     languagesTitle: '언어',
     languages: [
       { flag: '🇫🇷', level: '모국어' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: '중급' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: '학습 중' },
     ],
   },
@@ -3169,10 +3160,10 @@ const ko: Dictionary = {
     ],
   },
   contact: {
-    title: '임상 NLP, 생물의학 AI, 또는 박사과정 공동연구에 대해 이야기해 봅시다.',
+    title: "효율적 AI, 파인튜닝과 추론, 임상 NLP, 또는 공동연구에 대해 이야기해 봅시다.",
     directLabel: '직접 연락',
     elsewhereLabel: '다른 곳',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: '통화 예약',
@@ -3186,9 +3177,9 @@ const ko: Dictionary = {
 const ru: Dictionary = {
   htmlLang: 'ru',
   meta: {
-    title: 'Clément Longeac — клинический NLP и биомедицинский ИИ',
+    title: "Clément Longeac — эффективный ИИ, дообучение и инференс",
     description:
-      'Исследования в области клинического NLP и биомедицинского ИИ в ESIEE Paris, на пути к докторантуре.',
+      "Исследования эффективного, экономного ИИ в ESIEE Paris: маршрутизация между правилами, дообученными трансформерами и LLM для надёжного, проверяемого инференса. Применяется к клиническому NLP.",
   },
   nav: {
     about: 'Обо мне',
@@ -3203,7 +3194,7 @@ const ru: Dictionary = {
     menuToggleLabel: 'Открыть меню',
   },
   hero: {
-    kicker: 'ESIEE Paris · Ищу 6-месячную исследовательскую стажировку · Клинический NLP и биомедицинский ИИ · с февр. 2027',
+    kicker: "ESIEE Paris · Ищу 6-месячную исследовательскую стажировку · Эффективный ИИ, дообучение и инференс · с февр. 2027",
     h1Pre: 'Извлекаю биомаркеры из клинического текста ',
     h1Accent: 'не пробуждая GPU',
     h1Post: '',
@@ -3216,15 +3207,14 @@ const ru: Dictionary = {
     label: '01 — Обо мне',
     title: 'От репетиторства по математике до моделирования опухолевых маркеров',
     p1: 'Я студент четвёртого курса ESIEE Paris, специализация Data Science & AI, обучаюсь по программе Tremplin Recherche школы — программе для студентов, нацеленных на докторантуру, а не на стандартную стажировку в индустрии.',
-    p2: 'Моя работа сосредоточена на том, чтобы сделать неструктурированный клинический текст пригодным для исследований: извлечение биомаркеров, информации о стадировании и деталей лечения, скрытых во французских онкологических заключениях, где универсальные инструменты NLP систематически терпят неудачу из-за специфической лексики и структуры документов.',
-    p3: 'Параллельно с учёбой я преподаю математику и физику-химию через Complétude, а также готовлю заявки на промышленную докторантуру CIFRE в области биомедицинского ИИ в Сорбоннском университете.',
-    visionLine:
-      'В долгосрочной перспективе именно эта дисциплина — извлечение надёжной структуры из хаотичного, высокорискового текста — привлекает меня к исследованиям безопасности ИИ: построению и оценке world model через AMI Labs и программу Anthropic Fellows. (Черновая строка — замените на свою окончательную формулировку.)',
+    p2: "Моя исследовательская тема — эффективный и экономный ИИ: выбирать самую лёгкую модель, которая остаётся надёжной, и понимать, когда дообученный трансформер или LLM действительно оправдывает свои вычислительные затраты. Я применяю это к клиническим текстам. Моя работа сосредоточена на том, чтобы сделать неструктурированный клинический текст пригодным для исследований: извлечение биомаркеров, информации о стадировании и деталей лечения, скрытых во французских онкологических заключениях, где универсальные инструменты NLP систематически терпят неудачу из-за специфической лексики и структуры документов.",
+    p3: "Параллельно с учёбой я преподаю математику и физику-химию через Complétude и ищу исследовательские стажировки и возможности докторантуры в области эффективного ИИ, дообучения и инференса.",
+    visionLine: '',
     facts: [
       { dt: 'Учебное заведение', dd: 'ESIEE Paris' },
       { dt: 'Программа', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Трек', dd: 'Tremplin Recherche' },
-      { dt: 'Следующий шаг', dd: 'Докторантура, биомедицинский ИИ — Сорбонна' },
+      { dt: 'Следующий шаг', dd: "Исследовательская стажировка или докторантура в области ИИ" },
       { dt: 'Языки', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -3429,9 +3419,9 @@ const ru: Dictionary = {
     languagesTitle: 'Языки',
     languages: [
       { flag: '🇫🇷', level: 'Родной' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Средний уровень' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'В процессе изучения' },
     ],
   },
@@ -3467,10 +3457,10 @@ const ru: Dictionary = {
     ],
   },
   contact: {
-    title: 'Давайте обсудим клинический NLP, биомедицинский ИИ или сотрудничество в рамках докторантуры.',
+    title: "Давайте обсудим эффективный ИИ, дообучение и инференс, клинический NLP или исследовательское сотрудничество.",
     directLabel: 'Напрямую',
     elsewhereLabel: 'В других местах',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Назначить звонок',
@@ -3484,9 +3474,9 @@ const ru: Dictionary = {
 const ar: Dictionary = {
   htmlLang: 'ar',
   meta: {
-    title: 'Clément Longeac — NLP سريري وذكاء اصطناعي طبي',
+    title: "Clément Longeac — ذكاء اصطناعي كفؤ، وضبط دقيق، واستدلال",
     description:
-      'أبحاث في معالجة اللغة السريرية والذكاء الاصطناعي الطبي في ESIEE Paris، في طريقي لنيل الدكتوراه.',
+      "أبحاث في الذكاء الاصطناعي الكفؤ والمقتصد في ESIEE Paris: توجيه بين القواعد ونماذج transformer المضبوطة ونماذج LLM لاستدلال موثوق وقابل للتدقيق، مطبّقة على معالجة اللغة السريرية.",
   },
   nav: {
     about: 'نبذة عني',
@@ -3501,7 +3491,7 @@ const ar: Dictionary = {
     menuToggleLabel: 'فتح القائمة',
   },
   hero: {
-    kicker: 'ESIEE Paris · أبحث عن تدريب بحثي لمدة 6 أشهر · معالجة اللغة السريرية والذكاء الاصطناعي الطبي الحيوي · اعتبارًا من فبراير 2027',
+    kicker: "ESIEE Paris · أبحث عن تدريب بحثي لمدة 6 أشهر · ذكاء اصطناعي كفؤ، وضبط دقيق، واستدلال · اعتبارًا من فبراير 2027",
     h1Pre: 'أستخرج المؤشرات الحيوية من النص السريري ',
     h1Accent: 'دون إيقاظ وحدة معالجة الرسومات',
     h1Post: '',
@@ -3514,15 +3504,14 @@ const ar: Dictionary = {
     label: '01 — نبذة عني',
     title: 'من تدريس الرياضيات إلى نمذجة العلامات الحيوية للأورام',
     p1: 'أنا طالب في السنة الرابعة في ESIEE Paris، تخصص علوم البيانات والذكاء الاصطناعي، ومسجل في مسار Tremplin Recherche بالمدرسة — وهو برنامج مصمم للطلاب المتجهين نحو البحث الدكتوراهي بدلًا من التدريب الصناعي القياسي.',
-    p2: 'يتمحور عملي حول جعل النص السريري غير المنظم قابلًا للاستخدام في البحث: استخراج العلامات الحيوية ومعلومات التدريج وتفاصيل العلاج المدفونة في تقارير الأورام الفرنسية، حيث تفشل أدوات معالجة اللغة الطبيعية العامة باستمرار أمام المفردات وبنية الوثائق الخاصة بهذا المجال.',
-    p3: 'إلى جانب دراستي، أُدرّس الرياضيات والفيزياء والكيمياء عبر Complétude، وأُحضّر طلبات الالتحاق ببرنامج دكتوراه صناعي CIFRE في الذكاء الاصطناعي الحيوي الطبي بجامعة السوربون.',
-    visionLine:
-      'على المدى الطويل، هذا الانضباط نفسه — استخلاص بنية موثوقة من نص فوضوي وعالي المخاطر — هو ما يجذبني نحو أبحاث سلامة الذكاء الاصطناعي: بناء وتقييم نماذج العالم (world models) عبر AMI Labs وبرنامج Anthropic Fellows. (هذه جملة أولية — استبدلها بصياغتك النهائية.)',
+    p2: "يتمحور بحثي حول الذكاء الاصطناعي الكفؤ والمقتصد: اختيار أخفّ نموذج يظل موثوقًا، ومعرفة متى يستحق نموذج transformer مضبوط أو LLM كلفته الحسابية فعلًا. وأطبّق ذلك على النصوص السريرية. يتمحور عملي حول جعل النص السريري غير المنظم قابلًا للاستخدام في البحث: استخراج العلامات الحيوية ومعلومات التدريج وتفاصيل العلاج المدفونة في تقارير الأورام الفرنسية، حيث تفشل أدوات معالجة اللغة الطبيعية العامة باستمرار أمام المفردات وبنية الوثائق الخاصة بهذا المجال.",
+    p3: "إلى جانب دراستي، أُدرّس الرياضيات والفيزياء والكيمياء عبر Complétude، وأبحث عن تدريب بحثي وفرص دكتوراه في الذكاء الاصطناعي الكفؤ والضبط الدقيق والاستدلال.",
+    visionLine: '',
     facts: [
       { dt: 'المؤسسة', dd: 'ESIEE Paris' },
       { dt: 'البرنامج', dd: 'علوم البيانات والذكاء الاصطناعي (DSIA)' },
       { dt: 'المسار', dd: 'Tremplin Recherche' },
-      { dt: 'الخطوة التالية', dd: 'دكتوراه، الذكاء الاصطناعي الحيوي الطبي — السوربون' },
+      { dt: 'الخطوة التالية', dd: "تدريب بحثي أو دكتوراه في الذكاء الاصطناعي" },
       { dt: 'اللغات', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -3726,9 +3715,9 @@ const ar: Dictionary = {
     languagesTitle: 'اللغات',
     languages: [
       { flag: '🇫🇷', level: 'اللغة الأم' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'متوسط' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'قيد التعلم' },
     ],
   },
@@ -3764,10 +3753,10 @@ const ar: Dictionary = {
     ],
   },
   contact: {
-    title: 'لنتحدث عن معالجة اللغة السريرية، أو الذكاء الاصطناعي الحيوي الطبي، أو تعاون بحثي دكتوراهي.',
+    title: "لنتحدث عن الذكاء الاصطناعي الكفؤ، والضبط الدقيق والاستدلال، ومعالجة اللغة السريرية، أو تعاون بحثي.",
     directLabel: 'مباشر',
     elsewhereLabel: 'في أماكن أخرى',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'حجز مكالمة',
@@ -3781,9 +3770,9 @@ const ar: Dictionary = {
 const hi: Dictionary = {
   htmlLang: 'hi',
   meta: {
-    title: 'Clément Longeac — क्लिनिकल NLP और बायोमेडिकल AI',
+    title: "Clément Longeac — कुशल AI, फ़ाइन-ट्यूनिंग और इन्फ़रेंस",
     description:
-      'ESIEE Paris में क्लिनिकल NLP और बायोमेडिकल AI पर शोध, पीएचडी की दिशा में अग्रसर।',
+      "ESIEE Paris में कुशल, किफ़ायती AI पर शोध: नियमों, फ़ाइन-ट्यून किए गए ट्रांसफ़ॉर्मर और LLM के बीच रूटिंग, ताकि इन्फ़रेंस विश्वसनीय और ऑडिट-योग्य रहे। क्लिनिकल NLP पर लागू।",
   },
   nav: {
     about: 'मेरे बारे में',
@@ -3798,7 +3787,7 @@ const hi: Dictionary = {
     menuToggleLabel: 'मेनू खोलें',
   },
   hero: {
-    kicker: 'ESIEE Paris · 6 महीने की शोध इंटर्नशिप की तलाश · क्लिनिकल NLP और बायोमेडिकल AI · फ़रवरी 2027 से',
+    kicker: "ESIEE Paris · 6 महीने की शोध इंटर्नशिप की तलाश · कुशल AI, फ़ाइन-ट्यूनिंग और इन्फ़रेंस · फ़रवरी 2027 से",
     h1Pre: 'क्लिनिकल टेक्स्ट से बायोमार्कर निकालना, ',
     h1Accent: 'बिना GPU जगाए',
     h1Post: '।',
@@ -3811,15 +3800,14 @@ const hi: Dictionary = {
     label: '01 — मेरे बारे में',
     title: 'गणित पढ़ाने से ट्यूमर मार्करों के मॉडलिंग तक',
     p1: 'मैं ESIEE Paris में चौथे वर्ष का छात्र हूँ, डेटा साइंस और एआई में विशेषज्ञता के साथ, और स्कूल के Tremplin Recherche ट्रैक में नामांकित हूँ — यह कार्यक्रम मानक इंडस्ट्री इंटर्नशिप के बजाय डॉक्टरेट शोध की ओर बढ़ रहे छात्रों के लिए बनाया गया है।',
-    p2: 'मेरा काम असंरचित क्लिनिकल टेक्स्ट को शोध के लिए उपयोगी बनाने पर केंद्रित है: फ्रेंच ऑन्कोलॉजी रिपोर्टों में छिपे बायोमार्कर, स्टेजिंग जानकारी और उपचार विवरण निकालना, जहाँ सामान्य-उद्देश्य वाले एनएलपी उपकरण डोमेन-विशिष्ट शब्दावली और दस्तावेज़ संरचना के सामने लगातार विफल होते हैं।',
-    p3: 'अपनी पढ़ाई के साथ-साथ मैं Complétude के माध्यम से गणित और भौतिकी-रसायन विज्ञान पढ़ाता हूँ, और सोरबोन विश्वविद्यालय में बायोमेडिकल एआई में CIFRE औद्योगिक पीएचडी के लिए आवेदन तैयार कर रहा हूँ।',
-    visionLine:
-      'दीर्घकालिक रूप से, यही अनुशासन — अव्यवस्थित, उच्च-जोखिम वाले टेक्स्ट से विश्वसनीय संरचना निकालना — मुझे एआई सुरक्षा अनुसंधान की ओर आकर्षित करता है: AMI Labs और Anthropic Fellows कार्यक्रम के माध्यम से world model बनाना और उनका मूल्यांकन करना। (यह एक मसौदा पंक्ति है — इसे अपने अंतिम शब्दों से बदलें।)',
+    p2: "मेरा शोध कुशल और किफ़ायती AI पर केंद्रित है: ऐसा सबसे हल्का मॉडल चुनना जो विश्वसनीय रहे, और यह जानना कि फ़ाइन-ट्यून किया ट्रांसफ़ॉर्मर या LLM कब अपनी कंप्यूट लागत के लायक है। मैं इसे क्लिनिकल टेक्स्ट पर लागू करता हूँ। मेरा काम असंरचित क्लिनिकल टेक्स्ट को शोध के लिए उपयोगी बनाने पर केंद्रित है: फ्रेंच ऑन्कोलॉजी रिपोर्टों में छिपे बायोमार्कर, स्टेजिंग जानकारी और उपचार विवरण निकालना, जहाँ सामान्य-उद्देश्य वाले एनएलपी उपकरण डोमेन-विशिष्ट शब्दावली और दस्तावेज़ संरचना के सामने लगातार विफल होते हैं।",
+    p3: "पढ़ाई के साथ-साथ मैं Complétude के माध्यम से गणित और भौतिकी-रसायन विज्ञान पढ़ाता हूँ, और कुशल AI, फ़ाइन-ट्यूनिंग और इन्फ़रेंस में शोध इंटर्नशिप और पीएचडी के अवसर तलाश रहा हूँ।",
+    visionLine: '',
     facts: [
       { dt: 'संस्थान', dd: 'ESIEE Paris' },
       { dt: 'कार्यक्रम', dd: 'डेटा साइंस एवं एआई (DSIA)' },
       { dt: 'ट्रैक', dd: 'Tremplin Recherche' },
-      { dt: 'अगला कदम', dd: 'पीएचडी, बायोमेडिकल एआई — सोरबोन' },
+      { dt: 'अगला कदम', dd: "AI में शोध इंटर्नशिप या पीएचडी" },
       { dt: 'भाषाएँ', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -4023,9 +4011,9 @@ const hi: Dictionary = {
     languagesTitle: 'भाषाएं',
     languages: [
       { flag: '🇫🇷', level: 'मातृभाषा' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'मध्यम' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'सीखने की प्रक्रिया में' },
     ],
   },
@@ -4061,10 +4049,10 @@ const hi: Dictionary = {
     ],
   },
   contact: {
-    title: 'आइए क्लिनिकल एनएलपी, बायोमेडिकल एआई, या पीएचडी सहयोग पर बात करें।',
+    title: "आइए कुशल AI, फ़ाइन-ट्यूनिंग और इन्फ़रेंस, क्लिनिकल NLP, या शोध सहयोग पर बात करें।",
     directLabel: 'सीधा',
     elsewhereLabel: 'अन्यत्र',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'कॉल बुक करें',
@@ -4078,9 +4066,9 @@ const hi: Dictionary = {
 const tr: Dictionary = {
   htmlLang: 'tr',
   meta: {
-    title: 'Clément Longeac — Klinik NLP ve Biyomedikal AI',
+    title: "Clément Longeac — verimli yapay zeka, ince ayar ve çıkarım",
     description:
-      'ESIEE Paris\'te klinik NLP ve biyomedikal AI araştırması, doktoraya giden yolda.',
+      "ESIEE Paris'te verimli, tasarruflu yapay zeka araştırması: kurallar, ince ayarlı transformer'lar ve LLM'ler arasında yönlendirme ile güvenilir ve denetlenebilir çıkarım. Klinik NLP'ye uygulanıyor.",
   },
   nav: {
     about: 'Hakkımda',
@@ -4095,7 +4083,7 @@ const tr: Dictionary = {
     menuToggleLabel: 'Menüyü aç',
   },
   hero: {
-    kicker: 'ESIEE Paris · 6 aylık bir araştırma stajı arıyorum · Klinik NLP ve biyomedikal YZ · Şubat 2027’den itibaren',
+    kicker: "ESIEE Paris · 6 aylık bir araştırma stajı arıyorum · Verimli yapay zeka, ince ayar ve çıkarım · Şubat 2027’den itibaren",
     h1Pre: "GPU'yu uyandırmadan ",
     h1Accent: 'klinik metinden biyobelirteç çıkarıyorum',
     h1Post: '',
@@ -4108,15 +4096,14 @@ const tr: Dictionary = {
     label: '01 — Hakkımda',
     title: 'Matematik özel dersinden tümör belirteçlerini modellemeye',
     p1: 'ESIEE Paris\'te dördüncü sınıf öğrencisiyim, Veri Bilimi & Yapay Zeka uzmanlığındayım ve okulun Tremplin Recherche programına kayıtlıyım — bu program, standart bir sektör stajı yerine doktora araştırmasına yönelen öğrenciler için tasarlanmıştır.',
-    p2: 'Çalışmalarım, yapılandırılmamış klinik metni araştırma için kullanılabilir hale getirmeye odaklanıyor: genel amaçlı NLP araçlarının bu alana özgü kelime dağarcığı ve belge yapısı karşısında sürekli başarısız olduğu Fransız onkoloji raporlarında gizli biyobelirteçleri, evreleme bilgilerini ve tedavi detaylarını çıkarmak.',
-    p3: 'Çalışmalarımın yanı sıra Complétude aracılığıyla matematik ve fizik-kimya dersleri veriyor, Sorbonne Üniversitesi\'nde biyomedikal yapay zeka alanında bir CIFRE endüstriyel doktora başvurusu hazırlıyorum.',
-    visionLine:
-      'Uzun vadede, dağınık ve yüksek riskli metinden güvenilir yapı çıkarma disiplini, beni yapay zeka güvenliği araştırmalarına çekiyor: AMI Labs ve Anthropic Fellows Programı aracılığıyla world model inşa etmek ve değerlendirmek. (Bu taslak bir satır — kendi nihai ifadenle değiştir.)',
+    p2: "Araştırmam verimli ve tasarruflu yapay zekaya odaklanıyor: güvenilir kalan en hafif modeli seçmek ve ince ayarlı bir transformer'ın ya da bir LLM'in hesaplama maliyetine ne zaman gerçekten değdiğini bilmek. Bunu klinik metne uyguluyorum. Çalışmalarım, yapılandırılmamış klinik metni araştırma için kullanılabilir hale getirmeye odaklanıyor: genel amaçlı NLP araçlarının bu alana özgü kelime dağarcığı ve belge yapısı karşısında sürekli başarısız olduğu Fransız onkoloji raporlarında gizli biyobelirteçleri, evreleme bilgilerini ve tedavi detaylarını çıkarmak.",
+    p3: "Derslerimin yanı sıra Complétude aracılığıyla matematik ve fizik-kimya dersleri veriyor, verimli yapay zeka, ince ayar ve çıkarım alanlarında araştırma stajları ve doktora fırsatları arıyorum.",
+    visionLine: '',
     facts: [
       { dt: 'Kurum', dd: 'ESIEE Paris' },
       { dt: 'Program', dd: 'Veri Bilimi & Yapay Zeka (DSIA)' },
       { dt: 'Program türü', dd: 'Tremplin Recherche' },
-      { dt: 'Sıradaki adım', dd: 'Doktora, biyomedikal yapay zeka — Sorbonne' },
+      { dt: 'Sıradaki adım', dd: "Yapay zekada araştırma stajı veya doktora" },
       { dt: 'Diller', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -4321,9 +4308,9 @@ const tr: Dictionary = {
     languagesTitle: 'Diller',
     languages: [
       { flag: '🇫🇷', level: 'Anadil' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Orta düzey' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'Öğreniyorum' },
     ],
   },
@@ -4359,10 +4346,10 @@ const tr: Dictionary = {
     ],
   },
   contact: {
-    title: 'Klinik NLP, biyomedikal yapay zeka veya bir doktora iş birliği hakkında konuşalım.',
+    title: "Verimli yapay zeka, ince ayar ve çıkarım, klinik NLP veya bir araştırma iş birliği hakkında konuşalım.",
     directLabel: 'Doğrudan',
     elsewhereLabel: 'Diğer Yerler',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Görüşme ayarla',
@@ -4376,9 +4363,9 @@ const tr: Dictionary = {
 const pl: Dictionary = {
   htmlLang: 'pl',
   meta: {
-    title: 'Clément Longeac — Badania AI, kliniczne NLP i biomedyczna AI',
+    title: "Clément Longeac — wydajna AI, fine-tuning i inferencja",
     description:
-      'Badania w klinicznym NLP i biomedycznej AI w ESIEE Paris, w drodze do doktoratu.',
+      "Badania nad wydajną, oszczędną AI w ESIEE Paris: routing między regułami, dostrojonymi transformerami i LLM-ami dla wiarygodnej, audytowalnej inferencji. Zastosowane w klinicznym NLP.",
   },
   nav: {
     about: 'O mnie',
@@ -4393,7 +4380,7 @@ const pl: Dictionary = {
     menuToggleLabel: 'Otwórz menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · Szukam 6-miesięcznego stażu badawczego · Kliniczne NLP i biomedyczna SI · od lut. 2027',
+    kicker: "ESIEE Paris · Szukam 6-miesięcznego stażu badawczego · Wydajna AI, fine-tuning i inferencja · od lut. 2027",
     h1Pre: 'Wydobywam biomarkery z tekstu klinicznego ',
     h1Accent: 'nie budząc GPU',
     h1Post: '',
@@ -4406,15 +4393,14 @@ const pl: Dictionary = {
     label: '01 — O mnie',
     title: 'Od korepetycji z matematyki do modelowania markerów nowotworowych',
     p1: 'Jestem studentem czwartego roku w ESIEE Paris, specjalizacja Data Science & AI, zapisanym na ścieżkę Tremplin Recherche — program przeznaczony dla studentów zmierzających ku doktoratowi, a nie standardowemu stażowi w przemyśle.',
-    p2: 'Moja praca koncentruje się na uczynieniu nieustrukturyzowanego tekstu klinicznego użytecznym dla badań: wydobywaniu biomarkerów, informacji o stopniu zaawansowania i szczegółów leczenia ukrytych we francuskich raportach onkologicznych, gdzie ogólne narzędzia NLP systematycznie zawodzą wobec słownictwa i struktury dokumentów specyficznych dla tej dziedziny.',
-    p3: 'Równolegle ze studiami udzielam korepetycji z matematyki i fizyki-chemii poprzez Complétude, a także przygotowuję aplikacje na przemysłowy doktorat CIFRE w dziedzinie biomedycznej AI na Uniwersytecie Sorbony.',
-    visionLine:
-      'W dłuższej perspektywie ta sama dyscyplina — wydobywanie wiarygodnej struktury z chaotycznego, wysoce ryzykownego tekstu — przyciąga mnie do badań nad bezpieczeństwem AI: budowania i oceniania world models poprzez AMI Labs i program Anthropic Fellows. (To wersja robocza — zastąp ją własnym ostatecznym sformułowaniem.)',
+    p2: "Moje badania dotyczą wydajnej, oszczędnej AI: wyboru najlżejszego modelu, który pozostaje wiarygodny, i wiedzy, kiedy dostrojony transformer lub LLM naprawdę wart jest swojego kosztu obliczeń. Stosuję to do tekstów klinicznych. Moja praca koncentruje się na uczynieniu nieustrukturyzowanego tekstu klinicznego użytecznym dla badań: wydobywaniu biomarkerów, informacji o stopniu zaawansowania i szczegółów leczenia ukrytych we francuskich raportach onkologicznych, gdzie ogólne narzędzia NLP systematycznie zawodzą wobec słownictwa i struktury dokumentów specyficznych dla tej dziedziny.",
+    p3: "Obok studiów udzielam korepetycji z matematyki i fizyki-chemii przez Complétude i szukam staży badawczych oraz możliwości doktoratu w dziedzinie wydajnej AI, fine-tuningu i inferencji.",
+    visionLine: '',
     facts: [
       { dt: 'Uczelnia', dd: 'ESIEE Paris' },
       { dt: 'Program', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Ścieżka', dd: 'Tremplin Recherche' },
-      { dt: 'Kolejny krok', dd: 'Doktorat, biomedyczna AI — Sorbona' },
+      { dt: 'Kolejny krok', dd: "Staż badawczy lub doktorat z AI" },
       { dt: 'Języki', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -4618,9 +4604,9 @@ const pl: Dictionary = {
     languagesTitle: 'Języki',
     languages: [
       { flag: '🇫🇷', level: 'Ojczysty' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Średnio zaawansowany' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'W trakcie nauki' },
     ],
   },
@@ -4656,10 +4642,10 @@ const pl: Dictionary = {
     ],
   },
   contact: {
-    title: 'Porozmawiajmy o klinicznym NLP, biomedycznej AI lub współpracy doktoranckiej.',
+    title: "Porozmawiajmy o wydajnej AI, fine-tuningu i inferencji, klinicznym NLP lub współpracy badawczej.",
     directLabel: 'Bezpośrednio',
     elsewhereLabel: 'Gdzie indziej',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Umów rozmowę',
@@ -4673,9 +4659,9 @@ const pl: Dictionary = {
 const vi: Dictionary = {
   htmlLang: 'vi',
   meta: {
-    title: 'Clément Longeac — Nghiên cứu AI, NLP lâm sàng và AI y sinh',
+    title: "Clément Longeac — AI hiệu quả, tinh chỉnh và suy luận",
     description:
-      'Nghiên cứu NLP lâm sàng và AI y sinh tại ESIEE Paris, hướng tới bằng tiến sĩ.',
+      "Nghiên cứu AI hiệu quả, tiết kiệm tại ESIEE Paris: định tuyến giữa quy tắc, transformer đã tinh chỉnh và LLM để suy luận đáng tin cậy, có thể kiểm toán. Ứng dụng cho NLP lâm sàng.",
   },
   nav: {
     about: 'Giới thiệu',
@@ -4690,7 +4676,7 @@ const vi: Dictionary = {
     menuToggleLabel: 'Mở menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · Tìm kỳ thực tập nghiên cứu 6 tháng · NLP lâm sàng & AI y sinh · từ tháng 2 năm 2027',
+    kicker: "ESIEE Paris · Tìm kỳ thực tập nghiên cứu 6 tháng · AI hiệu quả, tinh chỉnh & suy luận · từ tháng 2 năm 2027",
     h1Pre: 'Trích xuất dấu ấn sinh học từ văn bản lâm sàng ',
     h1Accent: 'mà không cần đánh thức GPU',
     h1Post: '',
@@ -4703,15 +4689,14 @@ const vi: Dictionary = {
     label: '01 — Giới thiệu',
     title: 'Từ dạy kèm toán đến mô hình hóa dấu ấn sinh học khối u',
     p1: 'Tôi là sinh viên năm thứ tư tại ESIEE Paris, chuyên ngành Khoa học Dữ liệu & AI, theo học chương trình Tremplin Recherche của trường — một chương trình dành cho sinh viên hướng tới nghiên cứu tiến sĩ thay vì thực tập doanh nghiệp thông thường.',
-    p2: 'Công việc của tôi tập trung vào việc làm cho văn bản lâm sàng phi cấu trúc trở nên hữu ích cho nghiên cứu: trích xuất dấu ấn sinh học, thông tin phân giai đoạn và chi tiết điều trị ẩn trong các báo cáo ung bướu tiếng Pháp, nơi mà các công cụ NLP tổng quát liên tục thất bại trước từ vựng và cấu trúc tài liệu đặc thù của lĩnh vực này.',
-    p3: 'Bên cạnh việc học, tôi dạy kèm toán và lý-hóa thông qua Complétude, và đang chuẩn bị hồ sơ ứng tuyển chương trình tiến sĩ công nghiệp CIFRE về AI y sinh tại Đại học Sorbonne.',
-    visionLine:
-      'Về lâu dài, chính kỷ luật này — trích xuất cấu trúc đáng tin cậy từ văn bản hỗn độn, rủi ro cao — là điều thu hút tôi đến với nghiên cứu an toàn AI: xây dựng và đánh giá world model thông qua AMI Labs và chương trình Anthropic Fellows. (Đây là câu nháp — hãy thay bằng cách diễn đạt cuối cùng của bạn.)',
+    p2: "Nghiên cứu của tôi xoay quanh AI hiệu quả và tiết kiệm: chọn mô hình nhẹ nhất mà vẫn đáng tin cậy, và biết khi nào một transformer đã tinh chỉnh hay một LLM thực sự xứng đáng với chi phí tính toán. Tôi áp dụng điều đó cho văn bản lâm sàng. Công việc của tôi tập trung vào việc làm cho văn bản lâm sàng phi cấu trúc trở nên hữu ích cho nghiên cứu: trích xuất dấu ấn sinh học, thông tin phân giai đoạn và chi tiết điều trị ẩn trong các báo cáo ung bướu tiếng Pháp, nơi mà các công cụ NLP tổng quát liên tục thất bại trước từ vựng và cấu trúc tài liệu đặc thù của lĩnh vực này.",
+    p3: "Bên cạnh việc học, tôi dạy kèm toán và lý-hóa thông qua Complétude, và đang tìm kiếm cơ hội thực tập nghiên cứu và học tiến sĩ về AI hiệu quả, tinh chỉnh và suy luận.",
+    visionLine: '',
     facts: [
       { dt: 'Cơ sở đào tạo', dd: 'ESIEE Paris' },
       { dt: 'Chương trình', dd: 'Khoa học Dữ liệu & AI (DSIA)' },
       { dt: 'Hệ đào tạo', dd: 'Tremplin Recherche' },
-      { dt: 'Bước tiếp theo', dd: 'Tiến sĩ, AI y sinh — Sorbonne' },
+      { dt: 'Bước tiếp theo', dd: "Thực tập nghiên cứu hoặc tiến sĩ về AI" },
       { dt: 'Ngôn ngữ', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -4917,9 +4902,9 @@ const vi: Dictionary = {
     languagesTitle: 'Ngôn ngữ',
     languages: [
       { flag: '🇫🇷', level: 'Tiếng mẹ đẻ' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Trung cấp' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'Đang học' },
     ],
   },
@@ -4955,10 +4940,10 @@ const vi: Dictionary = {
     ],
   },
   contact: {
-    title: 'Hãy cùng trao đổi về NLP lâm sàng, AI y sinh, hoặc hợp tác nghiên cứu tiến sĩ.',
+    title: "Hãy cùng trao đổi về AI hiệu quả, tinh chỉnh và suy luận, NLP lâm sàng, hoặc hợp tác nghiên cứu.",
     directLabel: 'Trực tiếp',
     elsewhereLabel: 'Nơi khác',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Đặt lịch gọi',
@@ -4972,9 +4957,9 @@ const vi: Dictionary = {
 const id: Dictionary = {
   htmlLang: 'id',
   meta: {
-    title: 'Clément Longeac — Riset AI, NLP Klinis & AI Biomedis',
+    title: "Clément Longeac — AI efisien, fine-tuning & inferensi",
     description:
-      'Riset NLP klinis dan AI biomedis di ESIEE Paris, menuju gelar PhD.',
+      "Riset AI yang efisien dan hemat sumber daya di ESIEE Paris: perutean antara aturan, transformer hasil fine-tuning, dan LLM untuk inferensi yang andal dan dapat diaudit. Diterapkan pada NLP klinis.",
   },
   nav: {
     about: 'Tentang saya',
@@ -4989,7 +4974,7 @@ const id: Dictionary = {
     menuToggleLabel: 'Buka menu',
   },
   hero: {
-    kicker: 'ESIEE Paris · Mencari magang riset 6 bulan · NLP klinis & AI biomedis · mulai Feb 2027',
+    kicker: "ESIEE Paris · Mencari magang riset 6 bulan · AI efisien, fine-tuning & inferensi · mulai Feb 2027",
     h1Pre: 'Mengekstrak biomarker dari teks klinis ',
     h1Accent: 'tanpa membangunkan GPU',
     h1Post: '',
@@ -5002,15 +4987,14 @@ const id: Dictionary = {
     label: '01 — Tentang saya',
     title: 'Dari mengajar les matematika hingga memodelkan penanda tumor',
     p1: 'Saya mahasiswa tahun keempat di ESIEE Paris, spesialisasi Data Science & AI, terdaftar dalam jalur Tremplin Recherche di sekolah — sebuah program yang dirancang untuk mahasiswa yang menuju riset doktoral, bukan magang industri standar.',
-    p2: 'Pekerjaan saya berfokus pada membuat teks klinis tak terstruktur dapat digunakan untuk riset: mengekstrak penanda biologis, informasi stadium, dan detail perawatan yang terkubur dalam laporan onkologi berbahasa Prancis, di mana alat NLP umum secara konsisten gagal menghadapi kosakata dan struktur dokumen khas domain ini.',
-    p3: 'Selain kuliah, saya mengajar les matematika dan fisika-kimia melalui Complétude, dan sedang mempersiapkan pendaftaran untuk program PhD industri CIFRE dalam AI biomedis di Universitas Sorbonne.',
-    visionLine:
-      'Dalam jangka panjang, disiplin yang sama — menarik struktur yang andal dari teks yang berantakan dan berisiko tinggi — adalah yang menarik saya ke riset keamanan AI: membangun dan mengevaluasi world model melalui AMI Labs dan program Anthropic Fellows. (Ini kalimat draf — ganti dengan rumusan akhir Anda sendiri.)',
+    p2: "Riset saya berfokus pada AI yang efisien dan hemat: memilih model teringan yang tetap andal, dan tahu kapan transformer hasil fine-tuning atau LLM benar-benar sepadan dengan biaya komputasinya. Saya menerapkannya pada teks klinis. Pekerjaan saya berfokus pada membuat teks klinis tak terstruktur dapat digunakan untuk riset: mengekstrak penanda biologis, informasi stadium, dan detail perawatan yang terkubur dalam laporan onkologi berbahasa Prancis, di mana alat NLP umum secara konsisten gagal menghadapi kosakata dan struktur dokumen khas domain ini.",
+    p3: "Di samping kuliah, saya mengajar privat matematika dan fisika-kimia melalui Complétude, dan sedang mencari magang riset serta peluang doktoral di bidang AI efisien, fine-tuning dan inferensi.",
+    visionLine: '',
     facts: [
       { dt: 'Institusi', dd: 'ESIEE Paris' },
       { dt: 'Program', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Jalur', dd: 'Tremplin Recherche' },
-      { dt: 'Langkah berikutnya', dd: 'PhD, AI biomedis — Sorbonne' },
+      { dt: 'Langkah berikutnya', dd: "Magang riset atau PhD di bidang AI" },
       { dt: 'Bahasa', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -5214,9 +5198,9 @@ const id: Dictionary = {
     languagesTitle: 'Bahasa',
     languages: [
       { flag: '🇫🇷', level: 'Bahasa ibu' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Menengah' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'Sedang dipelajari' },
     ],
   },
@@ -5252,10 +5236,10 @@ const id: Dictionary = {
     ],
   },
   contact: {
-    title: 'Mari bicara tentang NLP klinis, AI biomedis, atau kolaborasi PhD.',
+    title: "Mari bicara tentang AI efisien, fine-tuning dan inferensi, NLP klinis, atau kolaborasi riset.",
     directLabel: 'Langsung',
     elsewhereLabel: 'Di Tempat Lain',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Jadwalkan panggilan',
@@ -5269,9 +5253,9 @@ const id: Dictionary = {
 const sv: Dictionary = {
   htmlLang: 'sv',
   meta: {
-    title: 'Clément Longeac — klinisk NLP & biomedicinsk AI',
+    title: "Clément Longeac — effektiv AI, finjustering & inferens",
     description:
-      'Forskning i klinisk NLP och biomedicinsk AI vid ESIEE Paris, på väg mot en doktorsexamen.',
+      "Forskning om effektiv, resurssnål AI vid ESIEE Paris: routing mellan regler, finjusterade transformers och LLM:er för pålitlig, granskningsbar inferens. Tillämpad på klinisk NLP.",
   },
   nav: {
     about: 'Om mig',
@@ -5286,7 +5270,7 @@ const sv: Dictionary = {
     menuToggleLabel: 'Öppna menyn',
   },
   hero: {
-    kicker: 'ESIEE Paris · Söker en 6 månaders forskningspraktik · Klinisk NLP & biomedicinsk AI · från feb. 2027',
+    kicker: "ESIEE Paris · Söker en 6 månaders forskningspraktik · Effektiv AI, finjustering & inferens · från feb. 2027",
     h1Pre: 'Extraherar biomarkörer från klinisk text ',
     h1Accent: 'utan att väcka GPU:n',
     h1Post: '',
@@ -5299,15 +5283,14 @@ const sv: Dictionary = {
     label: '01 — Om mig',
     title: 'Från mattestöttning till modellering av tumörmarkörer',
     p1: 'Jag är fjärdeårsstudent vid ESIEE Paris, inriktning Data Science & AI, inskriven på skolans Tremplin Recherche-spår — ett program byggt för studenter som siktar på doktorandforskning snarare än en vanlig industripraktik.',
-    p2: 'Mitt arbete handlar om att göra ostrukturerad klinisk text användbar för forskning: att extrahera biomarkörer, stadieinformation och behandlingsdetaljer som gömts i franska onkologirapporter, där generella NLP-verktyg konsekvent misslyckas inför domänens vokabulär och dokumentstruktur.',
-    p3: 'Vid sidan av studierna undervisar jag i matematik och fysik-kemi via Complétude, och förbereder ansökningar till en industriell CIFRE-doktorandtjänst inom biomedicinsk AI vid Sorbonneuniversitetet.',
-    visionLine:
-      'På längre sikt är det just den här disciplinen — att extrahera pålitlig struktur ur rörig, högriskbetonad text — som drar mig till AI-säkerhetsforskning: att bygga och utvärdera world models via AMI Labs och Anthropic Fellows-programmet. (Preliminär rad — ersätt med din egen slutgiltiga formulering.)',
+    p2: "Min forskning handlar om effektiv, resurssnål AI: att välja den lättaste modellen som förblir pålitlig, och veta när en finjusterad transformer eller en LLM verkligen är värd sin beräkningskostnad. Jag tillämpar det på klinisk text. Mitt arbete handlar om att göra ostrukturerad klinisk text användbar för forskning: att extrahera biomarkörer, stadieinformation och behandlingsdetaljer som gömts i franska onkologirapporter, där generella NLP-verktyg konsekvent misslyckas inför domänens vokabulär och dokumentstruktur.",
+    p3: "Vid sidan av studierna ger jag privatlektioner i matematik och fysik-kemi via Complétude och söker forskningspraktik och doktorandmöjligheter inom effektiv AI, finjustering och inferens.",
+    visionLine: '',
     facts: [
       { dt: 'Lärosäte', dd: 'ESIEE Paris' },
       { dt: 'Program', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Spår', dd: 'Tremplin Recherche' },
-      { dt: 'Nästa steg', dd: 'Doktorsexamen, biomedicinsk AI — Sorbonne' },
+      { dt: 'Nästa steg', dd: "Forskningspraktik eller doktorandtjänst inom AI" },
       { dt: 'Språk', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -5511,9 +5494,9 @@ const sv: Dictionary = {
     languagesTitle: 'Språk',
     languages: [
       { flag: '🇫🇷', level: 'Modersmål' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Medel' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'Under inlärning' },
     ],
   },
@@ -5549,10 +5532,10 @@ const sv: Dictionary = {
     ],
   },
   contact: {
-    title: 'Låt oss prata om klinisk NLP, biomedicinsk AI, eller ett doktorandsamarbete.',
+    title: "Låt oss prata om effektiv AI, finjustering och inferens, klinisk NLP eller ett forskningssamarbete.",
     directLabel: 'Direkt',
     elsewhereLabel: 'Andra kanaler',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Boka ett samtal',
@@ -5566,9 +5549,9 @@ const sv: Dictionary = {
 const uk: Dictionary = {
   htmlLang: 'uk',
   meta: {
-    title: 'Clément Longeac — клінічний NLP та біомедичний ШІ',
+    title: "Clément Longeac — ефективний ШІ, донавчання та інференс",
     description:
-      'Дослідження клінічного NLP та біомедичного ШІ в ESIEE Paris, на шляху до докторантури.',
+      "Дослідження ефективного, економного ШІ в ESIEE Paris: маршрутизація між правилами, донавченими трансформерами та LLM для надійного, перевірюваного інференсу. Застосовується до клінічного NLP.",
   },
   nav: {
     about: 'Про мене',
@@ -5583,7 +5566,7 @@ const uk: Dictionary = {
     menuToggleLabel: 'Відкрити меню',
   },
   hero: {
-    kicker: 'ESIEE Paris · Шукаю 6-місячне дослідницьке стажування · Клінічний NLP та біомедичний ШІ · з лют. 2027',
+    kicker: "ESIEE Paris · Шукаю 6-місячне дослідницьке стажування · Ефективний ШІ, донавчання та інференс · з лют. 2027",
     h1Pre: 'Видобуваю біомаркери з клінічного тексту ',
     h1Accent: 'не пробуджуючи GPU',
     h1Post: '',
@@ -5596,15 +5579,14 @@ const uk: Dictionary = {
     label: '01 — Про мене',
     title: 'Від репетиторства з математики до моделювання пухлинних маркерів',
     p1: 'Я студент четвертого курсу ESIEE Paris, спеціалізація Data Science & AI, навчаюся за програмою Tremplin Recherche школи — програмою для студентів, орієнтованих на докторантуру, а не на стандартне стажування в індустрії.',
-    p2: 'Моя робота зосереджена на тому, щоб зробити неструктурований клінічний текст придатним для досліджень: вилучення біомаркерів, інформації про стадіювання та деталей лікування, прихованих у французьких онкологічних звітах, де універсальні інструменти NLP систематично зазнають невдачі через специфічну лексику та структуру документів.',
-    p3: 'Паралельно з навчанням я викладаю математику та фізику-хімію через Complétude, а також готую заявки на промислову докторантуру CIFRE з біомедичного ШІ в Сорбонському університеті.',
-    visionLine:
-      'У довгостроковій перспективі саме ця дисципліна — здобування надійної структури з хаотичного, високоризикового тексту — приваблює мене до досліджень безпеки ШІ: побудови та оцінки world model через AMI Labs та програму Anthropic Fellows. (Це чорновий рядок — замініть на власне остаточне формулювання.)',
+    p2: "Моя дослідницька тема — ефективний та економний ШІ: обирати найлегшу модель, яка залишається надійною, і розуміти, коли донавчений трансформер чи LLM справді виправдовує свої обчислювальні витрати. Я застосовую це до клінічних текстів. Моя робота зосереджена на тому, щоб зробити неструктурований клінічний текст придатним для досліджень: вилучення біомаркерів, інформації про стадіювання та деталей лікування, прихованих у французьких онкологічних звітах, де універсальні інструменти NLP систематично зазнають невдачі через специфічну лексику та структуру документів.",
+    p3: "Паралельно з навчанням я викладаю математику та фізику-хімію через Complétude і шукаю дослідницькі стажування та можливості докторантури в галузі ефективного ШІ, донавчання та інференсу.",
+    visionLine: '',
     facts: [
       { dt: 'Навчальний заклад', dd: 'ESIEE Paris' },
       { dt: 'Програма', dd: 'Data Science & AI (DSIA)' },
       { dt: 'Трек', dd: 'Tremplin Recherche' },
-      { dt: 'Наступний крок', dd: 'Докторантура, біомедичний ШІ — Сорбонна' },
+      { dt: 'Наступний крок', dd: "Дослідницьке стажування або докторантура в галузі ШІ" },
       { dt: 'Мови', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -5809,9 +5791,9 @@ const uk: Dictionary = {
     languagesTitle: 'Мови',
     languages: [
       { flag: '🇫🇷', level: 'Рідна' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'Середній рівень' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'У процесі вивчення' },
     ],
   },
@@ -5847,10 +5829,10 @@ const uk: Dictionary = {
     ],
   },
   contact: {
-    title: 'Поговорімо про клінічний NLP, біомедичний ШІ або співпрацю в межах докторантури.',
+    title: "Поговорімо про ефективний ШІ, донавчання та інференс, клінічний NLP або дослідницьку співпрацю.",
     directLabel: 'Напряму',
     elsewhereLabel: 'Деінде',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'Запланувати дзвінок',
@@ -5864,9 +5846,9 @@ const uk: Dictionary = {
 const th: Dictionary = {
   htmlLang: 'th',
   meta: {
-    title: 'Clément Longeac — NLP ทางคลินิกและ AI ชีวการแพทย์',
+    title: "Clément Longeac — AI ที่มีประสิทธิภาพ, การ fine-tuning และ inference",
     description:
-      'งานวิจัยด้าน NLP ทางคลินิกและ AI ชีวการแพทย์ที่ ESIEE Paris มุ่งสู่ปริญญาเอก',
+      "งานวิจัย AI ที่มีประสิทธิภาพและประหยัดทรัพยากรที่ ESIEE Paris: การกำหนดเส้นทางระหว่างกฎ, transformer ที่ปรับละเอียด และ LLM เพื่อ inference ที่เชื่อถือได้และตรวจสอบได้ ประยุกต์ใช้กับ NLP ทางคลินิก",
   },
   nav: {
     about: 'เกี่ยวกับฉัน',
@@ -5881,7 +5863,7 @@ const th: Dictionary = {
     menuToggleLabel: 'เปิดเมนู',
   },
   hero: {
-    kicker: 'ESIEE Paris · กำลังหาการฝึกงานวิจัย 6 เดือน · NLP ทางคลินิก & AI ชีวการแพทย์ · ตั้งแต่ ก.พ. 2027',
+    kicker: "ESIEE Paris · กำลังหาการฝึกงานวิจัย 6 เดือน · AI ที่มีประสิทธิภาพ, fine-tuning & inference · ตั้งแต่ ก.พ. 2027",
     h1Pre: 'สกัดไบโอมาร์กเกอร์จากข้อความทางคลินิก ',
     h1Accent: 'โดยไม่ต้องปลุก GPU',
     h1Post: '',
@@ -5894,15 +5876,14 @@ const th: Dictionary = {
     label: '01 — เกี่ยวกับฉัน',
     title: 'จากติวเตอร์คณิตศาสตร์สู่การสร้างแบบจำลองตัวบ่งชี้มะเร็ง',
     p1: 'ผมเป็นนักศึกษาชั้นปีที่ 4 ที่ ESIEE Paris สาขา Data Science & AI และอยู่ในหลักสูตร Tremplin Recherche ของโรงเรียน — โปรแกรมที่ออกแบบมาสำหรับนักศึกษาที่มุ่งสู่งานวิจัยระดับปริญญาเอกแทนที่จะเป็นการฝึกงานในอุตสาหกรรมทั่วไป',
-    p2: 'งานของผมเน้นการทำให้ข้อความทางคลินิกที่ไม่มีโครงสร้างสามารถนำไปใช้ในงานวิจัยได้: การสกัดตัวบ่งชี้ทางชีวภาพ ข้อมูลระยะของโรค และรายละเอียดการรักษาที่ฝังอยู่ในรายงานมะเร็งวิทยาภาษาฝรั่งเศส ซึ่งเครื่องมือ NLP ทั่วไปมักล้มเหลวอย่างต่อเนื่องเมื่อเจอคำศัพท์เฉพาะทางและโครงสร้างเอกสารของสาขานี้',
-    p3: 'นอกจากการเรียน ผมยังสอนพิเศษวิชาคณิตศาสตร์และฟิสิกส์-เคมีผ่าน Complétude และกำลังเตรียมสมัครทุนปริญญาเอกภาคอุตสาหกรรม CIFRE ด้าน AI ชีวการแพทย์ที่มหาวิทยาลัยซอร์บอนน์',
-    visionLine:
-      'ในระยะยาว วินัยแบบเดียวกันนี้ — การดึงโครงสร้างที่เชื่อถือได้ออกจากข้อความที่ยุ่งเหยิงและมีความเสี่ยงสูง — คือสิ่งที่ดึงดูดผมเข้าสู่งานวิจัยด้านความปลอดภัยของ AI: การสร้างและประเมิน world model ผ่าน AMI Labs และโปรแกรม Anthropic Fellows (นี่คือข้อความร่าง — โปรดแทนที่ด้วยถ้อยคำฉบับสมบูรณ์ของคุณเอง)',
+    p2: "งานวิจัยของผมเน้น AI ที่มีประสิทธิภาพและประหยัดทรัพยากร: เลือกโมเดลที่เบาที่สุดที่ยังเชื่อถือได้ และรู้ว่า transformer ที่ปรับละเอียดหรือ LLM คุ้มค่ากับต้นทุนการคำนวณเมื่อใด ผมนำสิ่งนี้ไปใช้กับข้อความทางคลินิก งานของผมเน้นการทำให้ข้อความทางคลินิกที่ไม่มีโครงสร้างสามารถนำไปใช้ในงานวิจัยได้: การสกัดตัวบ่งชี้ทางชีวภาพ ข้อมูลระยะของโรค และรายละเอียดการรักษาที่ฝังอยู่ในรายงานมะเร็งวิทยาภาษาฝรั่งเศส ซึ่งเครื่องมือ NLP ทั่วไปมักล้มเหลวอย่างต่อเนื่องเมื่อเจอคำศัพท์เฉพาะทางและโครงสร้างเอกสารของสาขานี้",
+    p3: "นอกจากการเรียน ผมสอนพิเศษวิชาคณิตศาสตร์และฟิสิกส์-เคมีผ่าน Complétude และกำลังมองหาการฝึกงานวิจัยและโอกาสเรียนต่อปริญญาเอกด้าน AI ที่มีประสิทธิภาพ, fine-tuning และ inference",
+    visionLine: '',
     facts: [
       { dt: 'สถาบัน', dd: 'ESIEE Paris' },
       { dt: 'หลักสูตร', dd: 'Data Science & AI (DSIA)' },
       { dt: 'แทร็ก', dd: 'Tremplin Recherche' },
-      { dt: 'ขั้นตอนถัดไป', dd: 'ปริญญาเอก AI ชีวการแพทย์ — ซอร์บอนน์' },
+      { dt: 'ขั้นตอนถัดไป', dd: "ฝึกงานวิจัยหรือปริญญาเอกด้าน AI" },
       { dt: 'ภาษา', dd: 'FR · EN · JP · ES' },
     ],
   },
@@ -6106,9 +6087,9 @@ const th: Dictionary = {
     languagesTitle: 'ภาษา',
     languages: [
       { flag: '🇫🇷', level: 'ภาษาแม่' },
-      { flag: '🇬🇧', level: 'C1' },
-      { flag: '🇯🇵', level: 'ระดับกลาง' },
-      { flag: '🇪🇸', level: 'B2' },
+      { flag: '🇬🇧', level: 'B2' },
+      { flag: '🇯🇵', level: 'A1' },
+      { flag: '🇪🇸', level: 'B1' },
       { flag: '🇮🇹', level: 'กำลังเรียนรู้' },
     ],
   },
@@ -6144,10 +6125,10 @@ const th: Dictionary = {
     ],
   },
   contact: {
-    title: 'มาคุยกันเรื่อง NLP ทางคลินิก, AI ชีวการแพทย์ หรือความร่วมมือด้านปริญญาเอกกันเถอะ',
+    title: "มาคุยกันเรื่อง AI ที่มีประสิทธิภาพ, fine-tuning และ inference, NLP ทางคลินิก หรือความร่วมมือด้านการวิจัยกันเถอะ",
     directLabel: 'ติดต่อโดยตรง',
     elsewhereLabel: 'ที่อื่น',
-    email: 'contact@clement-longeac.com',
+    email: 'clement.longeac@edu.esiee.fr',
     github: 'GitHub',
     linkedin: 'LinkedIn',
     bookCall: 'นัดหมายการโทร',

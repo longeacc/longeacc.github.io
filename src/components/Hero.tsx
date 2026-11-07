@@ -30,7 +30,7 @@ export default function Hero({ dict }: { dict: Dictionary }) {
               <a href="#research" className="btn btn-primary">
                 {hero.ctaResearch}
               </a>
-              <a href="/CV_Clement_LONGEAC_Anthropic_Fellows_2026-bis.pdf" className="btn btn-ghost">
+              <a href="/CV_Clement_LONGEAC_2026.pdf" className="btn btn-ghost">
                 {hero.ctaCV}
               </a>
             </div>

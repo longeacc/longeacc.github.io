@@ -14,7 +14,7 @@ export default function About({ dict }: { dict: Dictionary }) {
             <p>{about.p1}</p>
             <p>{about.p2}</p>
             <p>{about.p3}</p>
-            <p className="vision-line">{about.visionLine}</p>
+            {about.visionLine && <p className="vision-line">{about.visionLine}</p>}
           </div>
           <div>
             <div className="profile-photo">

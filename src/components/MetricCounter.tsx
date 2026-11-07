@@ -19,7 +19,7 @@ export default function MetricCounter({
   label,
 }: Metric & { label: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
   const started = useRef(false);
 
   useEffect(() => {
@@ -27,6 +27,8 @@ export default function MetricCounter({
     if (!node) return;
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReduced) setDisplay(0);
 
     const observer = new IntersectionObserver(
       (entries) => {

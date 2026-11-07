@@ -3,9 +3,9 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://clement-longeac.com/'),
-  title: 'Clément Longeac — AI Research, Clinical NLP & Biomedical AI',
+  title: 'Clément Longeac — Efficient AI Research, Clinical NLP & LLM Inference',
   description:
-    'Recherche en NLP clinique et IA biomédicale. Ingénieur ESIEE Paris, spécialisation Data Science & IA, programme Tremplin Recherche. Vers un doctorat en IA appliquée à la recherche biomédicale.',
+    'AI researcher at ESIEE Paris (Data Science & AI, Tremplin Recherche) working on efficient, frugal AI — fine-tuning, inference and routing between rules, transformers and LLMs — applied to clinical NLP.',
 };
 
 const personJsonLd = {
@@ -13,8 +13,8 @@ const personJsonLd = {
   '@type': 'Person',
   name: 'Clément Longeac',
   url: 'https://clement-longeac.com/',
-  email: 'mailto:contact@clement-longeac.com',
-  jobTitle: 'AI Research Student — Clinical NLP & Biomedical AI',
+  email: 'mailto:clement.longeac@edu.esiee.fr',
+  jobTitle: 'AI Research Student — Efficient AI & Clinical NLP',
   affiliation: {
     '@type': 'CollegeOrUniversity',
     name: 'ESIEE Paris',
@@ -23,7 +23,7 @@ const personJsonLd = {
     '@type': 'CollegeOrUniversity',
     name: 'ESIEE Paris',
   },
-  knowsAbout: ['Clinical NLP', 'Biomedical AI', 'Named Entity Recognition', 'Machine Learning'],
+  knowsAbout: ['Efficient AI', 'LLM Inference', 'Fine-tuning', 'Clinical NLP', 'Biomedical AI', 'Named Entity Recognition', 'Machine Learning'],
   sameAs: ['https://github.com/longeacc', 'https://www.linkedin.com/in/clement-longeac'],
 };
 
